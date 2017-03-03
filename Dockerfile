@@ -24,7 +24,6 @@ RUN wget --quiet ${ALLUXIO_SPARK_URL}
 
 WORKDIR /
 ADD boot.sh /
+ADD configure.py /
 
-CMD ["/boot.sh"]
-
-
+ENTRYPOINT ["/boot.sh"]
