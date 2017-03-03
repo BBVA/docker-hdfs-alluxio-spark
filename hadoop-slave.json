@@ -1,0 +1,279 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "hadoop-slave",
+    "creationTimestamp": null,
+    "annotations": {
+      "description": "Hadoop Slave",
+      "iconClass": "icon-mysql-database",
+      "tags": "hadoop"
+    }
+  },
+  "objects": [
+      {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APP_SERVICE_NAME}",
+        "creationTimestamp": null
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "app1",
+            "protocol": "TCP",
+            "port": 22,
+            "targetPort": 7373,
+            "nodePort": 0
+          },{
+            "name": "app2",
+            "protocol": "TCP",
+            "port": 7946,
+            "targetPort": 7946,
+            "nodePort": 0
+          },{
+            "name": "app3",
+            "protocol": "TCP",
+            "port": 9000,
+            "targetPort": 9000,
+            "nodePort": 0
+          },{
+            "name": "app4",
+            "protocol": "TCP",
+            "port": 50010,
+            "targetPort": 50010,
+            "nodePort": 0
+          },{
+            "name": "app5",
+            "protocol": "TCP",
+            "port": 50020,
+            "targetPort": 50020,
+            "nodePort": 0
+          },{
+            "name": "app6",
+            "protocol": "TCP",
+            "port": 50070,
+            "targetPort": 50070,
+            "nodePort": 0
+          },{
+            "name": "app7",
+            "protocol": "TCP",
+            "port": 50075,
+            "targetPort": 50075,
+            "nodePort": 0
+          },{
+            "name": "app8",
+            "protocol": "TCP",
+            "port": 50090,
+            "targetPort": 50090,
+            "nodePort": 0
+          },{
+            "name": "app9",
+            "protocol": "TCP",
+            "port": 50475,
+            "targetPort": 50475,
+            "nodePort": 0
+          },{
+            "name": "app10",
+            "protocol": "TCP",
+            "port": 8030,
+            "targetPort": 8030,
+            "nodePort": 0
+          },{
+            "name": "app11",
+            "protocol": "TCP",
+            "port": 8031,
+            "targetPort": 8031,
+            "nodePort": 0
+          },{
+            "name": "app12",
+            "protocol": "TCP",
+            "port": 8032,
+            "targetPort": 8032,
+            "nodePort": 0
+          },{
+            "name": "app13",
+            "protocol": "TCP",
+            "port": 8033,
+            "targetPort": 8033,
+            "nodePort": 0
+          },{
+            "name": "app14",
+            "protocol": "TCP",
+            "port": 8040,
+            "targetPort": 8040,
+            "nodePort": 0
+          },{
+            "name": "app15",
+            "protocol": "TCP",
+            "port": 8042,
+            "targetPort": 8042,
+            "nodePort": 0
+          },{
+            "name": "app16",
+            "protocol": "TCP",
+            "port": 8060,
+            "targetPort": 8060,
+            "nodePort": 0
+          },{
+            "name": "app17",
+            "protocol": "TCP",
+            "port": 8088,
+            "targetPort": 8088,
+            "nodePort": 0
+          },{
+            "name": "app18",
+            "protocol": "TCP",
+            "port": 50060,
+            "targetPort": 50060,
+            "nodePort": 0
+          }
+        ],
+        "selector": {
+          "name": "${APP_SERVICE_NAME}"
+        },
+        "portalIP": "",
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+      },
+      "status": {
+        "loadBalancer": {}
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "${APP_SERVICE_NAME}",
+        "creationTimestamp": null
+      },
+      "spec": {
+        "strategy": {
+          "type": "Recreate",
+          "resources": {}
+        },
+        "triggers": [
+                    {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "${APP_SERVICE_NAME}"
+        },
+        "template": {
+          "metadata": {
+            "creationTimestamp": null,
+            "labels": {
+              "name": "${APP_SERVICE_NAME}"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "hadoop-slave",
+                "image": "kiwenlau/hadoop-slave:0.1.0",
+                "command": ["bash","-c","export JOIN_IP=$HADOOP_MASTER_SERVICE_HOST;/root/start-ssh-serf.sh ; ssh -o StrictHostKeyChecking=no $JOIN_IP \"/root/config.sh;/root/restart.sh\"; sleep 365d"],
+                "ports": [
+                  {
+                    "containerPort": 22,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 7373,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 7946,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 9000,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50010,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50020,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50070,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50075,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50090,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50475,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8030,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8031,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8032,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8033,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8040,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8042,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8060,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 8088,
+                    "protocol": "TCP"
+                  },{
+                    "containerPort": 50060,
+                    "protocol": "TCP"
+                  }
+                ],
+                "env": [
+                  ],
+                "resources": {},
+                "volumeMounts": [
+                                 ],
+                "terminationMessagePath": "/dev/termination-log",
+                "imagePullPolicy": "IfNotPresent",
+                "capabilities": {},
+                "securityContext": {
+                  "capabilities": {},
+                  "privileged": false
+                }
+              }
+            ],
+            "volumes": [
+              {
+                "name": "${APP_SERVICE_NAME}-data",
+                "emptyDir": {
+                  "medium": ""
+                }
+              }
+            ],
+            "restartPolicy": "Always",
+            "dnsPolicy": "ClusterFirst"
+          }
+        }
+      },
+      "status": {}
+    }
+  ],
+  "parameters": [
+    {
+      "name": "APP_SERVICE_NAME",
+      "description": "Application service name",
+      "value": "hadoop-slave",
+      "required": true
+    }
+  ],
+  "labels": {
+    "template": "hadoop-slave-template"
+  }
+}
