@@ -12,14 +12,18 @@ node="$1"
 action="$2"
 cluster_name="$3"
 
-set +o nounset
+
 
 # https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
 
 
-HADOOP_PREFIX=/opt/hadoop
-HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
-mkdir -p ${HADOOP_PREFIX}/logs/
+ALLUXIO_PREFIX=/opt/alluxio
+
+ALLUXIO_MASTER_HOSTNAME=${ALLUXIO_MASTER_HOSTNAME:-"ALLUXIO_NAME"}
+ALLUXIO_WORKER_MEMORY_SIZE=${ALLUXIO_WORKER_MEMORY_SIZE:-"10636MB"}
+ALLUXIO_RAM_FOLDER=${ALLUXIO_RAM_FOLDER:-"/mnt/ramdisk"}
+
+set +o nounset
 
 master_node() {
 	local action="$1"
@@ -27,6 +31,9 @@ master_node() {
 	
 	case $action in
 		start)
+			if [! -f /opt/alluxio/conf/alluxio-env.sh ]; then
+				${ALLUXIO_PREFIX}/bin/alluxio bootstrapConf ${cluster_name}
+			fi
 			${ALLUXIO_PREFIX}/bin/alluxio-start.sh master
 		;;
 		stop)
@@ -50,11 +57,9 @@ slave_node() {
 	
 	case $action in
 		start)	
-			# Start a HDFS DataNode with the following command on each designated node as hdfs:
 			${ALLUXIO_PREFIX}/bin/alluxio-start.sh worker SudoMount
 		;;
 		stop)
-			# Run a script to stop a DataNode as hdfs:
 			echo "Not implemented"
 		;;
 		status)
@@ -98,16 +103,12 @@ alluxio_handler() {
 	local node="$1"
 	local action="$2"
 	local cluster_name="$3"
-	echo "hadoop_handler():${node} ${action} ${cluster_name}"
+	echo "alluxio_handler():${node} ${action} ${cluster_name}"
 	case $node in
 		master)
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF}
 			master_node ${action} ${cluster_name}
 		;;
 		slave)
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF}	
 			slave_node ${action} ${cluster_name}
 		;;
 	esac
