@@ -242,7 +242,7 @@ trap "shut_down sigint" SIGINT
 # default config
 
 core_site_default=(
-	"fs.defaultFS=hdfs://${cluster_name}:8022"
+	"fs.defaultFS=hdfs://${cluster_name}:8020"
 	"io.file.buffer.size=131072"
 )
 
