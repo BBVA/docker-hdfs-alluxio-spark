@@ -3,27 +3,16 @@
 This image contains hadoop 2.7.3 distribution but its only used to bring up hdfs services.
 
 
-# Usage
+# Local usage
 
-General usage:
+You'll need a volume to store the data in /data inside the container. Create it in $PWD when using the provided scripts. 
 
-You'll need a volume to store the data in /data inside the container.
+ * starts a single namenode to be used as hdfs service master namenode
+    $ start_namenode.sh [namenode] [/tmp/data]
+ * starts a data node to be used with the namenode already launched. Use it as many times as needed to bring up multiple datanodes.
+    $ start_datanode.sh [namenode] [/tmp/data]
 
-sudo docker run -ti --rm 
-	-v $PWD/data:/data 
-	--name container_name 
-	-h container_hostname 
-	hdfs_image_name node_type action clustername
+Shown params are optional and those are their default values.
 
-To run a name node in foreground:
-
-sudo docker run -ti --rm -v $PWD/data:/data --name namenode -h namenode dhas namenode start namenode
-
-To start a datanode:
-
-sudo docker run -ti --rm -v $PWD/data:/data --name data0 -h data0 --link namenode dhas datanode start namenode
-
-- datanode needs to resolve the namenode container name by DNS
-
-
+namenode_fqdn is the hdfs namenode endpoint and must be resolvable by all the instances. The scripts work with regular dockers by linking the containers between them using the docker run command.
 

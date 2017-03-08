@@ -30,8 +30,7 @@ name_node() {
 	
 	case $action in
 		start)
-			dir=`get_value_var "dfs.namenode.name.dir" "${HDFS_SITE_CONF}"`
-			if [ ! -d $dir ]; then
+			if [ ! -d /data/${cluster_name}/ ]; then
 				# The first time you bring up HDFS, it must be formatted. Format a new distributed filesystem as hdfs: 
 				$HADOOP_PREFIX/bin/hdfs namenode -format ${cluster_name}
 			fi
@@ -169,12 +168,13 @@ jobhistory_server() {
 }
 
 config() {
-	local file="$1"
+	local file="${1}"
 	shift
-	local conf="$@"
+	local conf=("${@}")
 	for p in "${conf[@]}"; do
 		prop=$(echo ${p} | cut -f 1 -d '=')
 		val=$(echo ${p} | cut -f 2 -d '=')
+		echo "$file: $prop = $val"
 		./configure.py $file ${prop} ${val}
 	done
 }
@@ -195,7 +195,6 @@ get_value_var() {
 	done
 }
 
-
 hadoop_handler() {
 	local node="$1"
 	local action="$2"
@@ -203,13 +202,13 @@ hadoop_handler() {
 	echo "hadoop_handler():${node} ${action} ${cluster_name}"
 	case $node in
 		namenode)
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF}
+			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
+			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
 			name_node ${action} ${cluster_name}
 		;;
 		datanode)
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF}	
+			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
+			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}	
 			data_node ${action} ${cluster_name}
 		;;
 		resourcemanager)
@@ -260,11 +259,11 @@ hdfs_site_default=(
 
 
 if [ "${CORE_SITE_CONF}z" == "z" ]; then
-	CORE_SITE_CONF=$core_site_default
+	CORE_SITE_CONF=${core_site_default[@]}
 fi
 
 if [ "${HDFS_SITE_CONF}z" == "z" ]; then
-	HDFS_SITE_CONF=$hdfs_site_default
+	HDFS_SITE_CONF=${hdfs_site_default[@]}
 fi
 
 
