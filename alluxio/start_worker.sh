@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-master=${1:-"master"}
-namenode=${2:-"namenode"}
+node=${1:-0}
+master=${2:-"master"}
+namenode=${3:-"namenode"}
 
-sudo docker run -d --link ${namenode} --link master alluxio slave start ${master} 
+sudo docker run -d --link ${namenode} --link ${master} --name slave${node} -h data${node} alluxio slave start ${master} 

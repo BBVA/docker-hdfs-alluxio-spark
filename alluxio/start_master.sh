@@ -3,7 +3,7 @@
 name=${1:-"master"}
 hdfs_name=${2:-"namenode"}
 
-mkdir -p $volume
+
 
 id=$(sudo docker run -d --name ${name} -h ${name}  --link ${hdfs_name} alluxio master start ${name})
 
