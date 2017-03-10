@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-volume=${1:-"/tmp/data"}
-name=${2:-"namenode"}
+name=${1:-"spark-master"}
+hdfs_name=${2:-"namenode"}
 
 createNetwork() {
   sudo docker network inspect alluxio > /dev/null 2>&1
@@ -14,13 +14,11 @@ createNetwork() {
 
 createNetwork
 
-mkdir -p $volume
-
-id=$(sudo docker run -d -v ${volume}:/data --name ${name} -h ${name} --network=alluxio  hdfs namenode start ${name})
+id=$(sudo docker run -d --name ${name} -h ${name} --network=alluxio spark master start ${name})
 
 sleep 2s
 
 ip=$(sudo docker inspect --format '{{ .NetworkSettings.Networks.alluxio.IPAddress }}' $id)
 
 echo Access namenode console in:
-echo http://$ip:50070
+echo http://$ip:8080

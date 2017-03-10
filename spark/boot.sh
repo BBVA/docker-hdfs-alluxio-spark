@@ -16,48 +16,60 @@ set +o nounset
 # https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
 
 
-SPARK_PREFIX=/opt/spark
-SPARK_CONF_DIR=${SPARK_PREFIX}/conf
-mkdir -p ${SPARK_PREFIX}/logs/
+export SPARK_HOME=/opt/spark
+export SPARK_CONF_DIR=${SPARK_HOME}/conf
+
+export SPARK_MASTER_HOST=${SPARK_MASTER_HOST:-"spark-master"}
+export SPARK_MASTER_PORT=${SPARK_MASTER_PORT:-7077}
+export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT:-8080}
+
+export SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-"1g"}
+export SPARK_WORKER_PORT=${SPARK_WORKER_PORT:-35000}
+export SPARK_WORKER_WEBUI_PORT=${SPARK_WORKER_WEBUI_PORT:-8081}
+
+export SPARK_DAEMON_MEMORY=${SPARK_DAEMON_MEMORY:-"1g"}
+
+mkdir -p ${SPARK_HOME}/logs/
 
 master_node() {
-	local action="$1"
-
+	local action="${1}"
+	local cluster_name="${2}"
+	
 	case $action in
 		start)
-			${SPARK_PREFIX}/sbin/start-master.sh
+			${SPARK_HOME}/sbin/start-master.sh
 		;;
 		stop)
-      ${SPARK_PREFIX}/sbin/stop-master.sh
+			${SPARK_HOME}/sbin/stop-master.sh
 		;;
 		status)
 			# I would love a status report
 			echo "Not implemented"
 		;;
 		*)
-		echo "Action not supported"
-		;;
+			echo "Action not supported"
+			;;
 	esac
 
 }
 
 slave_node() {
-	local action="$1"
-
+	local action="${1}"
+	
 	case $action in
-    start)
-			${SPARK_PREFIX}/sbin/start-slave.sh spark://spark-master:7077
-		;;
+		start)
+			${SPARK_HOME}/sbin/start-slave.sh spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+			;;
 		stop)
-      ${SPARK_PREFIX}/sbin/stop-slave.sh
-		;;
+			${SPARK_HOME}/sbin/stop-slave.sh
+			;;
 		status)
 			# I would love a status report
 			echo "Not implemented"
-		;;
+			;;
 		*)
-		echo "Action not supported"
-		;;
+			echo "Action not supported"
+			;;
 	esac
 }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 node=${1:-0}
-master=${2:-"alluxio-master"}
+master=${2:-"spark-master"}
 namenode=${3:-"namenode"}
 
 createNetwork() {
@@ -15,4 +15,4 @@ createNetwork() {
 
 createNetwork
 
-sudo docker run -d --network=alluxio --name alluxio-worker${node} -h alluxio-worker${node} alluxio slave start ${master}
+sudo docker run -d --network=alluxio --name spark-worker${node} -h spark-worker${node} spark slave start ${master}

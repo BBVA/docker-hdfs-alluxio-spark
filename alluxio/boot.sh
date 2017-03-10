@@ -79,9 +79,7 @@ config() {
 	shift
 	local conf=("${@}")
 	for p in "${conf[@]}"; do
-		prop=$(echo ${p} | cut -f 1 -d '=')
-		val=$(echo ${p} | cut -f 2 -d '=')
-		./configure.py $file ${prop} ${val}
+		echo ${p} >> ${file}
 	done
 }
 
@@ -122,6 +120,12 @@ shut_down() {
 	alluxio_handler ${node} stop ${cluster_name}
 }
 
+
+default_properties=(
+	"alluxio.security.authentication.type=SIMPLE"
+	"alluxio.security.authorization.permission.enabled=true"
+)
+
 trap "shut_down sigkill" SIGKILL
 trap "shut_down sigterm" SIGTERM 
 trap "shut_down sighup" SIGHUP 
@@ -129,7 +133,8 @@ trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
 echo "The ${node} is swtching to ${action} with ${cluster_name} id"
+config "${ALLUXIO_PREFIX}/conf/alluxio-site.properties" "${default_properties[@]}"
 alluxio_handler ${node} ${action} ${cluster_name}
 
 sleep 2s
-tail -f //opt/alluxio/logs/*
+tail -f /opt/alluxio/logs/*

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-name=${1:-"master"}
+name=${1:-"alluxio-master"}
 hdfs_name=${2:-"namenode"}
 
 createNetwork() {
-  sudo docker network inspect alluxio #> /dev/null 2>&1
+  sudo docker network inspect alluxio > /dev/null 2>&1
 
   if [ $? -eq 1 ]; then
     local network=$(sudo docker network create alluxio)
-    echo "Created network --attachable alluxio $network"
+    echo "Created network alluxio $network"
   fi
 }
 
