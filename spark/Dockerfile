@@ -9,7 +9,7 @@ RUN wget --quiet ${SPARK_URL}
 
 RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.0-bin-hadoop2.7.tgz  --strip-components=1 -C /opt/spark/
 
-WORKDIR /opt/spark
+WORKDIR /opt/spark/jars
 RUN wget --quiet ${ALLUXIO_SPARK_URL}
 
 WORKDIR /
