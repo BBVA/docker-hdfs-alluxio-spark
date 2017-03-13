@@ -1,5 +1,6 @@
 sparky/target/*
 sparky/project/target/*
+sparky/project/project/target/*
 .idea
 sparky/.idea
 
