@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hp-pv
+spec:
+  capacity:
+    storage: 5Gi 
+  accessModes:
+  - ReadWriteOnce 
+  - ReadWriteMany
+  - ReadOnlyMany
+  hostPath: 
+    path: /tmp
+  persistentVolumeReclaimPolicy: Recycle
+
+
