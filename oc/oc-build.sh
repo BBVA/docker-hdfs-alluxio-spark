@@ -33,6 +33,9 @@ oc set build-secret --source bc/has-alluxio sshsecret
 oc new-build ${REPO} --context-dir="spark" --name="has-spark"
 oc set build-secret --source bc/has-spark sshsecret
 
+oc create -f hdfs-deploy.yaml
+
+
 # HDFS ports
 # MASTER 8020, 8022, 50070, 
 # SLAVES 50010, 50075, 50020
