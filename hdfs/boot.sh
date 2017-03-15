@@ -20,9 +20,7 @@ set +o nounset
 
 HADOOP_PREFIX=/opt/hadoop
 HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
-echo Running as $USER
-
-mkdir -p ${HADOOP_PREFIX}/logs
+echo Running as `id`
 
 name_node() {
 	local action="$1"
