@@ -17,6 +17,8 @@ oc new-project "${PROJECT}"
 # Upload ssh key to access the git using ssh://
 oc secrets new-sshauth sshsecret --ssh-privatekey=$HOME/.ssh/id_rsa
 
+oc create -f oc-imagestream-openjdk.yaml
+
 oc create -f oc-imagestream-hdfs.yaml
 oc create -f oc-build-hdfs.yaml
 
