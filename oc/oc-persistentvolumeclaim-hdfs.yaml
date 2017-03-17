@@ -1,0 +1,12 @@
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "has-hdfs-storage"
+spec:
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: "1000MiB"
+  volumeName: "has-hdfs-storage"
+  
