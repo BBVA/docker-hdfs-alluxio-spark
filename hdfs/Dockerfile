@@ -10,7 +10,7 @@ RUN mkdir -p /opt/hadoop && tar zxf /tmp/hadoop-2.7.3.tar.gz --strip-components=
 RUN mkdir -p /opt/hadoop/logs 
 RUN chmod -R g+rw /opt/hadoop
 
-RUN echo pollengorden:x:1000050000:0:root:::/bin/false >> /etc/passwd
+RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
 
 WORKDIR /
 ADD boot.sh /

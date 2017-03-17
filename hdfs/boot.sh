@@ -10,10 +10,14 @@ set -o errtrace
 
 node="$1"
 action="$2"
-cluster_name="$3"
+
 
 set +o nounset
 
+if [ "${cluster_name}z" == "z" ]; then
+	cluster_name=${HOSTNAME}
+fi
+cluster_name="$3"
 
 # https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
 
