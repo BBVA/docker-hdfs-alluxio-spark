@@ -12,6 +12,9 @@ RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.0-bin-hadoop2.7.tgz  --strip-c
 WORKDIR /opt/spark/jars
 RUN wget --quiet ${ALLUXIO_SPARK_URL}
 
+RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
+EXPOSE 7077 6066 8080 35000 8081
+
 WORKDIR /
 ADD boot.sh /
 ADD configure.py /

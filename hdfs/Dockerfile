@@ -11,6 +11,7 @@ RUN mkdir -p /opt/hadoop/logs
 RUN chmod -R g+rw /opt/hadoop
 
 RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
+EXPOSE 8020 8022 50070 50010 50075 50020
 
 WORKDIR /
 ADD boot.sh /
