@@ -12,6 +12,5 @@ RUN chmod -R g+rw /opt/hadoop
 
 WORKDIR /
 ADD boot.sh /
-ADD configure.py /
 
 ENTRYPOINT ["/boot.sh"]

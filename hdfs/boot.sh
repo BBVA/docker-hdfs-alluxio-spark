@@ -169,12 +169,16 @@ config() {
 	local file="${1}"
 	shift
 	local conf=("${@}")
+	echo "<configuration>" > ${file}
 	for p in "${conf[@]}"; do
 		prop=$(echo ${p} | cut -f 1 -d '=')
 		val=$(echo ${p} | cut -f 2 -d '=')
 		echo "$file: $prop = $val"
-		./configure.py $file ${prop} ${val}
+		echo "<property>" >> ${file}
+		echo "<name>${prop}</name><value>${val}</value>" >> ${file}
+		echo "</property>" >> ${file}
 	done
+	echo "</configuration>" >> ${file} 
 }
 
 get_value_var() {
