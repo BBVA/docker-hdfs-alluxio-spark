@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: hdfs-namenode
+  annotations:
+    description: HDFS cluster
+    tags: networking,storage
+
+parameters:
+  - name: STORAGE
+    value: "1Gi"
+    description: Storage assigned to the node
+    required: true
+  - name: IMAGE
+    value: "hdfs"
+    description: HAS HDFS Docker image
+    required: true
+
+objects:
+
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: hdfs-namenode-storage
+      namespace: has
+    spec:
+      accessModes:
+      - ReadWriteMany
+      resources:
+        requests:
+          storage: ${STORAGE}
+      volumeName: hp-pv
+
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: hdfs-namenode
+      namespace: has
+      labels:
+        app: hdfs-namenode
+    spec:
+      strategy:
+        type: Rolling
+        rollingParams:
+          updatePeriodSeconds: 1
+          intervalSeconds: 1
+          timeoutSeconds: 600
+          maxUnavailable: 25%
+          maxSurge: 25%
+        resources: {}
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - hdfs-namenode
+            from:
+              kind: ImageStreamTag
+              namespace: has
+              name: 'hdfs:latest'
+      replicas: 1
+      test: false
+      selector:
+        app: hdfs-namenode
+        deploymentconfig: hdfs-namenode
+      template:
+        metadata:
+          labels:
+            app: hdfs-namenode
+            deploymentconfig: hdfs-namenode
+        spec:
+          volumes:
+            - name: hdfs-namenode-storage
+              persistentVolumeClaim:
+                claimName: hdfs-namenode-storage
+          containers:
+            - name: hdfs-namenode
+              image: ${IMAGE}
+              resources: {}
+              args:
+                - namenode
+                - start
+              volumeMounts:
+                - name: hdfs-namenode-storage
+                  mountPath: /data
+              terminationMessagePath: /dev/termination-log
+              imagePullPolicy: Always
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}

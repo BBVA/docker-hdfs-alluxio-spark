@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-# basic project data
-export PROJECT="has"
-export REPO="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
 
+
+
+# basic project data
+export project="has"
+export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
+export secretname="sshcert"
 
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 oc login -u system:admin
@@ -12,26 +15,25 @@ oc create -f oc-persistentvolume-hostpath.yaml
 
 oc login -u developer
 # Create new oc project
-oc new-project "${PROJECT}"
+oc new-project "${project}"
 
 # Upload ssh key to access the git using ssh://
-oc secrets new-sshauth sshsecret --ssh-privatekey=$HOME/.ssh/id_rsa
+oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
-oc create -f oc-imagestream-openjdk.yaml
 
-oc create -f oc-imagestream-hdfs.yaml
-oc create -f oc-build-hdfs.yaml
 
-oc create -f oc-persistentvolumeclaim-hdfs.yaml
-oc create -f oc-deploy-hdfs.yaml
+for c in "hdfs" "alluxio" "spark"; do
+    oc process -v REPOSITORY=${repository} \
+                -v CONTEXTDIR="${c}" \
+                -v SECRETNAME="${secretname}" \
+                -v ID="${c}" \
+                -f oc-build-has.yaml | oc create -f -
+done
 
-# oc create -f oc-imagestream-alluxio.yaml
-# oc create -f oc-build-alluxio.yaml
-
-# oc create -f oc-imagestream-spark.yaml
-# oc create -f oc-build-spark.yaml
-
-# oc create -f hdfs-deploy.yaml
+set -e
+ 
+image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+oc process -v IMAGE=${image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
 
 # HDFS ports
