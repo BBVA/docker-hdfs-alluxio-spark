@@ -10,6 +10,5 @@ RUN mkdir -p /opt/alluxio && tar zxf /tmp/alluxio-1.4.0-hadoop2.7-bin.tar.gz --s
 
 WORKDIR /
 ADD boot.sh /
-ADD configure.py /
 
 ENTRYPOINT ["/boot.sh"]
