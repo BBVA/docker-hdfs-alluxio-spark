@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: has-hdfs
+  namespace: has
+spec:
+  triggers:
+    - type: ConfigChange
+  runPolicy: Serial
+  source:
+    type: Git
+    git:
+      uri: >-
+        ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git
+    contextDir: hdfs
+    sourceSecret:
+      name: sshsecret
+  strategy:
+    type: Docker
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'has-hdfs:latest'

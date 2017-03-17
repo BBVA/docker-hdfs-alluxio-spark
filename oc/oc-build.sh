@@ -8,32 +8,25 @@ export REPO="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spa
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 oc login -u system:admin
 
-oc create -f oc-pv-hp.yaml
+oc create -f oc-persistentvolume-hostpath.yaml
 
 oc login -u developer
 # Create new oc project
-oc new-project ${ṔROJECT}
+oc new-project "${PROJECT}"
 
 # Upload ssh key to access the git using ssh://
 oc secrets new-sshauth sshsecret --ssh-privatekey=$HOME/.ssh/id_rsa
 
-# Create new build from the repo url for hdfs docker image
-oc new-build ${REPO} --context-dir="hdfs" --name="has-hdfs" 
+oc create -f oc-imagestream-hdfs.yaml
+oc create -f oc-build-hdfs.yaml
 
-# set source secret, beware new-build --build-secrets is not 
-# the same as source secret, and if set incorrectly, images
-# couldn't be pushed to the internal registry. Lets OC handle those
-# default secrets
-oc set build-secret --source bc/has-hdfs sshsecret
+# oc create -f oc-imagestream-alluxio.yaml
+# oc create -f oc-build-alluxio.yaml
 
-# Same process for alluxio and spark images
-oc new-build ${REPO} --context-dir="alluxio" --name="has-alluxio" 
-oc set build-secret --source bc/has-alluxio sshsecret
+# oc create -f oc-imagestream-spark.yaml
+# oc create -f oc-build-spark.yaml
 
-oc new-build ${REPO} --context-dir="spark" --name="has-spark"
-oc set build-secret --source bc/has-spark sshsecret
-
-oc create -f hdfs-deploy.yaml
+# oc create -f hdfs-deploy.yaml
 
 
 # HDFS ports

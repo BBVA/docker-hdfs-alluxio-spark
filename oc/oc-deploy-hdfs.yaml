@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: DeploymentConfig
 metadata:
-  name: has-hdfs
+  name: has-hdfs-namenode
   namespace: has
   labels:
-    app: has-hdfs
+    app: has-hdfs-namenode
 spec:
   strategy:
     type: Rolling
@@ -26,33 +26,31 @@ spec:
           kind: ImageStreamTag
           namespace: has
           name: 'has-hdfs:latest'
-        lastTriggeredImage: >-
-          172.30.124.123:5000/has/has-hdfs@sha256:bba5e06be5307f9c99fd1c0fe01d6622183ff50754880df359a262a6f19a4eda
   replicas: 1
   test: false
   selector:
-    app: has-hdfs
-    deploymentconfig: has-hdfs
+    app: has-hdfs-namenode
+    deploymentconfig: has-hdfs-namenode
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: has-hdfs
-        deploymentconfig: has-hdfs
+        app: has-hdfs-namenode
+        deploymentconfig: has-hdfs-namenode
     spec:
       volumes:
         - name: has-hdfs-storage
           persistentVolumeClaim:
             claimName: has-hdfs-storage
       containers:
-        - name: has-hdfs
+        - name: has-hdfs-namenode
           image: >-
-            172.30.124.123:5000/has/has-hdfs@sha256:bba5e06be5307f9c99fd1c0fe01d6622183ff50754880df359a262a6f19a4eda
+            172.30.124.123:5000/has/has-hdfs:latest
           resources: {}
           args:
             - namenode
             - start
-            - namenode
+            - has-hdfs-namenode
           volumeMounts:
             - name: has-hdfs-storage
               mountPath: /data
