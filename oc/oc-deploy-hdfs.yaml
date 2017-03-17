@@ -45,7 +45,7 @@ spec:
       containers:
         - name: has-hdfs-namenode
           image: >-
-            172.30.124.123:5000/has/has-hdfs:latest
+            172.30.12.13:5000/has/has-hdfs:latest
           resources: {}
           args:
             - namenode
