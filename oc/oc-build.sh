@@ -22,6 +22,9 @@ oc create -f oc-imagestream-openjdk.yaml
 oc create -f oc-imagestream-hdfs.yaml
 oc create -f oc-build-hdfs.yaml
 
+oc create -f oc-persistentvolumeclaim-hdfs.yaml
+oc create -f oc-deploy-hdfs.yaml
+
 # oc create -f oc-imagestream-alluxio.yaml
 # oc create -f oc-build-alluxio.yaml
 
