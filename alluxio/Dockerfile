@@ -1,4 +1,4 @@
-FROM openjdk:9-jre
+FROM openjdk:8-jre
 
 ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-hadoop2.7-bin.tar.gz
 

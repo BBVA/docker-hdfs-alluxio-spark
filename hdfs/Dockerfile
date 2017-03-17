@@ -1,4 +1,4 @@
-FROM openjdk:9-jre
+FROM openjdk:8-jre
 
 ENV HADOOP_URL=http://apache.rediris.es/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 
