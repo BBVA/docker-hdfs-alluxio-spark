@@ -17,6 +17,5 @@ EXPOSE 7077 6066 8080 35000 8081
 
 WORKDIR /
 ADD boot.sh /
-ADD configure.py /
 
 ENTRYPOINT ["/boot.sh"]
