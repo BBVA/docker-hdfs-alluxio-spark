@@ -10,6 +10,7 @@ RUN mkdir -p /opt/alluxio && tar zxf /tmp/alluxio-1.4.0-hadoop2.7-bin.tar.gz --s
 
 RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
 RUN chown -R root.root /opt/alluxio
+RUN chmmod g+rwx /opt/alluxio
 EXPOSE 19999 19998 29998 29999 30000
 
 WORKDIR /
