@@ -10,7 +10,7 @@ set -o errtrace
 
 node="$1"
 action="$2"
-
+cluster_name="$3"
 
 set +o nounset
 
