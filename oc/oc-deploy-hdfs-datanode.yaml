@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: hdfs-namenode
+  name: hdfs-datanode
   annotations:
     description: HDFS cluster
     tags: networking,storage
@@ -21,7 +21,7 @@ objects:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: hdfs-namenode-storage
+      name: hdfs-datanode-storage
       namespace: has
     spec:
       accessModes:
@@ -29,16 +29,16 @@ objects:
       resources:
         requests:
           storage: ${STORAGE}
-      volumeName: hdfs-namenode-storage
+      volumeName: hdfs-datanode-storage
 
 
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
-      name: hdfs-namenode
+      name: hdfs-datanode
       namespace: has
       labels:
-        app: hdfs-namenode
+        app: hdfs-datanode
     spec:
       strategy:
         type: Rolling
@@ -55,7 +55,7 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - hdfs-namenode
+              - hdfs-datanode
             from:
               kind: ImageStreamTag
               namespace: has
@@ -63,27 +63,30 @@ objects:
       replicas: 1
       test: false
       selector:
-        app: hdfs-namenode
-        deploymentconfig: hdfs-namenode
+        app: hdfs-datanode
+        deploymentconfig: hdfs-datanode
       template:
         metadata:
           labels:
-            app: hdfs-namenode
-            deploymentconfig: hdfs-namenode
+            app: hdfs-datanode
+            deploymentconfig: hdfs-datanode
         spec:
           volumes:
-            - name: hdfs-namenode-storage
+            - name: hdfs-datanode-storage
               persistentVolumeClaim:
-                claimName: hdfs-namenode-storage
+                claimName: hdfs-datanode-storage
           containers:
-            - name: hdfs-namenode
+            - name: hdfs-datanode
               image: ${IMAGE}
               resources: {}
+              environment:
+                - cluster-name="hdfs-namenode"
               args:
-                - namenode
+                - datanode
                 - start
+                - hdfs-namenode
               volumeMounts:
-                - name: hdfs-namenode-storage
+                - name: hdfs-datanode-storage
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -95,35 +98,35 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: hdfs-namenode
+      name: hdfs-datanode
     spec:
       selector:
-        app: "hdfs-namenode"
+        app: "hdfs-datanode"
       ports:
-        - name: fs-default-name
+        - name: dfs-datanode-address
           protocol: TCP
-          port: 8020
-          targetPort: 8020
-        - name: dfs-namenode-servicerpc-address
+          port: 50010
+          targetPort: 50010
+        - name: dfs-datanode-http-address
           protocol: TCP
-          port: 8022
-          targetPort: 8022
-        - name: dfs-http-address
+          port: 50075
+          targetPort: 50075
+        - name: dfs-datanode-ipc-address
           protocol: TCP
-          port: 50070
-          targetPort: 50070
+          port: 50020
+          targetPort: 50020
 
   - apiVersion: v1
     kind: Route
     metadata:
-       name: hdfs-namenode-dashboard
-       namespace: has
-    spec:
-       to:
-         kind: Service
-         name: hdfs-namenode
-         weight: 100
-       port:
-         targetPort: dfs-http-address
-       wildcardPolicy: None
+      name: hdfs-datanode-dashboard
+      namespace: has
+      spec:
+        to:
+          kind: Service
+          name: hdfs-datanode
+          weight: 100
+        port:
+          targetPort: dfs-datanode-http-address
+        wildcardPolicy: None
 

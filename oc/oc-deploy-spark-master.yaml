@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: hdfs-namenode
+  name: spark-master
   annotations:
-    description: HDFS cluster
+    description: Sparm cluster master
     tags: networking,storage
 
 parameters:
@@ -12,8 +12,8 @@ parameters:
     description: Storage assigned to the node
     required: true
   - name: IMAGE
-    value: "hdfs"
-    description: HAS HDFS Docker image
+    value: "spark"
+    description: HAS spark Docker image
     required: true
 
 objects:
@@ -21,7 +21,7 @@ objects:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: hdfs-namenode-storage
+      name: spark-master-storage
       namespace: has
     spec:
       accessModes:
@@ -29,16 +29,16 @@ objects:
       resources:
         requests:
           storage: ${STORAGE}
-      volumeName: hdfs-namenode-storage
+      volumeName: spark-master-storage
 
 
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
-      name: hdfs-namenode
+      name: spark-master
       namespace: has
       labels:
-        app: hdfs-namenode
+        app: spark-master
     spec:
       strategy:
         type: Rolling
@@ -55,35 +55,35 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - hdfs-namenode
+              - spark-master
             from:
               kind: ImageStreamTag
               namespace: has
-              name: 'hdfs:latest'
+              name: 'spark:latest'
       replicas: 1
       test: false
       selector:
-        app: hdfs-namenode
-        deploymentconfig: hdfs-namenode
+        app: spark-master
+        deploymentconfig: spark-master
       template:
         metadata:
           labels:
-            app: hdfs-namenode
-            deploymentconfig: hdfs-namenode
+            app: spark-master
+            deploymentconfig: spark-master
         spec:
           volumes:
-            - name: hdfs-namenode-storage
+            - name: spark-master-storage
               persistentVolumeClaim:
-                claimName: hdfs-namenode-storage
+                claimName: spark-master-storage
           containers:
-            - name: hdfs-namenode
+            - name: spark-master
               image: ${IMAGE}
               resources: {}
               args:
-                - namenode
+                - master
                 - start
               volumeMounts:
-                - name: hdfs-namenode-storage
+                - name: spark-master-storage
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -95,35 +95,31 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: hdfs-namenode
+      name: spark-master
     spec:
       selector:
-        app: "hdfs-namenode"
+        app: "spark-master"
       ports:
-        - name: fs-default-name
+        - name: spark-master-service
           protocol: TCP
-          port: 8020
-          targetPort: 8020
-        - name: dfs-namenode-servicerpc-address
+          port: 7077
+          targetPort: 7077
+        - name: spark-master-ui
           protocol: TCP
-          port: 8022
-          targetPort: 8022
-        - name: dfs-http-address
-          protocol: TCP
-          port: 50070
-          targetPort: 50070
+          port: 8080
+          targetPort: 8080
 
   - apiVersion: v1
     kind: Route
     metadata:
-       name: hdfs-namenode-dashboard
-       namespace: has
+      name: spark-master-dashboard
+      namespace: has
     spec:
-       to:
-         kind: Service
-         name: hdfs-namenode
-         weight: 100
-       port:
-         targetPort: dfs-http-address
-       wildcardPolicy: None
+      to:
+          kind: Service
+          name: spark-master
+          weight: 100
+      port:
+          targetPort: spark-master-ui
+      wildcardPolicy: None
 

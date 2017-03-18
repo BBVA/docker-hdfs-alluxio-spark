@@ -11,17 +11,18 @@ export secretname="sshcert"
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 oc login -u system:admin
 
-oc create -f oc-persistentvolume-hostpath.yaml
+# Create persisten volumes
+oc process -f  oc-persistentvolume-hostpath.yaml | oc create -f -
 
 oc login -u developer
+
 # Create new oc project
 oc new-project "${project}"
 
 # Upload ssh key to access the git using ssh://
 oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
-
-
+# Create builds for each docker image
 for c in "hdfs" "alluxio" "spark"; do
     oc process -v REPOSITORY=${repository} \
                 -v CONTEXTDIR="${c}" \
@@ -29,12 +30,23 @@ for c in "hdfs" "alluxio" "spark"; do
                 -v ID="${c}" \
                 -f oc-build-has.yaml | oc create -f -
 done
-
-set -e
  
-image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }} --namespace ${project}")
-oc process -v IMAGE=${image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
+ # Deploy HDFS namenode 
+hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+oc process -v IMAGE=${hdfs_image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
+
+# Deploy Alluxio master
+alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+oc process -v IMAGE=${alluxio_image} -v STORAGE="1Gi" -f "oc-deploy-alluxio-master.yaml" | oc create -f -
+
+
+# Deploy Spark master
+spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+oc process -v IMAGE=${spark_image} -v STORAGE="1Gi" -f "oc-deploy-spark-master.yaml" | oc create -f -
+
+
+# oc process -v IMAGE=${image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-datanode.yaml" | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070, 

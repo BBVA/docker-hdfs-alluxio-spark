@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: hdfs-namenode
+  name: alluxio-master
   annotations:
     description: HDFS cluster
     tags: networking,storage
@@ -12,8 +12,8 @@ parameters:
     description: Storage assigned to the node
     required: true
   - name: IMAGE
-    value: "hdfs"
-    description: HAS HDFS Docker image
+    value: "alluxio"
+    description: HAS Alluxio Docker image
     required: true
 
 objects:
@@ -21,7 +21,7 @@ objects:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: hdfs-namenode-storage
+      name: alluxio-master-storage
       namespace: has
     spec:
       accessModes:
@@ -29,16 +29,16 @@ objects:
       resources:
         requests:
           storage: ${STORAGE}
-      volumeName: hdfs-namenode-storage
+      volumeName: alluxio-master-storage
 
 
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
-      name: hdfs-namenode
+      name: alluxio-master
       namespace: has
       labels:
-        app: hdfs-namenode
+        app: alluxio-master
     spec:
       strategy:
         type: Rolling
@@ -55,7 +55,7 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - hdfs-namenode
+              - alluxio-master
             from:
               kind: ImageStreamTag
               namespace: has
@@ -63,27 +63,27 @@ objects:
       replicas: 1
       test: false
       selector:
-        app: hdfs-namenode
-        deploymentconfig: hdfs-namenode
+        app: alluxio-master
+        deploymentconfig: alluxio-master
       template:
         metadata:
           labels:
-            app: hdfs-namenode
-            deploymentconfig: hdfs-namenode
+            app: alluxio-master
+            deploymentconfig: alluxio-master
         spec:
           volumes:
-            - name: hdfs-namenode-storage
+            - name: alluxio-master-storage
               persistentVolumeClaim:
-                claimName: hdfs-namenode-storage
+                claimName: alluxio-master-storage
           containers:
-            - name: hdfs-namenode
+            - name: alluxio-master
               image: ${IMAGE}
               resources: {}
               args:
-                - namenode
+                - master
                 - start
               volumeMounts:
-                - name: hdfs-namenode-storage
+                - name: alluxio-master-storage
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -95,35 +95,31 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: hdfs-namenode
+      name: alluxio-master
     spec:
       selector:
-        app: "hdfs-namenode"
+        app: "alluxio-master"
       ports:
-        - name: fs-default-name
+        - name: alluxio-master-ui
           protocol: TCP
-          port: 8020
-          targetPort: 8020
-        - name: dfs-namenode-servicerpc-address
+          port: 19999
+          targetPort: 19999
+        - name: alluxio-master-service
           protocol: TCP
-          port: 8022
-          targetPort: 8022
-        - name: dfs-http-address
-          protocol: TCP
-          port: 50070
-          targetPort: 50070
+          port: 19998
+          targetPort: 19998
 
   - apiVersion: v1
     kind: Route
     metadata:
-       name: hdfs-namenode-dashboard
-       namespace: has
+      name: alluxio-master-dashboard
+      namespace: has
     spec:
-       to:
-         kind: Service
-         name: hdfs-namenode
-         weight: 100
-       port:
-         targetPort: dfs-http-address
-       wildcardPolicy: None
+      to:
+          kind: Service
+          name: alluxio-master
+          weight: 100
+      port:
+          targetPort: alluxio-master-ui
+      wildcardPolicy: None
 
