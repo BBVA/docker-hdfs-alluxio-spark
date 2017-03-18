@@ -28,7 +28,8 @@ export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
 
 # export SPARK_MASTER_HOST=${SPARK_MASTER_HOST:-"spark-master"}
-export SPARK_MASTER_PORT=${SPARK_MASTER_PORT:-7077}
+# SPARK_MASTER_PORT is also defined by openshift to a value incompatible 
+export SPARK_MASTER_PORT=7077
 export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT:-8080}
 
 export SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-"1g"}
