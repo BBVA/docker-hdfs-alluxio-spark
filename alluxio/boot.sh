@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cluster_name="$3"
+
 set -o errexit
 set -o pipefail
 set -o nounset
@@ -10,7 +12,12 @@ set -o errtrace
 
 node="$1"
 action="$2"
-cluster_name="$3"
+
+set +o nounset
+
+if [ "${cluster_name}z" == "z" ]; then
+	cluster_name=${HOSTNAME}
+fi
 
 # http://www.alluxio.org/docs/1.4/en/Configuration-Settings.html
 
