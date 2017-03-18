@@ -13,6 +13,8 @@ WORKDIR /opt/spark/jars
 RUN wget --quiet ${ALLUXIO_SPARK_URL}
 
 RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
+RUN chown -R root.root /opt/spark
+RUN chmod g+rwx /opt/spark
 EXPOSE 7077 6066 8080 35000 8081
 
 WORKDIR /
