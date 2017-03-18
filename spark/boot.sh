@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cluster_name="$3"
+
 set -o errexit
 set -o pipefail
 set -o nounset
@@ -11,6 +13,12 @@ set -o errtrace
 node="$1"
 action="$2"
 
+
+if [ "${cluster_name}z" == "z" ]; then
+	cluster_name=${HOSTNAME}
+fi
+SPARK_MASTER_HOST=${cluster_name}
+
 set +o nounset
 
 # https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
@@ -19,7 +27,7 @@ set +o nounset
 export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
 
-export SPARK_MASTER_HOST=${SPARK_MASTER_HOST:-"spark-master"}
+# export SPARK_MASTER_HOST=${SPARK_MASTER_HOST:-"spark-master"}
 export SPARK_MASTER_PORT=${SPARK_MASTER_PORT:-7077}
 export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT:-8080}
 
