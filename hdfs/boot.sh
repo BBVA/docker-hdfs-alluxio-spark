@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
+# Optional varaible
+cluster_name="$3"
+
 set -o errexit
 set -o pipefail
 set -o nounset
 set -o errtrace
 
 
-# main script params
-
+# main script mandatory params
 node="$1"
 action="$2"
-cluster_name="$3"
+
 
 set +o nounset
 
