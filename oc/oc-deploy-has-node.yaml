@@ -1,31 +1,39 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: hdfs-datanode
+  name: has-node
   annotations:
     description: HDFS cluster
     tags: networking,storage
 
 parameters:
   - name: ID
-    value: 1
+    value: "1"
     description: Node ID
     required: true
   - name: STORAGE
     value: "1Gi"
     description: Storage assigned to the node
     required: true
-  - name: IMAGE
+  - name: IMAGE_HDFS
     value: "hdfs"
     description: HAS HDFS Docker image
     required: true
-
+  - name: IMAGE_ALLUXIO
+    value: "alluxio"
+    description: HAS Alluxio Docker image
+    required: true
+  - name: IMAGE_SPARK
+    value: "spark"
+    description: HAS Spark Docker image
+    required: true
+  
 objects:
 
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: hdfs-datanode-storage-${ID}
+      name: has-node-storage-${ID}
       namespace: has
     spec:
       accessModes:
@@ -33,16 +41,16 @@ objects:
       resources:
         requests:
           storage: ${STORAGE}
-      volumeName: hdfs-datanode-storage
+      volumeName: has-node-storage-${ID}
 
 
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
-      name: hdfs-datanode-${ID}
+      name: has-node-${ID}
       namespace: has
       labels:
-        app: hdfs-datanode-${ID}
+        app: has-node-${ID}
     spec:
       strategy:
         type: Rolling
@@ -59,7 +67,7 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - hdfs-datanode
+              - has-node
             from:
               kind: ImageStreamTag
               namespace: has
@@ -67,20 +75,20 @@ objects:
       replicas: 1
       test: false
       selector:
-        app: hdfs-datanode-${ID}
-        deploymentconfig: hdfs-datanode-${ID}
+        app: has-node-${ID}
+        deploymentconfig: has-node-${ID}
       template:
         metadata:
           labels:
-            app: hdfs-datanode-${ID}
-            deploymentconfig: hdfs-datanode-${ID}
+            app: has-node-${ID}
+            deploymentconfig: has-node-${ID}
         spec:
           volumes:
-            - name: hdfs-datanode-storage-${ID}
+            - name: has-node-storage-${ID}
               persistentVolumeClaim:
-                claimName: hdfs-datanode-storage
+                claimName: has-node-storage-${ID}
           containers:
-            - name: hdfs-datanode
+            - name: hdfs-node-${ID}
               image: ${IMAGE_HDFS}
               resources: {}
               args:
@@ -88,11 +96,11 @@ objects:
                 - start
                 - hdfs-namenode
               volumeMounts:
-                - name: hdfs-datanode-storage-${ID}
+                - name: has-node-storage-${ID}
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
-            - name: alluxio-worker
+            - name: alluxio-worker-${ID}
               image: ${IMAGE_ALLUXIO}
               resources: {}
               args:
@@ -100,11 +108,11 @@ objects:
                 - start
                 - alluxio-master
               volumeMounts:
-                - name: hdfs-datanode-storage-${ID}
+                - name: has-node-storage-${ID}
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
-            - name: spark-worker
+            - name: spark-worker-${ID}
               image: ${IMAGE_SPARK}
               resources: {}
               args:
@@ -112,7 +120,7 @@ objects:
                 - start
                 - spark-master
               volumeMounts:
-                - name: hdfs-datanode-storage-${ID}
+                - name: has-node-storage-${ID}
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -124,10 +132,10 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: hdfs-datanode-${ID}
+      name: has-node-${ID}
     spec:
       selector:
-        app: hdfs-datanode-${ID}
+        app: has-node-${ID}
       ports:
         - name: dfs-datanode-address
           protocol: TCP
@@ -161,21 +169,23 @@ objects:
           protocol: TCP
           port: 8081
           targetPort: 8081
-        - name: spark-worker-service
+        - name: spark-worker-service-bis
           protocol: TCP
           port: 6066
           targetPort: 6066
+
   - apiVersion: v1
     kind: Route
     metadata:
-      name: hdfs-datanode-dashboard-${ID}
+      name: has-node-${ID}
       namespace: has
-      spec:
-        to:
-          kind: Service
-          name: hdfs-datanode
-          weight: 100
-        port:
-          targetPort: dfs-datanode-http-address
-        wildcardPolicy: None
+    spec:
+      to:
+        kind: Service
+        name: has-node-${ID}
+        weight: 100
+      port:
+        targetPort: dfs-datanode-http-address
+      wildcardPolicy: None
+
 

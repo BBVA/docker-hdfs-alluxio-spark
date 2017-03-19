@@ -32,21 +32,21 @@ for c in "hdfs" "alluxio" "spark"; do
 done
  
  # Deploy HDFS namenode 
-hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -v IMAGE=${hdfs_image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
 
 # Deploy Alluxio master
-alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -v IMAGE=${alluxio_image} -v STORAGE="1Gi" -f "oc-deploy-alluxio-master.yaml" | oc create -f -
 
 
 # Deploy Spark master
-spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }} --namespace ${project}")
+export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -v IMAGE=${spark_image} -v STORAGE="1Gi" -f "oc-deploy-spark-master.yaml" | oc create -f -
 
-
-# oc process -v IMAGE=${image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-datanode.yaml" | oc create -f -
+# Deploy a single worker 0
+oc process -v ID=0 -v IMAGE_SPARK="${spark_image}" -v IMAGE_ALLUXIO="${alluxio_image}" -v IMAGE_HDFS="${hdfs_image}" -v STORAGE="1Gi" -f "oc-deploy-has-node.yaml" | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070, 
