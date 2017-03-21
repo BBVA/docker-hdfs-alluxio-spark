@@ -67,7 +67,7 @@ slave_node() {
 	
 	case $action in
 		start)
-			${SPARK_HOME}/sbin/start-slave.sh --host ${HOSTNAME} spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+			${SPARK_HOME}/sbin/start-slave.sh --host $(hostname -f) spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
 			;;
 		stop)
 			${SPARK_HOME}/sbin/stop-slave.sh
