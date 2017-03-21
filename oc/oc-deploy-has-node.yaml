@@ -96,8 +96,11 @@ objects:
                 - start
                 - hdfs-namenode
               volumeMounts:
-                - name: has-node-storage-${ID}
+                - name: hdfs-node-storage-${ID}
                   mountPath: /data
+              volumes:
+                - name: hdfs-node-storage-${ID}
+                  emptyDir: {}
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
             - name: alluxio-worker-${ID}
@@ -108,8 +111,11 @@ objects:
                 - start
                 - alluxio-master
               volumeMounts:
-                - name: has-node-storage-${ID}
+                - name: alluxio-node-storage-${ID}
                   mountPath: /data
+              volumes:
+                - name: alluxio-node-storage-${ID}
+                  emptyDir: {}
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
             - name: spark-worker-${ID}
@@ -120,8 +126,11 @@ objects:
                 - start
                 - spark-master
               volumeMounts:
-                - name: has-node-storage-${ID}
+                - name: spark-node-storage-${ID}
                   mountPath: /data
+              volumes:
+                - name: spark-node-storage-${ID}
+                  emptyDir: {}
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
           restartPolicy: Always

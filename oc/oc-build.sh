@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-
-
-
 # basic project data
 export project="has"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
@@ -31,7 +28,7 @@ for c in "hdfs" "alluxio" "spark"; do
                 -f oc-build-has.yaml | oc create -f -
 done
  
- # Deploy HDFS namenode 
+# Deploy HDFS namenode 
 export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -v IMAGE=${hdfs_image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 

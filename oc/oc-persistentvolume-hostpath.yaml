@@ -13,22 +13,7 @@ objects:
       name: hdfs-namenode-storage
     spec:
       capacity:
-        storage: 5Gi 
-      accessModes:
-      - ReadWriteOnce 
-      - ReadWriteMany
-      - ReadOnlyMany
-      hostPath: 
-        path: /tmp/
-      persistentVolumeReclaimPolicy: Recycle
-
-  - apiVersion: v1
-    kind: PersistentVolume
-    metadata:
-      name: hdfs-datanode-storage
-    spec:
-      capacity:
-        storage: 5Gi 
+        storage: 10Gi 
       accessModes:
       - ReadWriteOnce 
       - ReadWriteMany
@@ -40,10 +25,10 @@ objects:
   - apiVersion: v1
     kind: PersistentVolume
     metadata:
-      name: worker-storage
+      name: alluxio-master-storage
     spec:
       capacity:
-        storage: 5Gi 
+        storage: 10Gi 
       accessModes:
       - ReadWriteOnce 
       - ReadWriteMany
@@ -55,10 +40,10 @@ objects:
   - apiVersion: v1
     kind: PersistentVolume
     metadata:
-      name: node-storage
+      name: spark-master-storage
     spec:
       capacity:
-        storage: 5Gi 
+        storage: 10Gi 
       accessModes:
       - ReadWriteOnce 
       - ReadWriteMany
