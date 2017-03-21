@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: alluxio-master
   annotations:
-    description: HDFS cluster
+    description: Alluxio cluster
     tags: networking,storage
 
 parameters:
@@ -59,7 +59,7 @@ objects:
             from:
               kind: ImageStreamTag
               namespace: has
-              name: 'hdfs:latest'
+              name: 'alluxio:latest'
       replicas: 1
       test: false
       selector:
