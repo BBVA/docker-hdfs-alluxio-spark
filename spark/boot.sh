@@ -67,7 +67,7 @@ slave_node() {
 	
 	case $action in
 		start)
-			${SPARK_HOME}/sbin/start-slave.sh spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+			${SPARK_HOME}/sbin/start-slave.sh --host ${HOSTNAME} spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
 			;;
 		stop)
 			${SPARK_HOME}/sbin/stop-slave.sh
@@ -80,23 +80,6 @@ slave_node() {
 			echo "Action not supported"
 			;;
 	esac
-}
-
-
-get_value_var() {
-	local name="$1"
-	shift
-	local conf="$@"
-	for p in "${conf[@]}"; do
-		prop=$(echo ${p} | cut -f 1 -d '=')
-		val=$(echo ${p} | cut -f 2 -d '=')
-		if [ "${prop}" == "${name}" ]; then
-			echo ${val}
-		else
-		 	echo error reading ${name} variable. Panic
-		 	exit -2
-		fi
-	done
 }
 
 spark_handler() {
