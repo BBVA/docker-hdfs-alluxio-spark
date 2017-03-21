@@ -87,6 +87,8 @@ objects:
             - name: has-node-storage-${ID}
               persistentVolumeClaim:
                 claimName: has-node-storage-${ID}
+          hostname: has-node-${ID}
+          subdomain: has
           containers:
             - name: hdfs-node-${ID}
               image: ${IMAGE_HDFS}
