@@ -42,8 +42,12 @@ oc process -v IMAGE=${alluxio_image} -v STORAGE="1Gi" -f "oc-deploy-alluxio-mast
 export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -v IMAGE=${spark_image} -v STORAGE="1Gi" -f "oc-deploy-spark-master.yaml" | oc create -f -
 
-# Deploy a single worker 0
-oc process -v ID=0 -v IMAGE_SPARK="${spark_image}" -v IMAGE_ALLUXIO="${alluxio_image}" -v IMAGE_HDFS="${hdfs_image}" -v STORAGE="1Gi" -f "oc-deploy-has-node.yaml" | oc create -f -
+# Deploy three workers
+for id in $(seq 1 1 3); do
+    oc process -v ID=${id} -v IMAGE_SPARK="${spark_image}" -v IMAGE_ALLUXIO="${alluxio_image}" -v IMAGE_HDFS="${hdfs_image}" -v STORAGE="1Gi" -f "oc-deploy-has-node.yaml" | oc create -f -
+done
+
+
 
 # HDFS ports
 # MASTER 8020, 8022, 50070, 

@@ -31,20 +31,6 @@ parameters:
 objects:
 
   - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: has-node-storage-${ID}
-      namespace: has
-    spec:
-      accessModes:
-      - ReadWriteMany
-      resources:
-        requests:
-          storage: ${STORAGE}
-      volumeName: has-node-storage-${ID}
-
-
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: has-node-${ID}
@@ -89,6 +75,13 @@ objects:
                 claimName: has-node-storage-${ID}
           hostname: has-node-${ID}
           subdomain: has
+          volumes:
+            - name: hdfs-node-storage-${ID}
+              emptyDir: {}
+            - name: alluxio-node-storage-${ID}
+              emptyDir: {}
+            - name: spark-node-storage-${ID}
+              emptyDir: {}
           containers:
             - name: hdfs-node-${ID}
               image: ${IMAGE_HDFS}
@@ -100,9 +93,6 @@ objects:
               volumeMounts:
                 - name: hdfs-node-storage-${ID}
                   mountPath: /data
-              volumes:
-                - name: hdfs-node-storage-${ID}
-                  emptyDir: {}
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
             - name: alluxio-worker-${ID}
@@ -115,9 +105,6 @@ objects:
               volumeMounts:
                 - name: alluxio-node-storage-${ID}
                   mountPath: /data
-              volumes:
-                - name: alluxio-node-storage-${ID}
-                  emptyDir: {}
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
             - name: spark-worker-${ID}
@@ -130,9 +117,6 @@ objects:
               volumeMounts:
                 - name: spark-node-storage-${ID}
                   mountPath: /data
-              volumes:
-                - name: spark-node-storage-${ID}
-                  emptyDir: {}
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
           restartPolicy: Always
