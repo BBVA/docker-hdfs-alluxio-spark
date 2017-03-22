@@ -63,7 +63,7 @@ objects:
             from:
               kind: ImageStreamTag
               namespace: has
-              name: 'spark:latest'
+              name: 'zeppelin:latest'
       replicas: 1
       test: false
       selector:
