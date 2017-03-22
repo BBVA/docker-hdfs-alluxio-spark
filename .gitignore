@@ -4,3 +4,5 @@ sparky/project/project/target/*
 .idea
 sparky/.idea
 
+data/repo
+out*.csv
