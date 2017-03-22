@@ -20,7 +20,7 @@ oc new-project "${project}"
 oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
 # Create builds for each docker image
-for c in "hdfs" "alluxio" "spark"; do
+for c in "hdfs" "alluxio" "spark" "zeppelin"; do
     oc process -v REPOSITORY=${repository} \
                 -v CONTEXTDIR="${c}" \
                 -v SECRETNAME="${secretname}" \
@@ -47,7 +47,9 @@ for id in $(seq 1 1 3); do
     oc process -v ID=${id} -v IMAGE_SPARK="${spark_image}" -v IMAGE_ALLUXIO="${alluxio_image}" -v IMAGE_HDFS="${hdfs_image}" -v STORAGE="1Gi" -f "oc-deploy-has-node.yaml" | oc create -f -
 done
 
-
+# Deploy a Zeppelin client
+export zeppelin_image=$(oc get is/zeppelin--template="{{ .status.dockerImageRepository }}" --namespace ${project})
+oc process -v IMAGE=${zeppelin_image} -v STORAGE="1Gi" -f "oc-deploy-zeppelin.yaml" | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070, 
