@@ -164,3 +164,16 @@ objects:
           targetPort: zeppelin-ui
       wildcardPolicy: None
 
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: zeppelin-driver
+      namespace: has
+    spec:
+      to:
+          kind: Service
+          name: zeppelin
+          weight: 100
+      port:
+          targetPort: spark-ui
+      wildcardPolicy: None
