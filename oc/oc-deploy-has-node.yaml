@@ -95,6 +95,13 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
+              livenessProbe:
+                # an http probe
+                httpGet:
+                  path: /
+                  port: 50075
+                  initialDelaySeconds: 15
+                  timeoutSeconds: 1
             - name: alluxio-worker-${ID}
               image: ${IMAGE_ALLUXIO}
               resources: {}
@@ -107,6 +114,13 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
+              livenessProbe:
+                # an http probe
+                httpGet:
+                  path: /
+                  port: 30000
+                  initialDelaySeconds: 15
+                  timeoutSeconds: 1
             - name: spark-worker-${ID}
               image: ${IMAGE_SPARK}
               resources: {}
@@ -119,6 +133,13 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
+              livenessProbe:
+                # an http probe
+                httpGet:
+                  path: /
+                  port: 8081
+                  initialDelaySeconds: 15
+                  timeoutSeconds: 1
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst

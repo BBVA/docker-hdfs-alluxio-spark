@@ -87,6 +87,13 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
+              livenessProbe:
+                # an http probe
+                httpGet:
+                  path: /
+                  port: 8080
+                  initialDelaySeconds: 15
+                  timeoutSeconds: 1
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
