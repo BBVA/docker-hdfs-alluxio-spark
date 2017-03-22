@@ -176,6 +176,6 @@ Please read them to use them. Feel free to complete this documentation.
  * simplify the zeppelin configuration, it would be cool to automate it
  * test everything from the very begining and fix any issue
  * test more complex analisys to see if there are any networking issues
+ * make the data upload process easier to the cluster
  * deploy on real cluster
 
- 
