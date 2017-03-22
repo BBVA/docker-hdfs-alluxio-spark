@@ -120,7 +120,7 @@ In order for the spark interpreter to work with this set up, you need to make th
     spark.replClassServer.port, 51300
     spark.blockManager.port, 51400
     spark.executor.port, 51500
-    spark.ui.port,51600
+    spark.ui.port,4040
     alluxio.security.authentication.type, SIMPLE
 
 Add the following artifact to connect to alluxio:
