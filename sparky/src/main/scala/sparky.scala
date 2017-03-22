@@ -3,8 +3,8 @@ import org.apache.spark.SparkConf
 import org.rogach.scallop._
 
 class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
-  val sparkUrl = opt[String](required = true)
-  val alluxioUrl = opt[String](required = true)
+  val spark = opt[String](required = true)
+  val alluxio = opt[String](required = true)
   verify()
 }
 
@@ -13,7 +13,7 @@ object sparky {
     val conf = new Conf(args)
 
     val sparkConf = new SparkConf().setAppName("Simple Application")
-      .setMaster(conf.sparkUrl())
+      .setMaster(conf.spark())
       .set("spark.driver.port", "51000")
       .set("spark.fileserver.port", "51100")
       .set("spark.broadcast.port", "51200")
@@ -23,9 +23,9 @@ object sparky {
       .set("spark.ui.port","51600")
     val sc = new SparkContext(sparkConf)
 
-    val alluxioFile = sc.textFile(conf.alluxioUrl())
+    val alluxioFile = sc.textFile(conf.alluxio())
 
     val n = alluxioFile.count()
-    println("%s:%s".format(conf.alluxioUrl(),n))
+    println("%s:%s".format(conf.alluxio(),n))
   }
 }
