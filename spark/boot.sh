@@ -21,13 +21,9 @@ SPARK_MASTER_HOST=${cluster_name}
 
 set +o nounset
 
-# https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
-
-
 export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
 
-# export SPARK_MASTER_HOST=${SPARK_MASTER_HOST:-"spark-master"}
 # SPARK_MASTER_PORT is also defined by openshift to a value incompatible 
 export SPARK_MASTER_PORT=7077
 export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT:-8080}

@@ -13,7 +13,6 @@ set -o errtrace
 node="$1"
 action="$2"
 
-
 set +o nounset
 
 if [ "${cluster_name}z" == "z" ]; then
@@ -23,11 +22,10 @@ fi
 
 # https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
 
-
 HADOOP_PREFIX=/opt/hadoop
 HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
-echo Running as `id`
 
+# stars a name node
 name_node() {
 	local action="$1"
 	local cluster_name="$2"
@@ -79,98 +77,6 @@ data_node() {
 	esac
 }
 
-resrouce_manager() {
-	local action="$1"
-	local cluster_name="$2"
-	
-	case $action in 
-		start)	
-			# Start the YARN with the following command, run on the designated ResourceManager as yarn:
-			$HADOOP_YARN_HOME/sbin/yarn-daemon.sh --config ${HADOOP_CONF_DIR} start resourcemanager
-		;;
-		stop)
-			# Stop the ResourceManager with the following command, run on the designated ResourceManager as yarn:
-			$HADOOP_YARN_HOME/sbin/yarn-daemon.sh --config ${HADOOP_CONF_DIR} stop resourcemanager
-		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
-		*)
-		echo "Action not supported"
-		;;
-	esac			
-}
-
-node_manger() {
-	local action="$1"
-	local cluster_name="$2"
-	
-	case $action in 
-		start)	
-			# Run a script to start a NodeManager on each designated host as yarn:
-			$HADOOP_YARN_HOME/sbin/yarn-daemon.sh --config ${HADOOP_CONF_DIR} start nodemanager
-		;;
-		stop)
-			# Run a script to stop a NodeManager on a slave as yarn:
-			$HADOOP_YARN_HOME/sbin/yarn-daemon.sh --config ${HADOOP_CONF_DIR} stop nodemanager
-		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
-		*)
-		echo "Action not supported"
-		;;
-	esac			
-}
-
-webproxy_server() {
-	local action="$1"
-	local cluster_name="$2"
-	
-	case $action in 
-		start)	
-			# Start a standalone WebAppProxy server. Run on the WebAppProxy server as yarn. If multiple servers are used with load balancing it should be run on each of them:
-			$HADOOP_YARN_HOME/sbin/yarn-daemon.sh --config ${HADOOP_CONF_DIR} start proxyserver
-		;;
-		stop)
-			# Stop the WebAppProxy server. Run on the WebAppProxy server as yarn. If multiple servers are used with load balancing it should be run on each of them:
-			$HADOOP_YARN_HOME/sbin/yarn-daemon.sh --config ${HADOOP_CONF_DIR} stop proxyserver
-		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
-		*)
-		echo "Action not supported"
-		;;
-	esac					
-}
-
-jobhistory_server() {
-	local action="$1"
-	local cluster_name="$2"
-	
-	case $action in 
-		start)	
-			# Start the MapReduce JobHistory Server with the following command, run on the designated server as mapred:
-			$HADOOP_PREFIX/sbin/mr-jobhistory-daemon.sh --config ${HADOOP_CONF_DIR} start historyserver
-		;;
-		stop)
-			# Stop the MapReduce JobHistory Server with the following command, run on the designated server as mapred:
-			$HADOOP_PREFIX/sbin/mr-jobhistory-daemon.sh --config ${HADOOP_CONF_DIR} stop historyserver
-		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
-		*)
-		echo "Action not supported"
-		;;
-	esac					
-}
-
 config() {
 	local file="${1}"
 	shift
@@ -185,22 +91,6 @@ config() {
 		echo "</property>" >> ${file}
 	done
 	echo "</configuration>" >> ${file} 
-}
-
-get_value_var() {
-	local name="$1"
-	shift
-	local conf="$@"
-	for p in "${conf[@]}"; do
-		prop=$(echo ${p} | cut -f 1 -d '=')
-		val=$(echo ${p} | cut -f 2 -d '=')
-		if [ "${prop}" == "${name}" ]; then
-			echo ${val}
-		else
-		 	echo error reading ${name} variable. Panic
-		 	exit -2
-		fi
-	done
 }
 
 hadoop_handler() {
@@ -219,26 +109,17 @@ hadoop_handler() {
 			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}	
 			data_node ${action} ${cluster_name}
 		;;
-		resourcemanager)
-			resource_manager ${action} ${cluster_name}
-		;;
-		nodemanager)
-			node_manager ${action} ${cluster_name}
-		;;
-		webproxyserver)
-			webproxy_server ${action} ${cluster_name}
-		;;
-		jobhistoryserver)
-			jobhistory_server ${action} ${cluster_name}
+		*)
+			echo This component is not implemented, see boot.sh
 		;;
 	esac
 }
-
 
 shut_down() {
 	echo "Calling shutdown! $1"
 	hadoop_handler ${node} stop ${cluster_name}
 }
+
 
 trap "shut_down sigkill" SIGKILL
 trap "shut_down sigterm" SIGTERM 
@@ -248,7 +129,6 @@ trap "shut_down sigint" SIGINT
 
 
 # default config
-
 core_site_default=(
 	"fs.defaultFS=hdfs://${cluster_name}:8020"
 	"io.file.buffer.size=131072"

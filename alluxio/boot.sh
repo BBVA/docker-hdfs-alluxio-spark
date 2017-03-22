@@ -7,7 +7,6 @@ set -o pipefail
 set -o nounset
 set -o errtrace
 
-
 # main script params
 
 node="$1"
@@ -90,21 +89,6 @@ config() {
 	done
 }
 
-get_value_var() {
-	local name="$1"
-	shift
-	local conf="$@"
-	for p in "${conf[@]}"; do
-		prop=$(echo ${p} | cut -f 1 -d '=')
-		val=$(echo ${p} | cut -f 2 -d '=')
-		if [ "${prop}" == "${name}" ]; then
-			echo ${val}
-		else
-		 	echo error reading ${name} variable. Panic
-		 	exit -2
-		fi
-	done
-}
 
 alluxio_handler() {
 	local node="$1"
@@ -139,7 +123,6 @@ trap "shut_down sighup" SIGHUP
 trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
-echo "The ${node} is swtching to ${action} with ${cluster_name} id"
 config "${ALLUXIO_PREFIX}/conf/alluxio-site.properties" "${default_properties[@]}"
 alluxio_handler ${node} ${action} ${cluster_name}
 
