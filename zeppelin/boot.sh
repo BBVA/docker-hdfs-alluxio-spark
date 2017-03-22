@@ -25,11 +25,12 @@ set +o nounset
 # http://zeppelin.apache.org/docs/0.7.0/install/configuration.html
 
 export ZEPPELIN_PORT=${ZEPPELIN_PORT:-8080}
-export ZEPPELIN_NOTEBOOK_DIR=${ZEPPELIN_NOTEBOOK_DIR:-/data}
+export ZEPPELIN_NOTEBOOK_DIR=${ZEPPELIN_NOTEBOOK_DIR:-/data/zeppelin}
 export ZEPPELIN_NOTEBOOK_PUBLIC=${ZEPPELIN_NOTEBOOK_PUBLIC:-false}
 
 export ZEPPELIN_HOME=/opt/zeppelin
 mkdir -p ${ZEPPELIN_HOME}/logs/
+mkdir -p ${ZEPPELIN_NOTEBOOK_DIR}
 
 master_node() {
 	local action="${1}"
