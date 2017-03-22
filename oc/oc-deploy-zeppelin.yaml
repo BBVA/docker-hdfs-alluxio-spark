@@ -106,7 +106,7 @@ objects:
       selector:
         app: "zeppelin"
       ports:
-        - name: zeppelin-driver
+        - name: spark-ui
           protocol: TCP
           port: 4040
           targetPort: 4040
@@ -118,6 +118,30 @@ objects:
           protocol: TCP
           port: 8080
           targetPort: 8080
+        - name: spark-driver-port
+          protocol: TCP
+          port: 51000
+          targetPort: 51000
+        - name: spark-fileserver-port
+          protocol: TCP
+          port: 51100
+          targetPort: 51100
+        - name: spark-broadcast-port
+          protocol: TCP
+          port: 51200
+          targetPort: 51200
+        - name: spark-replclassserver-port
+          protocol: TCP
+          port: 51300
+          targetPort: 51300
+        - name: spark-blockmanager-port
+          protocol: TCP
+          port: 51400
+          targetPort: 51400
+        - name: spark-executor-port
+          protocol: TCP
+          port: 51500
+          targetPort: 51500
 
   - apiVersion: v1
     kind: Route
