@@ -74,7 +74,6 @@ objects:
               persistentVolumeClaim:
                 claimName: has-node-storage-${ID}
           hostname: has-node-${ID}
-          subdomain: has
           volumes:
             - name: hdfs-node-storage-${ID}
               emptyDir: {}
