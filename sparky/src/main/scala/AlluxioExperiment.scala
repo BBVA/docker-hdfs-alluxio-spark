@@ -1,6 +1,6 @@
 import org.apache.spark.{SparkConf, SparkContext}
 
-object sparky {
+object AlluxioExperiment {
   def main(args: Array[String]) {
     val conf = new Conf(args)
 
@@ -16,8 +16,7 @@ object sparky {
     val sc = new SparkContext(sparkConf)
 
     val alluxioFile = sc.textFile(conf.alluxio())
+    alluxioFile.saveAsTextFile(conf.out())
 
-    val n = alluxioFile.count()
-    println("%s:%s".format(conf.alluxio(), n))
   }
 }

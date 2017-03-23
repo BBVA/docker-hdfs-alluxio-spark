@@ -10,13 +10,13 @@ The folders called ```hdfs```, ```alluxio```, ```spark``` and ```zeppelin``` con
 
 We tried to not make assumptions about the platform that will run this images, so they should work in a local docker installtion, kubernetes, openshift or whatever. Of course the programs from the images have certain communications and storage capabilities and **you MUST tailor them for your needs**.
 
-Also you need to be familiar with HDFS, alluxio, spark and zepelling. Do not expect everything to work without reading first how those programs operate in a general way. 
+Also you need to be familiar with HDFS, alluxio, spark and zepelling. Do not expect everything to work without reading first how those programs operate in a general way.
 
-The images also are prepared for graceful shutdown of each component. 
+The images also are prepared for graceful shutdown of each component.
 
 Finally, its important to note that an image could act as a different component, normaly master or worker of its software component.
 
-# General boot.sh 
+# General boot.sh
 
 In general, this script is composed of three sections:
 
@@ -96,7 +96,7 @@ And the following environment variables for spark configuration:
 
     export SPARK_DAEMON_MEMORY=${SPARK_DAEMON_MEMORY:-"1g"}
 
-If not set, you can see in that snipper the default values for each variable. More can be added by following the spark conifguration guideline. 
+If not set, you can see in that snipper the default values for each variable. More can be added by following the spark conifguration guideline.
 
 # ZEPPELIN image
 
@@ -134,7 +134,7 @@ This contains a Scala application that counts lines on a textFile given the apro
 
 Read the source code, and try it like:
 
-    sbt "run --spark spark://spark-master-dashboard-has.192.168.99.100.nip.io --alluxio alluxio://alluxio-master-dashboard-has.192.168.99.100.nip.io/README.txt"
+    sbt "runMain (sparky | AlluxioExperiment) --spark spark://spark-master-dashboard-has.192.168.99.100.nip.io --alluxio alluxio://alluxio-master-dashboard-has.192.168.99.100.nip.io/README.txt [outputFile]"
 
 To test it agains the minishift cluster.
 
@@ -148,7 +148,7 @@ The general procedure to bring this up is:
  - install docker-machine and the drivers you need for virtualbox, kvm, etc.
  - install ```minishift``` command  and openshift cli ```oc``` command and put them in your path
  - stat a minishift cluster: ```minishift start --vm-driver=virtualbox --cpus 4 --memory 8192```
- - run bash oc-build.sh to bring up all the components 
+ - run bash oc-build.sh to bring up all the components
 
 Please note that images are built in your minishift installation, it might take some time. Also The deployments might not be started automatically, so proceed to deploy manually when the images are ready.
 
@@ -178,4 +178,3 @@ Please read them to use them. Feel free to complete this documentation.
  * test more complex analisys to see if there are any networking issues
  * make the data upload process easier to the cluster
  * deploy on real cluster
-
