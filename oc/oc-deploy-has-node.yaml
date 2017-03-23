@@ -135,6 +135,9 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
+              env:
+                - name: SPARK_WORKER_MEMORY
+                  value: 256MB
               livenessProbe:
                 # an http probe
                 httpGet:
