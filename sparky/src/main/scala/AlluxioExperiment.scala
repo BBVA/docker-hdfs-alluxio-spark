@@ -4,7 +4,7 @@ object AlluxioExperiment {
   def main(args: Array[String]) {
     val conf = new Conf(args)
 
-    val sparkConf = new SparkConf().setAppName("Simple Application")
+    val sparkConf = new SparkConf().setAppName("alluxio-experiment")
       .setMaster(conf.spark())
       .set("spark.driver.port", "51000")
       .set("spark.fileserver.port", "51100")
@@ -13,6 +13,8 @@ object AlluxioExperiment {
       .set("spark.blockManager.port", "51400")
       .set("spark.executor.port", "51500")
       .set("spark.ui.port", "51600")
+      .set("spark.eventLog.enabled", "true")
+
     val sc = new SparkContext(sparkConf)
 
     val alluxioFile = sc.textFile(conf.alluxio())
