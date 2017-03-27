@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 node=${1:-0}
-volume=${2:-"/tmp/data"}
+volume=${2:-"/tmp/data${node}"}
 name=${3:-"namenode"}
 
 createNetwork() {

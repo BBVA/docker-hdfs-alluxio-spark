@@ -24,14 +24,14 @@ export ALLUXIO_PREFIX=/opt/alluxio
 
 export ALLUXIO_WORKER_MEMORY_SIZE=${ALLUXIO_WORKER_MEMORY_SIZE:-"1024MB"}
 export ALLUXIO_RAM_FOLDER=${ALLUXIO_RAM_FOLDER:-"/mnt/ramdisk"}
-export ALLUXIO_UNDERFS_ADDRESS=${ALLUXIO_UNDERFS_ADDRESS:-"hdfs://hdfs-namenode:8020"}
+export ALLUXIO_UNDERFS_ADDRESS=${ALLUXIO_UNDERFS_ADDRESS:-"hdfs://namenode:8020"}
 
 set +o nounset
 
 master_node() {
 	local action="$1"
 	local cluster_name="$2"
-	
+
 	case $action in
 		start)
 			export ALLUXIO_MASTER_HOSTNAME=${cluster_name}
@@ -55,13 +55,13 @@ master_node() {
 		echo "Action not supported"
 		;;
 	esac
-	
+
 }
 
 slave_node() {
 	local action="$1"
 	local cluster_name="$2"
-	
+
 	case $action in
 		start)
 			export ALLUXIO_MASTER_HOSTNAME=${cluster_name}
@@ -118,8 +118,8 @@ default_properties=(
 )
 
 trap "shut_down sigkill" SIGKILL
-trap "shut_down sigterm" SIGTERM 
-trap "shut_down sighup" SIGHUP 
+trap "shut_down sigterm" SIGTERM
+trap "shut_down sighup" SIGHUP
 trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
