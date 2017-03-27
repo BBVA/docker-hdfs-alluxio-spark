@@ -19,20 +19,6 @@ parameters:
 objects:
 
   - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: spark-master-storage
-      namespace: has
-    spec:
-      accessModes:
-      - ReadWriteMany
-      resources:
-        requests:
-          storage: ${STORAGE}
-      volumeName: spark-master-storage
-
-
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: spark-master
@@ -73,8 +59,7 @@ objects:
         spec:
           volumes:
             - name: spark-master-storage
-              persistentVolumeClaim:
-                claimName: spark-master-storage
+              emptyDir: {}
           containers:
             - name: spark-master
               image: ${IMAGE}

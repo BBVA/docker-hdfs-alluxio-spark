@@ -115,7 +115,7 @@ objects:
               imagePullPolicy: Always
               env:
                 - name: ALLUXIO_WORKER_MEMORY_SIZE
-                  value: 256MB
+                  value: 2048MB
               livenessProbe:
                 # an http probe
                 httpGet:
@@ -137,7 +137,7 @@ objects:
               imagePullPolicy: Always
               env:
                 - name: SPARK_WORKER_MEMORY
-                  value: 256MB
+                  value: 2048MB
               livenessProbe:
                 # an http probe
                 httpGet:

@@ -19,20 +19,6 @@ parameters:
 objects:
 
   - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: alluxio-master-storage
-      namespace: has
-    spec:
-      accessModes:
-      - ReadWriteMany
-      resources:
-        requests:
-          storage: ${STORAGE}
-      volumeName: alluxio-master-storage
-
-
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: alluxio-master
@@ -73,8 +59,7 @@ objects:
         spec:
           volumes:
             - name: alluxio-master-storage
-              persistentVolumeClaim:
-                claimName: alluxio-master-storage
+              emptyDir: {}
           containers:
             - name: alluxio-master
               image: ${IMAGE}

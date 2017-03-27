@@ -23,20 +23,6 @@ parameters:
 objects:
 
   - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: zeppelin-storage
-      namespace: has
-    spec:
-      accessModes:
-      - ReadWriteMany
-      resources:
-        requests:
-          storage: ${STORAGE}
-      volumeName: zeppelin-storage
-
-
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: zeppelin
@@ -77,8 +63,7 @@ objects:
         spec:
           volumes:
             - name: zeppelin-storage
-              persistentVolumeClaim:
-                claimName: zeppelin-storage
+              emptyDir: {}
           hostname: zeppelin-${ID}
           subdomain: has
           containers:
@@ -161,7 +146,7 @@ objects:
     spec:
       to:
           kind: Service
-          name: zeppelin
+          name: zeppelin-${ID}
           weight: 100
       port:
           targetPort: zeppelin-ui
@@ -175,7 +160,7 @@ objects:
     spec:
       to:
           kind: Service
-          name: zeppelin
+          name: zeppelin-${ID}
           weight: 100
       port:
           targetPort: spark-ui

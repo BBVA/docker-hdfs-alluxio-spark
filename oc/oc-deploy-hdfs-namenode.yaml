@@ -19,20 +19,6 @@ parameters:
 objects:
 
   - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: hdfs-namenode-storage
-      namespace: has
-    spec:
-      accessModes:
-      - ReadWriteMany
-      resources:
-        requests:
-          storage: ${STORAGE}
-      volumeName: hdfs-namenode-storage
-
-
-  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: hdfs-namenode
@@ -73,8 +59,7 @@ objects:
         spec:
           volumes:
             - name: hdfs-namenode-storage
-              persistentVolumeClaim:
-                claimName: hdfs-namenode-storage
+              emptyDir: {}
           containers:
             - name: hdfs-namenode
               image: ${IMAGE}

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 # basic project data
-export project="has"
+export project="hasz"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
 export secretname="sshcert"
 
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
-oc login -u system:admin
+# oc login -u system:admin
 
 # Create persisten volumes
 oc process -f  oc-persistentvolume-hostpath.yaml | oc create -f -
 
-oc login -u developer
+# oc login -u developer
 
 # Create new oc project
 oc new-project "${project}"
@@ -43,7 +43,7 @@ export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepositor
 oc process -v IMAGE=${spark_image} -v STORAGE="1Gi" -f "oc-deploy-spark-master.yaml" | oc create -f -
 
 # Deploy three workers
-for id in $(seq 1 1 3); do
+for id in $(seq 1 1 6); do
     oc process -v ID=${id} -v IMAGE_SPARK="${spark_image}" -v IMAGE_ALLUXIO="${alluxio_image}" -v IMAGE_HDFS="${hdfs_image}" -v STORAGE="1Gi" -f "oc-deploy-has-node.yaml" | oc create -f -
 done
 
