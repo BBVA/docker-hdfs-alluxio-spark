@@ -77,6 +77,29 @@ data_node() {
 	esac
 }
 
+httpfs_node() {
+	local action="$1"
+	local cluster_name="$2"
+	
+	case $action in
+		start)	
+			# Start a HDFS DataNode with the following command on each designated node as hdfs:
+			$HADOOP_PREFIX/sbin/httpfs.sh start
+		;;
+		stop)
+			# Run a script to stop a DataNode as hdfs:
+			$HADOOP_PREFIX/sbin/httpfs.sh stop
+		;;
+		status)
+			# I would love a status report
+			echo "Not implemented"
+		;;
+		*)
+		echo "Action not supported"
+		;;
+	esac
+}
+
 config() {
 	local file="${1}"
 	shift
@@ -109,6 +132,12 @@ hadoop_handler() {
 			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}	
 			data_node ${action} ${cluster_name}
 		;;
+		httpfs)
+			export HTTPFS_HTTP_PORT=14000
+			export HTTPFS_ADMIN_PORT=14001
+			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
+			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
+			httpfs_node ${action} ${cluster_name} 
 		*)
 			echo This component is not implemented, see boot.sh
 		;;
