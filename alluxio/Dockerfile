@@ -1,9 +1,12 @@
-FROM openjdk:8-jdk
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get --no-install-recommends install -y default-jdk libnss-wrapper wget && apt-get clean
+
 
 ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-hadoop2.7-bin.tar.gz
 
 WORKDIR /tmp
-RUN apt-get update && apt-get install libnss-wrapper && apt-get clean
+
 
 RUN wget --quiet ${ALLUXIO_HDFS_URL}
 

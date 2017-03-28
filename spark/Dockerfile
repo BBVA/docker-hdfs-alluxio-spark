@@ -1,10 +1,11 @@
-FROM openjdk:8-jre
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get --no-install-recommends install -y default-jre libnss-wrapper wget && apt-get clean
 
 ENV SPARK_URL=http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz
 ENV ALLUXIO_SPARK_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-spark-client-jar-with-dependencies.jar
 
 WORKDIR /tmp
-RUN apt-get update && apt-get install libnss-wrapper && apt-get clean
 
 RUN wget --quiet ${SPARK_URL}
 
