@@ -145,6 +145,16 @@ hadoop_handler() {
 	esac
 }
 
+setup_username() {
+	export USER_ID=$(id -u)
+	export GROUP_ID=$(id -g)
+	cat /etc/passwd > /tmp/passwd
+	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ALLUXIO_PREFIX}:/bin/bash" >> /tmp/passwd
+	export LD_PRELOAD=/usr/lib64/libnss_wrapper.so
+	export NSS_WRAPPER_PASSWD=/tmp/passwd
+	export NSS_WRAPPER_GROUP=/etc/group
+}
+
 shut_down() {
 	echo "Calling shutdown! $1"
 	hadoop_handler ${node} stop ${cluster_name}
@@ -184,6 +194,7 @@ if [ "${HDFS_SITE_CONF}z" == "z" ]; then
 	HDFS_SITE_CONF=${hdfs_site_default[@]}
 fi
 
+setup_username
 
 echo "The ${node} is swtching to ${action} with ${cluster_name} id"
 hadoop_handler ${node} ${action} ${cluster_name}

@@ -105,6 +105,15 @@ alluxio_handler() {
 	esac
 }
 
+setup_username() {
+	export USER_ID=$(id -u)
+	export GROUP_ID=$(id -g)
+	cat /etc/passwd > /tmp/passwd
+	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ALLUXIO_PREFIX}:/bin/bash" >> /tmp/passwd
+	export LD_PRELOAD=/usr/lib64/libnss_wrapper.so
+	export NSS_WRAPPER_PASSWD=/tmp/passwd
+	export NSS_WRAPPER_GROUP=/etc/group
+}
 
 shut_down() {
 	echo "Calling shutdown! $1"
@@ -123,6 +132,7 @@ trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
 
+setup_username
 
 config "${ALLUXIO_PREFIX}/conf/alluxio-site.properties" "${default_properties[@]}"
 alluxio_handler ${node} ${action} ${cluster_name}
