@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 name=${1:-"spark-master"}
-hdfs_name=${2:-"namenode"}
+hdfs_name=${2:-"hdfs-namenode"}
 
 createNetwork() {
   sudo docker network inspect alluxio > /dev/null 2>&1
@@ -14,7 +14,7 @@ createNetwork() {
 
 createNetwork
 
-id=$(sudo docker run -d --name ${name} -h ${name} --network=alluxio spark master start ${name})
+id=$(sudo docker run -d --name ${name} -h ${name} --network=alluxio spark master start)
 
 sleep 2s
 

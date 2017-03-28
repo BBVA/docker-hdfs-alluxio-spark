@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 volume=${1:-"/tmp/data"}
-name=${2:-"namenode"}
+name=${2:-"hdfs-namenode"}
 
 createNetwork() {
   sudo docker network inspect alluxio > /dev/null 2>&1

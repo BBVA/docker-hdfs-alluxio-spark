@@ -2,7 +2,7 @@
 
 node=${1:-0}
 volume=${2:-"/tmp/data${node}"}
-name=${3:-"namenode"}
+name=${3:-"hdfs-namenode"}
 
 createNetwork() {
   sudo docker network inspect alluxio > /dev/null 2>&1
