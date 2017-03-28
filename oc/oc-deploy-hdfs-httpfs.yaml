@@ -54,7 +54,7 @@ objects:
             app: hdfs-httpfs
             deploymentconfig: hdfs-httpfs
         spec:
-
+          hostname: hdfs-httpfs
           containers:
             - name: hdfs-httpfs
               image: ${IMAGE}
@@ -97,7 +97,7 @@ objects:
   - apiVersion: v1
     kind: Route
     metadata:
-       name: hdfs-httpfs-dashboard
+       name: hdfs-httpfs
        namespace: has
     spec:
        to:
