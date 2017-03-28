@@ -111,7 +111,6 @@ shut_down() {
 	alluxio_handler ${node} stop ${cluster_name}
 }
 
-
 default_properties=(
 	"alluxio.security.authentication.type=SIMPLE"
 	"alluxio.security.authorization.permission.enabled=true"
@@ -122,6 +121,8 @@ trap "shut_down sigterm" SIGTERM
 trap "shut_down sighup" SIGHUP
 trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
+
+
 
 config "${ALLUXIO_PREFIX}/conf/alluxio-site.properties" "${default_properties[@]}"
 alluxio_handler ${node} ${action} ${cluster_name}

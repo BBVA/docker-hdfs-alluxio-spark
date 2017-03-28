@@ -8,12 +8,16 @@ RUN wget --quiet ${ALLUXIO_HDFS_URL}
 
 RUN mkdir -p /opt/alluxio && tar zxf /tmp/alluxio-1.4.0-hadoop2.7-bin.tar.gz --strip-components=1 -C /opt/alluxio/
 
-RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
-RUN chown -R root.root /opt/alluxio
-RUN chmod g+rwx /opt/alluxio
+RUN useradd -b /opt/alluxio -s /bin/false alluxio
+
+RUN chown -R alluxio.alluxio /opt/alluxio
+RUN chmod g+rw /opt/alluxio
+
 EXPOSE 19999 19998 29998 29999 30000
 
 WORKDIR /
 ADD boot.sh /
+
+USER alluxio
 
 ENTRYPOINT ["/boot.sh"]
