@@ -171,10 +171,11 @@ trap "shut_down sigint" SIGINT
 # default config
 # For httpfs config
 # https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Superusers.html
+# insecure defaults
 core_site_default=(
 	"fs.defaultFS=hdfs://${cluster_name}:8020"
 	"io.file.buffer.size=131072"
-	"hadoop.proxyuser.openshift.host=hdfs-httpfs"
+	"hadoop.proxyuser.openshift.host=*"
 	"hadoop.proxyuser.openshift.groups=*"
 )
 
