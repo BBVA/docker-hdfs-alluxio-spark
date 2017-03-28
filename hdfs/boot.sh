@@ -137,7 +137,8 @@ hadoop_handler() {
 			export HTTPFS_ADMIN_PORT=14001
 			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
 			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
-			httpfs_node ${action} ${cluster_name} 
+			httpfs_node ${action} ${cluster_name}
+		;;
 		*)
 			echo This component is not implemented, see boot.sh
 		;;
