@@ -14,7 +14,8 @@ RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.0-bin-hadoop2.7.tgz  --strip-c
 WORKDIR /opt/spark/jars
 RUN wget --quiet ${ALLUXIO_SPARK_URL}
 
-RUN chown -R g+rw /opt/spark
+RUN chown -R root.root /opt/spark
+RUN chmod -R g+rw /opt/spark
 
 EXPOSE 7077 6066 8080 35000 8081
 
