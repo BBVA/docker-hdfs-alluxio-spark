@@ -17,8 +17,8 @@ object AlluxioExperiment {
 
     val sc = new SparkContext(sparkConf)
 
-    val alluxioFile = sc.textFile(conf.alluxio())
-    alluxioFile.saveAsTextFile(conf.out())
+    val alluxioFile = sc.textFile(conf.input())
+    alluxioFile.saveAsTextFile(conf.output())
 
   }
 }

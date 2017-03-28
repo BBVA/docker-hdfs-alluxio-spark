@@ -15,9 +15,9 @@ object sparky {
       .set("spark.ui.port", "51600")
     val sc = new SparkContext(sparkConf)
 
-    val alluxioFile = sc.textFile(conf.alluxio())
+    val alluxioFile = sc.textFile(conf.input())
 
     val n = alluxioFile.count()
-    println("%s:%s".format(conf.alluxio(), n))
+    println("%s:%s".format(conf.input(), n))
   }
 }
