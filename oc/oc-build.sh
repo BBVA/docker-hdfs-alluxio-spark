@@ -33,6 +33,9 @@ export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository 
 oc process -v IMAGE=${hdfs_image} -v STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
 
+# Deploy HDFS httpfs node 
+oc process -v IMAGE=${hdfs_image} -f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
+
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -v IMAGE=${alluxio_image} -v STORAGE="1Gi" -f "oc-deploy-alluxio-master.yaml" | oc create -f -
