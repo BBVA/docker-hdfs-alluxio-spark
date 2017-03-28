@@ -4,6 +4,14 @@ This repository contains the docker images and the Openshift code to bring up a 
 
 Please complete this document if you find errors or lack information. Just git push it! :)
 
+# Local environment
+
+Because this is using for development, tweaking images, etc. its recommended to be generous with the minishift parameters.
+
+    minishift start --vm-driver=kvm --memory 10480 --cpus 4 --disk-size 100g
+
+Docker images are optimized for development, and not for deployment, that is, images build fast, but require more disk space. The 20g of the the default vm minishift brings up becomes full in two or three builds. 
+
 # Docker images
 
 The folders called ```hdfs```, ```alluxio```, ```spark``` and ```zeppelin``` contain the Dockerfiles and boot.sh script for each container.
