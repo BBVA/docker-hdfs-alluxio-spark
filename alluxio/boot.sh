@@ -43,10 +43,10 @@ master_node() {
 				${ALLUXIO_PREFIX}/bin/alluxio format
 			fi
 			${ALLUXIO_PREFIX}/bin/alluxio-start.sh master
-			${ALLUXIO_HOME}/bin/alluxio-start.sh proxy
+			${ALLUXIO_PREFIX}/bin/alluxio-start.sh proxy
 		;;
 		stop)
-			${ALLUXIO_HOME}/bin/alluxio-stop.sh proxy
+			${ALLUXIO_PREFIX}/bin/alluxio-stop.sh proxy
 			${ALLUXIO_PREFIX}/bin/alluxio-stop.sh master
 		;;
 		status)
