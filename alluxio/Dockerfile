@@ -15,7 +15,7 @@ RUN mkdir -p /opt/alluxio && tar zxf /tmp/alluxio-1.4.0-hadoop2.7-bin.tar.gz --s
 RUN chown -R root.root /opt/alluxio
 RUN chmod -R g+rw /opt/alluxio
 
-EXPOSE 19999 19998 29998 29999 30000
+EXPOSE 19999 19998 29998 29999 30000 39999
 
 WORKDIR /
 ADD boot.sh /
