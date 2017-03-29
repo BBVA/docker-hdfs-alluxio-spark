@@ -28,11 +28,11 @@ case $action in
     mkdir)
         remote_filepath=${local_file}
         curl -L $debug -X PUT \
-         "${httpfs}/webhdfs/v1/user/${user}/${remote_filepath}?op=MKDIRS&user.name=${user}"
+         "${httpfs}/webhdfs/v1/${remote_filepath}?op=MKDIRS&user.name=${user}"
     ;;
     rm)
         remote_filepath=${local_file}
         curl -L $debug -X DELETE \
-        "${httpfs}/webhdfs/v1/user/${user}/${remote_filepath}?op=DELETE&user.name=${user}&recursive=true"
+        "${httpfs}/webhdfs/v1/${remote_filepath}?op=DELETE&user.name=${user}&recursive=true"
     ;;
 esac
