@@ -6,7 +6,7 @@ remote_filepath="$3"
 
 user="openshift"
 httpfs=${HTTPFS:-"http://hdfs-httpfs-dashboard-hasz.192.168.42.95.nip.io"}
-"
+
 debug="-v -i"
 case $action in 
     upload)
