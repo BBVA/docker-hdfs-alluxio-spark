@@ -17,7 +17,6 @@ parameters:
     required: true
   - name: NAME
     description: Service name. Make sure the Namespace exists or you will not be able to see the service.
-    value: spark-submitter
     required: true
   - name: SUBMIT_ARGS
     description: Spark Submit arguments

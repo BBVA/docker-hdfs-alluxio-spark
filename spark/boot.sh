@@ -24,7 +24,7 @@ set +o nounset
 export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
 
-# SPARK_MASTER_PORT is also defined by openshift to a value incompatible 
+# SPARK_MASTER_PORT is also defined by openshift to a value incompatible
 export SPARK_MASTER_PORT=7077
 export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT:-8080}
 
@@ -39,7 +39,7 @@ mkdir -p ${SPARK_HOME}/logs/
 master_node() {
 	local action="${1}"
 	local cluster_name="${2}"
-	
+
 	case $action in
 		start)
 			${SPARK_HOME}/sbin/start-master.sh
@@ -60,7 +60,7 @@ master_node() {
 
 slave_node() {
 	local action="${1}"
-	
+
 	case $action in
 		start)
 			${SPARK_HOME}/sbin/start-slave.sh --host $(hostname -f) spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
@@ -97,7 +97,7 @@ setup_username() {
 	export USER_ID=$(id -u)
 	export GROUP_ID=$(id -g)
 	cat /etc/passwd > /tmp/passwd
-	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ALLUXIO_PREFIX}:/bin/bash" >> /tmp/passwd
+	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${SPARK_HOME}:/bin/bash" >> /tmp/passwd
 	export LD_PRELOAD=/usr/lib/libnss_wrapper.so
 	export NSS_WRAPPER_PASSWD=/tmp/passwd
 	export NSS_WRAPPER_GROUP=/etc/group
