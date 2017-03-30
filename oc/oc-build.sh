@@ -16,7 +16,7 @@ oc new-project "${project}"
 oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
 # Create builds for each docker image
-for c in "hdfs" "alluxio" "spark" "zeppelin"; do
+for c in "hdfs" "alluxio" "spark" "spark-submitter" "zeppelin"; do
     oc process -p REPOSITORY=${repository} \
                 -p CONTEXTDIR="${c}" \
                 -p SECRETNAME="${secretname}" \
