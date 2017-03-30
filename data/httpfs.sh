@@ -5,7 +5,7 @@ local_file="$2"
 remote_filepath="$3"
 
 user="openshift"
-httpfs=${HTTPFS:-"http://hdfs-httpfs-dashboard-hasz.192.168.42.95.nip.io"}
+httpfs=${HTTPFS:-"http://hdfs-httpfs-has.192.168.42.95.nip.io"}
 
 debug="-s"
 case $action in

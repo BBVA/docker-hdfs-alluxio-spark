@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: has-node
+  name: worker
   annotations:
-    description: HDFS cluster
+    description: HDFS cluster worker deploymentconfig
     tags: networking,storage
 
 parameters:
@@ -27,16 +27,17 @@ parameters:
     value: "spark"
     description: HAS Spark Docker image
     required: true
-  
+
 objects:
 
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
-      name: has-node-${ID}
+      name: worker${ID}
       namespace: has
       labels:
-        app: has-node-${ID}
+        app: worker${ID}
+        type: "worker"
     spec:
       strategy:
         type: Rolling
@@ -53,7 +54,7 @@ objects:
           imageChangeParams:
             automatic: true
             containerNames:
-              - has-node
+              - worker
             from:
               kind: ImageStreamTag
               namespace: has
@@ -61,28 +62,42 @@ objects:
       replicas: 1
       test: false
       selector:
-        app: has-node-${ID}
-        deploymentconfig: has-node-${ID}
+        app: worker${ID}
+        deploymentconfig: worker${ID}
       template:
         metadata:
           labels:
-            app: has-node-${ID}
-            deploymentconfig: has-node-${ID}
+            app: worker${ID}
+            deploymentconfig: worker${ID}
+            type: "worker"
+          annotations:
+            pod.alpha.kubernetes.io/initialized: "true"
+            scheduler.alpha.kubernetes.io/affinity: >
+                {
+                  "podAntiAffinity": {
+                    "preferredDuringScheduling": [{
+                      "labelSelector": {
+                        "matchExpressions": [{
+                          "key": "type",
+                          "operator": "In",
+                          "values": ["worker", "master", "driver", "aux"]
+                        }]
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    }]
+                  }
+                }
         spec:
+          hostname: worker${ID}
           volumes:
-            - name: has-node-storage-${ID}
-              persistentVolumeClaim:
-                claimName: has-node-storage-${ID}
-          hostname: has-node-${ID}
-          volumes:
-            - name: hdfs-node-storage-${ID}
+            - name: hdfs-worker-storage-${ID}
               emptyDir: {}
-            - name: alluxio-node-storage-${ID}
+            - name: alluxio-worker-storage-${ID}
               emptyDir: {}
-            - name: spark-node-storage-${ID}
+            - name: spark-worker-storage-${ID}
               emptyDir: {}
           containers:
-            - name: hdfs-node-${ID}
+            - name: hdfs-worker${ID}
               image: ${IMAGE_HDFS}
               resources: {}
               args:
@@ -90,7 +105,7 @@ objects:
                 - start
                 - hdfs-namenode
               volumeMounts:
-                - name: hdfs-node-storage-${ID}
+                - name: hdfs-worker-storage-${ID}
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -109,7 +124,7 @@ objects:
                 - start
                 - alluxio-master
               volumeMounts:
-                - name: alluxio-node-storage-${ID}
+                - name: alluxio-worker-storage-${ID}
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -131,7 +146,7 @@ objects:
                 - start
                 - spark-master
               volumeMounts:
-                - name: spark-node-storage-${ID}
+                - name: spark-worker-storage-${ID}
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
@@ -153,10 +168,10 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
-      name: has-node-${ID}
+      name: worker${ID}
     spec:
       selector:
-        app: has-node-${ID}
+        app: worker${ID}
       ports:
         - name: dfs-datanode-address
           protocol: TCP
@@ -202,15 +217,13 @@ objects:
   - apiVersion: v1
     kind: Route
     metadata:
-      name: has-node-${ID}
+      name: worker${ID}
       namespace: has
     spec:
       to:
         kind: Service
-        name: has-node-${ID}
+        name: worker${ID}
         weight: 100
       port:
         targetPort: dfs-datanode-http-address
       wildcardPolicy: None
-
-

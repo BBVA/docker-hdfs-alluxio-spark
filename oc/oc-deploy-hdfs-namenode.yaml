@@ -3,8 +3,8 @@ kind: Template
 metadata:
   name: hdfs-namenode
   annotations:
-    description: HDFS cluster
-    tags: networking,storage
+    description: HDFS cluster namenode
+    tags: networking
 
 parameters:
   - name: STORAGE
@@ -25,6 +25,7 @@ objects:
       namespace: has
       labels:
         app: hdfs-namenode
+        type: "master"
     spec:
       strategy:
         type: Rolling
@@ -56,6 +57,24 @@ objects:
           labels:
             app: hdfs-namenode
             deploymentconfig: hdfs-namenode
+            type: "master"
+          annotations:
+            pod.alpha.kubernetes.io/initialized: "true"
+            scheduler.alpha.kubernetes.io/affinity: >
+                {
+                  "podAntiAffinity": {
+                    "preferredDuringScheduling": [{
+                      "labelSelector": {
+                        "matchExpressions": [{
+                          "key": "type",
+                          "operator": "In",
+                          "values": ["worker", "master", "driver", "aux"]
+                        }]
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    }]
+                  }
+                }
         spec:
           volumes:
             - name: hdfs-namenode-storage
@@ -118,4 +137,3 @@ objects:
        port:
          targetPort: dfs-http-address
        wildcardPolicy: None
-
