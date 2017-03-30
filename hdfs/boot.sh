@@ -29,11 +29,11 @@ HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
 name_node() {
 	local action="$1"
 	local cluster_name="$2"
-	
+
 	case $action in
 		start)
 			if [ ! -d /data/${cluster_name}/ ]; then
-				# The first time you bring up HDFS, it must be formatted. Format a new distributed filesystem as hdfs: 
+				# The first time you bring up HDFS, it must be formatted. Format a new distributed filesystem as hdfs:
 				$HADOOP_PREFIX/bin/hdfs namenode -format ${cluster_name}
 			fi
 			# Start the HDFS NameNode with the following command on the designated node as hdfs:
@@ -51,15 +51,15 @@ name_node() {
 		echo "Action not supported"
 		;;
 	esac
-	
+
 }
 
 data_node() {
 	local action="$1"
 	local cluster_name="$2"
-	
+
 	case $action in
-		start)	
+		start)
 			# Start a HDFS DataNode with the following command on each designated node as hdfs:
 			$HADOOP_PREFIX/sbin/hadoop-daemon.sh --config ${HADOOP_CONF_DIR} --script hdfs start datanode
 		;;
@@ -80,9 +80,9 @@ data_node() {
 httpfs_node() {
 	local action="$1"
 	local cluster_name="$2"
-	
+
 	case $action in
-		start)	
+		start)
 			# Start a HDFS DataNode with the following command on each designated node as hdfs:
 			$HADOOP_PREFIX/sbin/httpfs.sh start
 		;;
@@ -113,7 +113,7 @@ config() {
 		echo "<name>${prop}</name><value>${val}</value>" >> ${file}
 		echo "</property>" >> ${file}
 	done
-	echo "</configuration>" >> ${file} 
+	echo "</configuration>" >> ${file}
 }
 
 hadoop_handler() {
@@ -129,7 +129,7 @@ hadoop_handler() {
 		;;
 		datanode)
 			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}	
+			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
 			data_node ${action} ${cluster_name}
 		;;
 		httpfs)
@@ -162,8 +162,8 @@ shut_down() {
 
 
 trap "shut_down sigkill" SIGKILL
-trap "shut_down sigterm" SIGTERM 
-trap "shut_down sighup" SIGHUP 
+trap "shut_down sigterm" SIGTERM
+trap "shut_down sighup" SIGHUP
 trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
@@ -176,7 +176,9 @@ core_site_default=(
 	"fs.defaultFS=hdfs://${cluster_name}:8020"
 	"io.file.buffer.size=131072"
 	"hadoop.proxyuser.openshift.hosts=172.16.0.0/12"
-	"hadoop.proxyuser.openshift.groups=openshift,root"
+	"hadoop.proxyuser.openshift.groups=openshift, root"
+	"hadoop.proxyuser.root.hosts=172.16.0.0/12"
+	"hadoop.proxyuser.root.groups=root"
 )
 
 # https://log.rowanto.com/why-datanode-is-denied-communication-with-namenode/
