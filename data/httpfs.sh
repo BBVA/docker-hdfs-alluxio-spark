@@ -35,4 +35,9 @@ case $action in
         curl -L $debug -X DELETE \
         "${httpfs}/webhdfs/v1/${remote_filepath}?op=DELETE&user.name=${user}&recursive=true"
     ;;
+    get)
+        remote_filepath=${local_file}
+        curl -L $debug -X GET \
+        "${httpfs}/webhdfs/v1/${remote_filepath}?op=OPEN&user.name=${user}"
+    ;;
 esac
