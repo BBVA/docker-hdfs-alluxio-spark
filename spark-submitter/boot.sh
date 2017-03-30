@@ -20,4 +20,4 @@ setup_username
 execution="$executable $submit_args"
 
 echo "Submitting Spark job with: $execution"
-exec execution
+exec $execution
