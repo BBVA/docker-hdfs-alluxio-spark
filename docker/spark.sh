@@ -8,21 +8,21 @@ volume=${VOLUME:-"/tmp/data"}
 
 
 # check network existence and create it if necessary
-# we need this network for the automatic service discovery in docker engine 
-sudo docker network inspect ${net} > /dev/null 2>&1
+# we need this network for the automatic service discovery in docker engine
+docker network inspect ${net} > /dev/null 2>&1
 
 if [ $? -eq 1 ]; then
-	net_id=$(sudo docker network create ${net})
+	net_id=$(docker network create ${net})
 	echo "Created network ${net} with id ${net_id}"
 fi
 
 # bring up namenode and show its url
 mkdir -p ${volume}/spark-master
-spark_master_id=$(sudo docker run -d -v ${volume}/spark-master:/data --name spark-master -h spark-master --network=${net}  spark master start hdfs-namenode)
+spark_master_id=$(docker run -d -v ${volume}/spark-master:/data -p 8080:8080 --name spark-master -h spark-master --network=${net}  spark master start hdfs-namenode)
 
 sleep 2s
 
-ip=$(sudo docker inspect --format '{{ .NetworkSettings.Networks.'${net}'.IPAddress }}' ${spark_master_id})
+ip=$(docker inspect --format '{{ .NetworkSettings.Networks.'${net}'.IPAddress }}' ${spark_master_id})
 
 echo Master started in:
 echo http://$ip:7077
@@ -30,5 +30,5 @@ echo http://$ip:7077
 for n in $(seq 1 1 ${nodes}); do
 	echo Starting node ${n}
 	mkdir -p ${volume}/spark-worker${n}
-	datanode_id=$(sudo docker run -d -v ${volume}/spark-worker${n}:/data --name spark-worker${n} -h spark-worker${n} --network=${net} spark slave start spark-master)
+	datanode_id=$(docker run -d -v ${volume}/spark-worker${n}:/data --name spark-worker${n} -h spark-worker${n} --network=${net} spark slave start spark-master)
 done
