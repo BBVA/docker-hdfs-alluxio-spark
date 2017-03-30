@@ -14,7 +14,7 @@ RUN wget --quiet ${SPARK_DIST_URL}
 RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.0-bin-hadoop2.7.tgz --strip-components=1 -C /opt/spark/
 
 WORKDIR /
-ADD run.sh /
+ADD boot.sh /
 RUN chmod a+x /boot.sh
 
 EXPOSE 4040
