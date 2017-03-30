@@ -130,7 +130,7 @@ objects:
               imagePullPolicy: Always
               env:
                 - name: ALLUXIO_WORKER_MEMORY_SIZE
-                  value: 2048MB
+                  value: 512MB
               livenessProbe:
                 # an http probe
                 httpGet:
