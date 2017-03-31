@@ -1,17 +1,10 @@
 FROM ubuntu:16.04
 
+RUN apt-get update && apt-get --no-install-recommends install -y default-jre libnss-wrapper wget && apt-get clean
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
-RUN echo deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main >> /etc/apt/sources.list.d/oracle.list
-RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7B2C3B0889BF5709A105D03AC2518248EEA14886 && \
-	apt-get update && apt-get --no-install-recommends install -y libnss-wrapper wget oracle-java7-installer && \
-	apt-get clean
+ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-hadoop2.7-bin.tar.gz
 
-RUN update-java-alternatives -a
-
-
-# ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-hadoop2.7-bin.tar.gz
-ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.3.0/alluxio-1.3.0-hadoop2.7-bin.tar.gz
 WORKDIR /tmp
 
 RUN wget --quiet ${ALLUXIO_HDFS_URL}
