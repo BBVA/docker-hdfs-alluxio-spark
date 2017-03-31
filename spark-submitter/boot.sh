@@ -3,8 +3,9 @@
 export SPARK_HOME=/opt/spark
 
 executable=$SPARK_HOME/bin/spark-submit
-job_args=
-submit_args="$@"
+job_path=/spark-job.jar
+job_args=""
+submit_args=""
 
 setup_username() {
 	export USER_ID=$(id -u)
@@ -18,16 +19,16 @@ setup_username() {
 
 setup_username
 
-if [ -n "$JOB_JAR_URL" ]; then
-  wget -O /spark-job.jar JOB_JAR_URL
-	job_args="$job_args /spark-job.jar"
-fi
+# Extract jar URL argument and download
+for ((i=$#; i>0; i--)); do
+	if [[ ${!i} == http* ]]; then
+		wget -O $job_path ${!i}
+    submit_args="${@:1:((i-1))} $job_path ${@:((i+1))}"
+    break
+	fi
+done
 
-if [ -n "$JOB_JAR_ARGS" ]; then
-	job_args="$job_args JOB_JAR_ARGS"
-fi
-
-execution="$executable $submit_args $job_args"
+execution="$executable $submit_args"
 
 echo "Submitting Spark job with: $execution"
 exec $execution
