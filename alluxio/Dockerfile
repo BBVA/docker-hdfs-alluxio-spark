@@ -10,13 +10,13 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7B2C3B0889BF5709A10
 RUN update-java-alternatives -a
 
 
-ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-hadoop2.7-bin.tar.gz
-
+# ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.4.0/alluxio-1.4.0-hadoop2.7-bin.tar.gz
+ENV ALLUXIO_HDFS_URL=http://downloads.alluxio.org/downloads/files/1.3.0/alluxio-1.3.0-hadoop2.7-bin.tar.gz
 WORKDIR /tmp
 
 RUN wget --quiet ${ALLUXIO_HDFS_URL}
 
-RUN mkdir -p /opt/alluxio && tar zxf /tmp/alluxio-1.4.0-hadoop2.7-bin.tar.gz --strip-components=1 -C /opt/alluxio/
+RUN mkdir -p /opt/alluxio && tar zxf /tmp/alluxio-1.3.0-hadoop2.7-bin.tar.gz --strip-components=1 -C /opt/alluxio/
 
 RUN chown -R root.root /opt/alluxio
 RUN chmod -R g+rw /opt/alluxio
