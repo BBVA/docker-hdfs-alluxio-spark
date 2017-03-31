@@ -5,7 +5,7 @@ export SPARK_HOME=/opt/spark
 executable=$SPARK_HOME/bin/spark-submit
 job_path=/tmp/spark-job.jar
 job_args=""
-submit_args="$@"
+submit_args=("$@")
 
 setup_username() {
 	export USER_ID=$(id -u)
@@ -20,12 +20,12 @@ setup_username() {
 setup_username
 
 # Extract jar URL argument and download
-for ((i=$#; i>0; i--)); do
-	if [[ ${!i} == http://* ]]; then
-		echo "Downloading ${!i}"
-		wget -O $job_path ${!i}
+for ((i=${#submit_args[@]}; i>0; i--)); do
+	if [[ ${submit_args[$i-1]} == http://* ]]; then
+		echo "Downloading ${!i-1}"
+		wget -O $job_path ${!i-1}
 		chmod a+r $job_path
-    submit_args="${@:1:((i-1))} $job_path ${@:((i+1))}"
+    submit_args="${submit_args[@]:0:(($i))} $job_path ${submit_args[@]:(($i))}"
     break
 	fi
 done
