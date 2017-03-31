@@ -22,6 +22,7 @@ setup_username
 # Extract jar URL argument and download
 for ((i=$#; i>0; i--)); do
 	if [[ ${!i} == http* ]]; then
+		echo "Downloading ${!i}"
 		wget -O $job_path ${!i}
     submit_args="${@:1:((i-1))} $job_path ${@:((i+1))}"
     break
