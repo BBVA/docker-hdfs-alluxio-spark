@@ -3,7 +3,7 @@
 export SPARK_HOME=/opt/spark
 
 executable=$SPARK_HOME/bin/spark-submit
-job_path=/spark-job.jar
+job_path=/tmp/spark-job.jar
 job_args=""
 submit_args="$@"
 
@@ -21,9 +21,10 @@ setup_username
 
 # Extract jar URL argument and download
 for ((i=$#; i>0; i--)); do
-	if [[ ${!i} == http* ]]; then
+	if [[ ${!i} == http://* ]]; then
 		echo "Downloading ${!i}"
 		wget -O $job_path ${!i}
+		chmod a+x $job_path
     submit_args="${@:1:((i-1))} $job_path ${@:((i+1))}"
     break
 	fi
