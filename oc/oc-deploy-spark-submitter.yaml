@@ -21,6 +21,12 @@ parameters:
   - name: SUBMIT_ARGS
     description: Spark Submit arguments
     required: true
+  - name: JOB_JAR_URL
+    description: URL to application job jar.
+    required: true
+  - name: JOB_JAR_ARGS
+    description: Arguments for the application job.
+    required: false
 
 objects:
 
@@ -41,6 +47,11 @@ objects:
           - name: ${NAME}
             image: ${IMAGE}
             namespace: has
+            env:
+            - name: JOB_JAR_URL
+              value: ${JOB_JAR_URL}
+            - name: JOB_JAR_ARGS
+              value: ${JOB_JAR_ARGS}
             args:
             - ${SUBMIT_ARGS}
             ports:

@@ -3,6 +3,7 @@
 export SPARK_HOME=/opt/spark
 
 executable=$SPARK_HOME/bin/spark-submit
+job_args=
 submit_args="$@"
 
 setup_username() {
@@ -17,7 +18,16 @@ setup_username() {
 
 setup_username
 
-execution="$executable $submit_args"
+if [ -n "$JOB_JAR_URL" ]; then
+  wget -O /spark-job.jar JOB_JAR_URL
+	job_args="$job_args /opt/spark-job.jar"
+fi
+
+if [ -n "$JOB_JAR_ARGS" ]; then
+	job_args="$job_args JOB_JAR_ARGS"
+fi
+
+execution="$executable $submit_args $job_args"
 
 echo "Submitting Spark job with: $execution"
 exec $execution
