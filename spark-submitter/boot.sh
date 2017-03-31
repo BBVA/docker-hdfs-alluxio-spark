@@ -5,7 +5,7 @@ export SPARK_HOME=/opt/spark
 executable=$SPARK_HOME/bin/spark-submit
 job_path=/spark-job.jar
 job_args=""
-submit_args=""
+submit_args="$@"
 
 setup_username() {
 	export USER_ID=$(id -u)
