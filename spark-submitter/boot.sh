@@ -24,7 +24,7 @@ for ((i=$#; i>0; i--)); do
 	if [[ ${!i} == http://* ]]; then
 		echo "Downloading ${!i}"
 		wget -O $job_path ${!i}
-		chmod a+x $job_path
+		chmod a+r $job_path
     submit_args="${@:1:((i-1))} $job_path ${@:((i+1))}"
     break
 	fi
