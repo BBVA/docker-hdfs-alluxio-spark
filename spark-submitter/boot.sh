@@ -20,7 +20,7 @@ setup_username
 
 if [ -n "$JOB_JAR_URL" ]; then
   wget -O /spark-job.jar JOB_JAR_URL
-	job_args="$job_args /opt/spark-job.jar"
+	job_args="$job_args /spark-job.jar"
 fi
 
 if [ -n "$JOB_JAR_ARGS" ]; then
