@@ -40,4 +40,8 @@ case $action in
         curl -L $debug -X GET \
         "${httpfs}/webhdfs/v1/${remote_filepath}?op=OPEN&user.name=${user}"
     ;;
+    *)
+      echo "Invalid action: ${action}"
+      exit 1
+    ;;
 esac

@@ -10,7 +10,7 @@ Because this is using for development, tweaking images, etc. its recommended to 
 
     minishift start --vm-driver=kvm --memory 10480 --cpus 4 --disk-size 100g
 
-Docker images are optimized for development, and not for deployment, that is, images build fast, but require more disk space. The 20g of the the default vm minishift brings up becomes full in two or three builds. 
+Docker images are optimized for development, and not for deployment, that is, images build fast, but require more disk space. The 20g of the the default vm minishift brings up becomes full in two or three builds.
 
 # Docker images
 
@@ -131,8 +131,13 @@ In order for the spark interpreter to work with this set up, you need to make th
     spark.ui.port,4040
     alluxio.security.authentication.type, SIMPLE
 
+Modify the following properties:
+    zeppelin.spark.useHiveContext, false
+    master, spark://spark-master:7077    
+
 Add the following artifact to connect to alluxio:
     org.alluxio:alluxio-core-client:1.2.0
+
 
 **Version 1.2.0 of alluxio is needed in order to work with the combination of libraries the version 0.7.0 of zeppelin ships by default. If you need a newer version, you will need to build your own zeppelin distribution and docker image**
 
