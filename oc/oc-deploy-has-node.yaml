@@ -201,7 +201,7 @@ objects:
   - apiVersion: v1
     kind: Route
     metadata:
-      name: worker${ID}
+      name: hdfs-worker${ID}
       namespace: has
     spec:
       to:
@@ -210,4 +210,32 @@ objects:
         weight: 100
       port:
         targetPort: dfs-datanode-http-address
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: spark-worker${ID}
+      namespace: has
+    spec:
+      to:
+        kind: Service
+        name: worker${ID}
+        weight: 100
+      port:
+        targetPort: spark-worker-ui
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: alluxio-worker${ID}
+      namespace: has
+    spec:
+      to:
+        kind: Service
+        name: worker${ID}
+        weight: 100
+      port:
+        targetPort: alluxio-worker-rpc-ui
       wildcardPolicy: None
