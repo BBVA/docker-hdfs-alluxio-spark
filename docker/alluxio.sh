@@ -18,7 +18,7 @@ fi
 
 # bring up namenode and show its url
 mkdir -p ${volume}/alluxio-master
-alluxio_master_id=$(docker run -d -v ${volume}/alluxio-master:/data -p 19999:19999 --name alluxio-master -h alluxio-master --network=${net}  alluxio master start hdfs-namenode)
+alluxio_master_id=$(docker run ---shm-size 2g -d -v ${volume}/alluxio-master:/data -p 19999:19999 --name alluxio-master -h alluxio-master --network=${net}  alluxio master start alluxio-master)
 
 sleep 2s
 
@@ -30,5 +30,5 @@ echo http://$ip:19999
 for n in $(seq 1 1 ${nodes}); do
 	echo Starting node ${n}
 	mkdir -p ${volume}/alluxio-worker${n}
-	datanode_id=$(docker run -d -v ${volume}/alluxio-worker${n}:/data --name alluxio-worker${n} -h alluxio-worker${n} --network=${net} alluxio slave start alluxio-master)
+	datanode_id=$(docker run ---shm-size 2g  d -v ${volume}/alluxio-worker${n}:/data --name alluxio-worker${n} -h alluxio-worker${n} --network=${net} alluxio slave start alluxio-master)
 done

@@ -18,7 +18,7 @@ fi
 
 # bring up namenode and show its url
 mkdir -p ${volume}/hdfs-namenode
-hdfs_master_id=$(docker run -d -v ${volume}/hdfs-namenode:/data -p 50070:50070 --name hdfs-namenode -h hdfs-namenode --network=${net}  hdfs namenode start hdfs-namenode)
+hdfs_master_id=$(docker run ---shm-size 2g  -d -v ${volume}/hdfs-namenode:/data -p 50070:50070 --name hdfs-namenode -h hdfs-namenode --network=${net}  hdfs namenode start hdfs-namenode)
 
 sleep 2s
 
@@ -30,5 +30,5 @@ echo http://$ip:50070
 for n in $(seq 1 1 ${nodes}); do
 	echo Starting node ${n}
 	mkdir -p ${volume}/hdfs-datanode${n}
-	datanode_id=$(docker run -d -v ${volume}/hdfs-datanode${n}:/data --name hdfs-datanode${n} -h hdfs-datanode${n} --network=${net} hdfs datanode start hdfs-namenode)
+	datanode_id=$(docker run ---shm-size 2g -d -v ${volume}/hdfs-datanode${n}:/data --name hdfs-datanode${n} -h hdfs-datanode${n} --network=${net} hdfs datanode start hdfs-namenode)
 done
