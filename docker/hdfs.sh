@@ -3,7 +3,7 @@
 set -e
 # defaults
 net=${NET:-"hasz"}
-nodes=${NODES:-3}
+nodes=${NODES:-2}
 volume=${VOLUME:-"/tmp/data"}
 
 
@@ -32,3 +32,8 @@ for n in $(seq 1 1 ${nodes}); do
 	mkdir -p ${volume}/hdfs-datanode${n}
 	datanode_id=$(docker run ---shm-size 2g -d -v ${volume}/hdfs-datanode${n}:/data --name hdfs-datanode${n} -h hdfs-datanode${n} --network=${net} hdfs datanode start hdfs-namenode)
 done
+
+# httpfs_node
+	echo Starting httpfs node
+	mkdir -p ${volume}/httpfs_node
+	datanode_id=$(docker run -d -v ${volume}/httpfs_node:/data -p 14000:14000 --name httpfs_node -h httpfs_node --network=${net} hdfs httpfs start hdfs-namenode)

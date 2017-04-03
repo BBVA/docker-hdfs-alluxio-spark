@@ -3,7 +3,7 @@
 set -e
 # defaults
 net=${NET:-"hasz"}
-nodes=${NODES:-3}
+nodes=${NODES:-2}
 volume=${VOLUME:-"/tmp/data"}
 
 
