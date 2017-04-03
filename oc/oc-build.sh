@@ -7,8 +7,6 @@ export secretname="sshcert"
 nodes=${1:-"3"}
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 
-oc login -u developer
-
 # Create new oc project
 oc new-project "${project}"
 
