@@ -140,12 +140,12 @@ objects:
   - apiVersion: v1
     kind: Route
     metadata:
-      name: alluxio-master-dashboard
+      name: alluxio-master-rest
       namespace: has
     spec:
       to:
           kind: Service
-          name: alluxio-rest
+          name: alluxio-master
           weight: 100
       port:
           targetPort: alluxio-master-rest
