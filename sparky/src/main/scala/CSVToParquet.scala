@@ -20,36 +20,33 @@ object CSVToParquet {
     val sc = new SparkContext(sparkConf)
     val sqlContext = SparkSession.builder().config(sparkConf).getOrCreate()
 
-    val csvFile = sc.textFile(conf.input()).map(line => Row(line.split(",")))
+    val csvFile = sc.textFile(conf.input()).map(line => Row(line.split(",").toList))
 
     val schema = StructType(Array(
-      StructField("created_utc", DateType, false),
-      StructField("score", IntegerType, false),
-      StructField("domain", StringType, false),
-      StructField("id", StringType, false),
-      StructField("title", StringType, false),
-      StructField("ups", IntegerType, false),
-      StructField("downs", IntegerType, false),
-      StructField("num_comments", IntegerType, false),
-      StructField("permalink", StringType, false),
-      StructField("selftext", StringType, false),
-      StructField("link_flair_text", StringType, false),
-      StructField("over_18", BooleanType, false),
-      StructField("thumbnail", StringType, false),
-      StructField("subreddit_id", StringType, false),
-      StructField("edited", BooleanType, false),
-      StructField("link_flair_css_class", StringType, false),
-      StructField("author_flair_css_class", StringType, false),
-      StructField("is_self", BooleanType, false),
-      StructField("name", StringType, false),
-      StructField("url", StringType, false),
-      StructField("distinguished", StringType, false)
+      StructField("ID", StringType, true),
+      StructField("Case_Number", StringType, true),
+      StructField("Date", DateType, true),
+      StructField("Block", StringType, true),
+      StructField("IUCR", StringType, true),
+      StructField("Primary_Type", StringType, true),
+      StructField("Description", StringType, true),
+      StructField("Location_Description", StringType, true),
+      StructField("Arrest", BooleanType, true),
+      StructField("Domestic", BooleanType, true),
+      StructField("Beat", StringType, true),
+      StructField("District_Ward", StringType, true),
+      StructField("Community_Area", StringType, true),
+      StructField("FBI_Code", StringType, true),
+      StructField("X_Coordinate", LongType, true),
+      StructField("Y_Coordinate", LongType, true),
+      StructField("Year", StringType, true),
+      StructField("Updated_On", DateType, true),
+      StructField("Latitude", LongType, true),
+      StructField("Longitude", LongType, true),
+      StructField("Location", StringType, true)
     ))
 
     val dataframe = sqlContext.createDataFrame(csvFile, schema)
-
     dataframe.write.parquet(conf.output())
-
-
   }
 }
