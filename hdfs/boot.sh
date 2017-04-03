@@ -186,7 +186,7 @@ core_site_default=(
 # discovery reverse dns set up
 hdfs_site_default=(
 	"dfs.namenode.name.dir=file:///data/${cluster_name}/"
-	"dfs.blocksize=268435456"
+	"dfs.blocksize=33554432"
 	"dfs.namenode.handler.count=100"
 	"dfs.namenode.servicerpc-address=hdfs://${cluster_name}:8022"
 	"dfs.namenode.datanode.registration.ip-hostname-check=false"
