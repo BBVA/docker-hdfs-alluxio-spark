@@ -125,7 +125,7 @@ shut_down() {
 default_properties=(
 	"alluxio.security.authentication.type=SIMPLE"
 	"alluxio.security.authorization.permission.enabled=true"
-	"alluxio.user.block.size.bytes.default=64MB"
+	"alluxio.user.block.size.bytes.default=32MB"
 )
 
 trap "shut_down sigkill" SIGKILL
