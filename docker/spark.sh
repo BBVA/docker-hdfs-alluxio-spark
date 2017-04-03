@@ -19,7 +19,7 @@ fi
 # bring up namenode and show its url
 mkdir -p ${volume}/spark-master
 
-spark_master_id=$(docker run ---shm-size 2g  -d -v ${volume}/spark-master:/data -p 8080:8080 -p 7077:7077 --name spark-master -h spark-master --network=${net}  spark master start hdfs-namenode)
+spark_master_id=$(docker run --shm-size 2g -d -v ${volume}/spark-master:/data -p 8080:8080 -p 7077:7077 --name spark-master -h spark-master --network=${net}  spark master start hdfs-namenode)
 
 sleep 2s
 
@@ -31,5 +31,5 @@ echo http://$ip:7077
 for n in $(seq 1 1 ${nodes}); do
 	echo Starting node ${n}
 	mkdir -p ${volume}/spark-worker${n}
-	datanode_id=$(docker run ---shm-size 2g  -d -v ${volume}/spark-worker${n}:/data --name spark-worker${n} -h spark-worker${n} --network=${net} spark slave start spark-master)
+	datanode_id=$(docker run --shm-size 2g -d -v ${volume}/spark-worker${n}:/data --name spark-worker${n} -h spark-worker${n} --network=${net} spark slave start spark-master)
 done
