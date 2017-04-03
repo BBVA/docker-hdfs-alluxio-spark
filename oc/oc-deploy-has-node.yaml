@@ -96,6 +96,9 @@ objects:
               emptyDir: {}
             - name: spark-worker-storage-${ID}
               emptyDir: {}
+            - name: dshm
+              emptyDir:
+              medium: Memory
           containers:
             - name: hdfs-worker${ID}
               image: ${IMAGE_HDFS}
@@ -109,13 +112,6 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
-              livenessProbe:
-                # an http probe
-                httpGet:
-                  path: /
-                  port: 50075
-                  initialDelaySeconds: 15
-                  timeoutSeconds: 1
             - name: alluxio-worker-${ID}
               image: ${IMAGE_ALLUXIO}
               resources: {}
@@ -126,18 +122,13 @@ objects:
               volumeMounts:
                 - name: alluxio-worker-storage-${ID}
                   mountPath: /data
+                - name: dshm
+                  mountPath: /dev/shm
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
               env:
                 - name: ALLUXIO_WORKER_MEMORY_SIZE
                   value: 512MB
-              livenessProbe:
-                # an http probe
-                httpGet:
-                  path: /
-                  port: 30000
-                  initialDelaySeconds: 15
-                  timeoutSeconds: 1
             - name: spark-worker-${ID}
               image: ${IMAGE_SPARK}
               resources: {}
@@ -153,13 +144,6 @@ objects:
               env:
                 - name: SPARK_WORKER_MEMORY
                   value: 2048MB
-              livenessProbe:
-                # an http probe
-                httpGet:
-                  path: /
-                  port: 8081
-                  initialDelaySeconds: 15
-                  timeoutSeconds: 1
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
