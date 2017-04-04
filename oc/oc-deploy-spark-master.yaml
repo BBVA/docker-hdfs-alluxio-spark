@@ -7,10 +7,6 @@ metadata:
     tags: networking,storage
 
 parameters:
-  - name: STORAGE
-    value: "1Gi"
-    description: Storage assigned to the node
-    required: true
   - name: IMAGE
     value: "spark"
     description: HAS spark Docker image
@@ -67,7 +63,7 @@ objects:
                         "matchExpressions": [{
                           "key": "type",
                           "operator": "In",
-                          "values": ["worker", "master", "driver", "aux"]
+                          "values": ["worker", "driver", "aux"]
                         }]
                       },
                       "topologyKey": "kubernetes.io/hostname"

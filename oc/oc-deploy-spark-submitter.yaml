@@ -7,10 +7,6 @@ metadata:
     tags: "networking,spark"
 
 parameters:
-  - name: STORAGE
-    value: "1Gi"
-    description: Storage assigned to the node
-    required: true
   - name: IMAGE
     value: "spark-submitter"
     description: HAS Spark Submitter Docker image
