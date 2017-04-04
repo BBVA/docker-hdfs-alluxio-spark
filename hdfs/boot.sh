@@ -34,6 +34,7 @@ name_node() {
 		start)
 			if [ ! -d /data/${cluster_name}/ ]; then
 				# The first time you bring up HDFS, it must be formatted. Format a new distributed filesystem as hdfs:
+				mkdir -p /data/${cluster_name}
 				$HADOOP_PREFIX/bin/hdfs namenode -format ${cluster_name}
 			fi
 			# Start the HDFS NameNode with the following command on the designated node as hdfs:
@@ -60,6 +61,9 @@ data_node() {
 
 	case $action in
 		start)
+			if [ ! -d /data/${cluster_name}/ ]; then
+				mkdir -p /data/${cluster_name}
+			fi		
 			# Start a HDFS DataNode with the following command on each designated node as hdfs:
 			$HADOOP_PREFIX/sbin/hadoop-daemon.sh --config ${HADOOP_CONF_DIR} --script hdfs start datanode
 		;;
@@ -149,10 +153,12 @@ setup_username() {
 	export USER_ID=$(id -u)
 	export GROUP_ID=$(id -g)
 	cat /etc/passwd > /tmp/passwd
+	cat /etc/group > /tmp/group
 	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ALLUXIO_PREFIX}:/bin/bash" >> /tmp/passwd
+	echo "openshift:x:${GROUP_ID}:openshift" >> /tmp/group
 	export LD_PRELOAD=/usr/lib/libnss_wrapper.so
 	export NSS_WRAPPER_PASSWD=/tmp/passwd
-	export NSS_WRAPPER_GROUP=/etc/group
+	export NSS_WRAPPER_GROUP=/tmp/group
 }
 
 shut_down() {
@@ -190,6 +196,7 @@ hdfs_site_default=(
 	"dfs.namenode.handler.count=100"
 	"dfs.namenode.servicerpc-address=hdfs://${cluster_name}:8022"
 	"dfs.namenode.datanode.registration.ip-hostname-check=false"
+	"dfs.datanode.data.dir=/data/${cluster_name}"
 )
 
 
