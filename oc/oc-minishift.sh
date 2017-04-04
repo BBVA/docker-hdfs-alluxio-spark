@@ -4,7 +4,7 @@
 export project="has"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
 export secretname="sshcert"
-nodes=${1:-"7"}
+nodes=${1:-"3"}
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 
 # Create new oc project
@@ -52,9 +52,9 @@ for id in $(seq 1 1 ${nodes}); do
     	-p IMAGE_SPARK="${spark_image}" \
     	-p IMAGE_ALLUXIO="${alluxio_image}" \
     	-p IMAGE_HDFS="${hdfs_image}" \
-    	-p "ALLUXIO_MEMORY=6GB" \
-    	-p "SPARK_MEMORY=6GB" \
-    	-p "HDFS_MEMORY=1GB" \
+    	-p "ALLUXIO_MEMORY=512MB" \
+    	-p "SPARK_MEMORY=512MB" \
+    	-p "HDFS_MEMORY=512MB" \
     	-f "oc-deploy-has-node.yaml" | oc create -f -
 done
 

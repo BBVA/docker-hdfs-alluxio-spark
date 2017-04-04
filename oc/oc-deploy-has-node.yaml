@@ -27,6 +27,8 @@ parameters:
     value: "4096MB"
   - name: SPARK_MEMORY
     value: "2048MB"
+  - name: HDFS_MEMORY
+    value: "1024MB"
 
 objects:
 
@@ -107,6 +109,8 @@ objects:
                 - datanode
                 - start
                 - hdfs-namenode
+              env:
+                - HADOOP_NAMENODE_OPTS="-Xms${HDFS_MEMORY} -Xmx${HDFS_MEMORY}"
               volumeMounts:
                 - name: hdfs-worker-storage-${ID}
                   mountPath: /data
