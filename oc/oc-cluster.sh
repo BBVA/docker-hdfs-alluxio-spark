@@ -4,7 +4,7 @@
 export project="has"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
 export secretname="sshcert"
-nodes=${1:-"3"}
+nodes=${1:-"7"}
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 
 # Create new oc project
@@ -24,28 +24,45 @@ done
 
 # Deploy HDFS namenode
 export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process -p IMAGE=${hdfs_image} -p STORAGE="1Gi" -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
+oc process \
+	-p IMAGE=${hdfs_image} \
+	-f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
 # Deploy HDFS httpfs node
-oc process -p IMAGE=${hdfs_image} -f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
+oc process \
+	-p IMAGE=${hdfs_image} \
+	-f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
 
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process -p IMAGE=${alluxio_image} -p STORAGE="1Gi" -f "oc-deploy-alluxio-master.yaml" | oc create -f -
+oc process \
+	-p IMAGE=${alluxio_image} \
+	-f "oc-deploy-alluxio-master.yaml" | oc create -f -
 
 
 # Deploy Spark master
 export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process -p IMAGE=${spark_image} -p STORAGE="1Gi" -f "oc-deploy-spark-master.yaml" | oc create -f -
+oc process \
+	-p IMAGE=${spark_image} \
+	-f "oc-deploy-spark-master.yaml" | oc create -f -
 
 # Deploy three workers
 for id in $(seq 1 1 ${nodes}); do
-    oc process -p ID=${id} -p IMAGE_SPARK="${spark_image}" -p IMAGE_ALLUXIO="${alluxio_image}" -p IMAGE_HDFS="${hdfs_image}" -p STORAGE="1Gi" -f "oc-deploy-has-node.yaml" | oc create -f -
+    oc process -p ID=${id} \
+    	-p IMAGE_SPARK="${spark_image}" \
+    	-p IMAGE_ALLUXIO="${alluxio_image}" \
+    	-p IMAGE_HDFS="${hdfs_image}" \
+    	-p "ALLUXIO_MEMORY=6GB" \
+    	-p "SPARK_MEMORY=6GB" \
+    	-f "oc-deploy-has-node.yaml" | oc create -f -
 done
 
 # Deploy a Zeppelin client
-# export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-# oc process -p ID=0 -p IMAGE=${zeppelin_image} -p STORAGE="1Gi" -f "oc-deploy-zeppelin.yaml" | oc create -f -
+#export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
+#oc process -p ID=0 \
+#	-p IMAGE=${zeppelin_image} \
+#	-p STORAGE="1Gi" \
+#	-f "oc-deploy-zeppelin.yaml" | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070,
