@@ -109,8 +109,6 @@ objects:
                 - datanode
                 - start
                 - hdfs-namenode
-              env:
-                - HADOOP_NAMENODE_OPTS="-Xms${HDFS_MEMORY} -Xmx${HDFS_MEMORY}"
               volumeMounts:
                 - name: hdfs-worker-storage-${ID}
                   mountPath: /data
