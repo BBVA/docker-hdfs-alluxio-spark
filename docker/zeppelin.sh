@@ -19,3 +19,8 @@ fi
 # bring up namenode and show its url
 mkdir -p ${volume}/zeppelin
 zeppelin_id=$(docker run -d -v ${volume}/zeppelin:/data -p 8081:8080 --name zeppelin -h zeppelin --network=${net} zeppelin master start zeppelin)
+
+ip=$(docker inspect --format '{{ .NetworkSettings.Networks.'${net}'.IPAddress }}' ${zeppelin_id})
+
+echo Zeppelin started in:
+echo http://$ip:8080
