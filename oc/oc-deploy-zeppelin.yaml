@@ -71,7 +71,7 @@ objects:
                         "matchExpressions": [{
                           "key": "type",
                           "operator": "In",
-                          "values": ["worker", "master", "driver", "aux"]
+                          "values": ["worker", "master", "driver"]
                         }]
                       },
                       "topologyKey": "kubernetes.io/hostname"

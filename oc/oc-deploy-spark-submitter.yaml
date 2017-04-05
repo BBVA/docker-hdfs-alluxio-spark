@@ -32,6 +32,7 @@ objects:
         metadata:
           labels:
             app: ${NAME}
+            type: "driver"
         spec:
           containers:
           - name: ${NAME}
