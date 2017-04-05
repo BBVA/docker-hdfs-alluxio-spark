@@ -71,6 +71,7 @@ objects:
                   }
                 }
         spec:
+          hostname: alluxio-master
           volumes:
             - name: alluxio-master-storage
               emptyDir: {}

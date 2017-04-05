@@ -71,6 +71,7 @@ objects:
                   }
                 }
         spec:
+          hostname: spark-master
           volumes:
             - name: spark-master-storage
               emptyDir: {}
