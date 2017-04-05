@@ -26,7 +26,7 @@ sleep 2s
 ip=$(docker inspect --format '{{ .NetworkSettings.Networks.'${net}'.IPAddress }}' ${spark_master_id})
 
 echo Master started in:
-echo http://$ip:7077
+echo http://$ip:8080
 
 for n in $(seq 1 1 ${nodes}); do
 	echo Starting node ${n}
