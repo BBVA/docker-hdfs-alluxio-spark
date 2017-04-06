@@ -165,13 +165,15 @@ The general procedure to bring this up is:
 
 Please note that images are built in your minishift installation, it might take some time. Also The deployments might not be started automatically, so proceed to deploy manually when the images are ready.
 
+```oc-cluster.sh``` is used to deploy a production-grade cluster, 7 workers, and 3 masters, with antiaffinity rules, also with 6GB of RAM for alluxio workers and 6GB of RAM for spark workers. Please read the yaml for current layout and futher details. On the other hand,  ```oc-minishift.sh``` deploys three workers with 512MB of RAM for alluxio and 512MB of RAM for spark workers,  this scenario expects a single VM minishift deployment. 
+
 ## notes on data locality
 
-Data locality is achieves by naming everything. All the components should be reachable by name, and that name needs to be also the hostname of the component.
+Data locality is achieved by naming everything. All the components should be reachable by name, and that name needs to be also the hostname of the component.
 
 To achieve this in openshift, several assumptions are made:
  - workers of hdfs, alluxio and spark run toghether on the same pod, sharing hostname and ip address
- - all workers have a openshift service of their own to be able to communicate with the rest of the cluster
+ - all workers have an openshift service of their own to be able to communicate with the rest of the cluster
  - the openshift service and the hostname of the pod must be equal
  - all the nodes that accept as a parameter its local name, shoud be set up that way using the FQDN, for example with the output of ```hostname -f```
 
