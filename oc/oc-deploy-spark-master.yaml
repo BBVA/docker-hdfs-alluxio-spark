@@ -15,6 +15,37 @@ parameters:
 objects:
 
   - apiVersion: v1
+    kind: Service
+    metadata:
+      name: spark-master
+    spec:
+      selector:
+        app: "spark-master"
+      ports:
+        - name: spark-master-service
+          protocol: TCP
+          port: 7077
+          targetPort: 7077
+        - name: spark-master-ui
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: spark-master-dashboard
+      namespace: has
+    spec:
+      to:
+          kind: Service
+          name: spark-master
+          weight: 100
+      port:
+          targetPort: spark-master-ui
+      wildcardPolicy: None
+
+  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: spark-master
@@ -90,34 +121,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: spark-master
-    spec:
-      selector:
-        app: "spark-master"
-      ports:
-        - name: spark-master-service
-          protocol: TCP
-          port: 7077
-          targetPort: 7077
-        - name: spark-master-ui
-          protocol: TCP
-          port: 8080
-          targetPort: 8080
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: spark-master-dashboard
-      namespace: has
-    spec:
-      to:
-          kind: Service
-          name: spark-master
-          weight: 100
-      port:
-          targetPort: spark-master-ui
-      wildcardPolicy: None

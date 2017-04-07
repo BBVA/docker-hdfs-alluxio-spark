@@ -15,6 +15,55 @@ parameters:
 objects:
 
   - apiVersion: v1
+    kind: Service
+    metadata:
+      name: alluxio-master
+    spec:
+      selector:
+        app: "alluxio-master"
+      ports:
+        - name: alluxio-master-ui
+          protocol: TCP
+          port: 19999
+          targetPort: 19999
+        - name: alluxio-master-service
+          protocol: TCP
+          port: 19998
+          targetPort: 19998
+        - name: alluxio-master-rest
+          protocol: TCP
+          port: 39999
+          targetPort: 39999
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: alluxio-master-dashboard
+      namespace: has
+    spec:
+      to:
+          kind: Service
+          name: alluxio-master
+          weight: 100
+      port:
+          targetPort: alluxio-master-ui
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: alluxio-master-rest
+      namespace: has
+    spec:
+      to:
+          kind: Service
+          name: alluxio-master
+          weight: 100
+      port:
+          targetPort: alluxio-master-rest
+      wildcardPolicy: None  
+
+  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: alluxio-master
@@ -90,52 +139,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: alluxio-master
-    spec:
-      selector:
-        app: "alluxio-master"
-      ports:
-        - name: alluxio-master-ui
-          protocol: TCP
-          port: 19999
-          targetPort: 19999
-        - name: alluxio-master-service
-          protocol: TCP
-          port: 19998
-          targetPort: 19998
-        - name: alluxio-master-rest
-          protocol: TCP
-          port: 39999
-          targetPort: 39999
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: alluxio-master-dashboard
-      namespace: has
-    spec:
-      to:
-          kind: Service
-          name: alluxio-master
-          weight: 100
-      port:
-          targetPort: alluxio-master-ui
-      wildcardPolicy: None
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: alluxio-master-rest
-      namespace: has
-    spec:
-      to:
-          kind: Service
-          name: alluxio-master
-          weight: 100
-      port:
-          targetPort: alluxio-master-rest
-      wildcardPolicy: None

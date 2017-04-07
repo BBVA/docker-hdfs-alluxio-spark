@@ -33,6 +33,97 @@ parameters:
 objects:
 
   - apiVersion: v1
+    kind: Service
+    metadata:
+      name: worker${ID}
+    spec:
+      selector:
+        app: worker${ID}
+      ports:
+        - name: dfs-datanode-address
+          protocol: TCP
+          port: 50010
+          targetPort: 50010
+        - name: dfs-datanode-http-address
+          protocol: TCP
+          port: 50075
+          targetPort: 50075
+        - name: dfs-datanode-ipc-address
+          protocol: TCP
+          port: 50020
+          targetPort: 50020
+        - name: alluxio-worker-metadata
+          protocol: TCP
+          port: 29998
+          targetPort: 29998
+        - name: alluxio-worker-data-transfer
+          protocol: TCP
+          port: 29999
+          targetPort: 29999
+        - name: alluxio-worker-rpc-ui
+          protocol: TCP
+          port: 30000
+          targetPort: 30000
+        - name: spark-worker-service
+          protocol: TCP
+          port: 35000
+          targetPort: 35000
+        - name: spark-worker-ui
+          protocol: TCP
+          port: 8081
+          targetPort: 8081
+        - name: spark-worker-service-bis
+          protocol: TCP
+          port: 6066
+          targetPort: 6066
+        - name: spark-blockmanager-port
+          protocol: TCP
+          port: 51400
+          targetPort: 51400
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: hdfs-worker${ID}
+      namespace: has
+    spec:
+      to:
+        kind: Service
+        name: worker${ID}
+        weight: 100
+      port:
+        targetPort: dfs-datanode-http-address
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: spark-worker${ID}
+      namespace: has
+    spec:
+      to:
+        kind: Service
+        name: worker${ID}
+        weight: 100
+      port:
+        targetPort: spark-worker-ui
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: alluxio-worker${ID}
+      namespace: has
+    spec:
+      to:
+        kind: Service
+        name: worker${ID}
+        weight: 100
+      port:
+        targetPort: alluxio-worker-rpc-ui
+      wildcardPolicy: None  
+
+  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: worker${ID}
@@ -142,94 +233,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: worker${ID}
-    spec:
-      selector:
-        app: worker${ID}
-      ports:
-        - name: dfs-datanode-address
-          protocol: TCP
-          port: 50010
-          targetPort: 50010
-        - name: dfs-datanode-http-address
-          protocol: TCP
-          port: 50075
-          targetPort: 50075
-        - name: dfs-datanode-ipc-address
-          protocol: TCP
-          port: 50020
-          targetPort: 50020
-        - name: alluxio-worker-metadata
-          protocol: TCP
-          port: 29998
-          targetPort: 29998
-        - name: alluxio-worker-data-transfer
-          protocol: TCP
-          port: 29999
-          targetPort: 29999
-        - name: alluxio-worker-rpc-ui
-          protocol: TCP
-          port: 30000
-          targetPort: 30000
-        - name: spark-worker-service
-          protocol: TCP
-          port: 35000
-          targetPort: 35000
-        - name: spark-worker-ui
-          protocol: TCP
-          port: 8081
-          targetPort: 8081
-        - name: spark-worker-service-bis
-          protocol: TCP
-          port: 6066
-          targetPort: 6066
-        - name: spark-blockmanager-port
-          protocol: TCP
-          port: 51400
-          targetPort: 51400
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: hdfs-worker${ID}
-      namespace: has
-    spec:
-      to:
-        kind: Service
-        name: worker${ID}
-        weight: 100
-      port:
-        targetPort: dfs-datanode-http-address
-      wildcardPolicy: None
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: spark-worker${ID}
-      namespace: has
-    spec:
-      to:
-        kind: Service
-        name: worker${ID}
-        weight: 100
-      port:
-        targetPort: spark-worker-ui
-      wildcardPolicy: None
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-      name: alluxio-worker${ID}
-      namespace: has
-    spec:
-      to:
-        kind: Service
-        name: worker${ID}
-        weight: 100
-      port:
-        targetPort: alluxio-worker-rpc-ui
-      wildcardPolicy: None

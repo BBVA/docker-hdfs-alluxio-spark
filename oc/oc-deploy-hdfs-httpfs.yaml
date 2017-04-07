@@ -16,6 +16,37 @@ parameters:
 objects:
 
   - apiVersion: v1
+    kind: Service
+    metadata:
+      name: hdfs-httpfs
+    spec:
+      selector:
+        app: "hdfs-httpfs"
+      ports:
+        - name: httpfs-service
+          protocol: TCP
+          port: 14000
+          targetPort: 14000
+        - name: httpfs-admin
+          protocol: TCP
+          port: 14001
+          targetPort: 14001
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+       name: hdfs-httpfs
+       namespace: has
+    spec:
+       to:
+         kind: Service
+         name: hdfs-httpfs
+         weight: 100
+       port:
+         targetPort: httpfs-service
+       wildcardPolicy: None
+
+  - apiVersion: v1
     kind: DeploymentConfig
     metadata:
       name: hdfs-httpfs
@@ -86,34 +117,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: hdfs-httpfs
-    spec:
-      selector:
-        app: "hdfs-httpfs"
-      ports:
-        - name: httpfs-service
-          protocol: TCP
-          port: 14000
-          targetPort: 14000
-        - name: httpfs-admin
-          protocol: TCP
-          port: 14001
-          targetPort: 14001
-
-  - apiVersion: v1
-    kind: Route
-    metadata:
-       name: hdfs-httpfs
-       namespace: has
-    spec:
-       to:
-         kind: Service
-         name: hdfs-httpfs
-         weight: 100
-       port:
-         targetPort: httpfs-service
-       wildcardPolicy: None
