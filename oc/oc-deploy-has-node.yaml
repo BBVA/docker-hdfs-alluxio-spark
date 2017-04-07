@@ -65,10 +65,7 @@ objects:
             app: worker${ID}
             deploymentconfig: worker${ID}
             type: "worker"
-        spec:
-          hostname: worker${ID}
           annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
@@ -83,7 +80,9 @@ objects:
                       "topologyKey": "kubernetes.io/hostname"
                     }]
                   }
-                } 
+                }
+        spec:
+          hostname: worker${ID}
           volumes:
             - name: hdfs-worker-storage-${ID}
               emptyDir: {}

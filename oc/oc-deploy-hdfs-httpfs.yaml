@@ -47,10 +47,7 @@ objects:
             app: hdfs-httpfs
             deploymentconfig: hdfs-httpfs
             type: "aux"
-        spec:
-          hostname: hdfs-httpfs
           annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
@@ -66,6 +63,8 @@ objects:
                     }]
                   }
                 }
+        spec:
+          hostname: hdfs-httpfs
           containers:
             - name: hdfs-httpfs
               image: ${IMAGE}

@@ -34,7 +34,6 @@ objects:
             app: ${NAME}
             type: "driver"
           annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {

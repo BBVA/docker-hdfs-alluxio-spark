@@ -47,10 +47,7 @@ objects:
             app: hdfs-namenode
             deploymentconfig: hdfs-namenode
             type: "master"
-        spec:
-          hostname: hdfs-namenode
           annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
@@ -66,6 +63,8 @@ objects:
                     }]
                   }
                 }
+        spec:
+          hostname: hdfs-namenode
           volumes:
             - name: hdfs-namenode-storage
               emptyDir: {}

@@ -46,10 +46,7 @@ objects:
             app: alluxio-master
             deploymentconfig: alluxio-master
             type: "master"
-        spec:
-          hostname: alluxio-master
           annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
@@ -65,6 +62,8 @@ objects:
                     }]
                   }
                 }
+        spec:
+          hostname: alluxio-master
           volumes:
             - name: alluxio-master-storage
               emptyDir: {}

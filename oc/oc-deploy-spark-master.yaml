@@ -46,10 +46,7 @@ objects:
             app: spark-master
             deploymentconfig: spark-master
             type: "master"
-        spec:
-          hostname: spark-master
           annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
@@ -65,6 +62,8 @@ objects:
                     }]
                   }
                 }
+        spec:
+          hostname: spark-master
           volumes:
             - name: spark-master-storage
               emptyDir: {}
