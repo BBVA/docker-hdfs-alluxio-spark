@@ -53,25 +53,18 @@ objects:
             app: spark-master
             deploymentconfig: spark-master
             type: "master"
-          annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
-            scheduler.alpha.kubernetes.io/affinity: >
-                {
-                  "podAntiAffinity": {
-                    "preferredDuringScheduling": [{
-                      "labelSelector": {
-                        "matchExpressions": [{
-                          "key": "type",
-                          "operator": "In",
-                          "values": ["worker", "driver", "aux"]
-                        }]
-                      },
-                      "topologyKey": "kubernetes.io/hostname"
-                    }]
-                  }
-                }
         spec:
           hostname: spark-master
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoreDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                    - key: type
+                      operator: In
+                      values:
+                        - "worker"
+                        - "driver"
+                        - "aux"
           volumes:
             - name: spark-master-storage
               emptyDir: {}

@@ -61,28 +61,21 @@ objects:
             app: zeppelin
             deploymentconfig: zeppelin
             type: "aux"
-          annotations:
-            pod.alpha.kubernetes.io/initialized: "true"
-            scheduler.alpha.kubernetes.io/affinity: >
-                {
-                  "podAntiAffinity": {
-                    "preferredDuringScheduling": [{
-                      "labelSelector": {
-                        "matchExpressions": [{
-                          "key": "type",
-                          "operator": "In",
-                          "values": ["worker", "master", "driver"]
-                        }]
-                      },
-                      "topologyKey": "kubernetes.io/hostname"
-                    }]
-                  }
-                }
         spec:
           volumes:
             - name: zeppelin-storage
               emptyDir: {}
           hostname: zeppelin-${ID}
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoreDuringExecution:
+              - labelSelector:
+                  matchExpressions:
+                    - key: type
+                      operator: In
+                      values:
+                        - "worker"
+                        - "master"
+                        - "driver"
           subdomain: has
           containers:
             - name: zeppelin

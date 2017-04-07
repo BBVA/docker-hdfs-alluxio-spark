@@ -33,6 +33,23 @@ objects:
           labels:
             app: ${NAME}
             type: "driver"
+          annotations:
+            pod.alpha.kubernetes.io/initialized: "true"
+            scheduler.alpha.kubernetes.io/affinity: >
+                {
+                  "podAntiAffinity": {
+                    "requiredDuringScheduling": [{
+                      "labelSelector": {
+                        "matchExpressions": [{
+                          "key": "type",
+                          "operator": "In",
+                          "values": ["worker", "master", "aux"]
+                        }]
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    }]
+                  }
+                }
         spec:
           containers:
           - name: ${NAME}
