@@ -181,9 +181,9 @@ trap "shut_down sigint" SIGINT
 core_site_default=(
 	"fs.defaultFS=hdfs://${cluster_name}:8020"
 	"io.file.buffer.size=131072"
-	"hadoop.proxyuser.openshift.hosts=172.16.0.0/12"
+	"hadoop.proxyuser.openshift.hosts=172.16.0.0/12,10.0.0.0/8"
 	"hadoop.proxyuser.openshift.groups=openshift,root"
-	"hadoop.proxyuser.root.hosts=172.16.0.0/12"
+	"hadoop.proxyuser.root.hosts=172.16.0.0/12,10.0.0.0/8"
 	"hadoop.proxyuser.root.groups=root"
 )
 
