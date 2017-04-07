@@ -49,15 +49,23 @@ objects:
             type: "aux"
         spec:
           hostname: hdfs-httpfs
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoreDuringExecution:
-              - labelSelector:
-                  matchExpressions:
-                    - key: type
-                      operator: In
-                      values:
-                        - "worker"
-                        - "driver"
+          annotations:
+            pod.alpha.kubernetes.io/initialized: "true"
+            scheduler.alpha.kubernetes.io/affinity: >
+                {
+                  "podAntiAffinity": {
+                    "requiredDuringScheduling": [{
+                      "labelSelector": {
+                        "matchExpressions": [{
+                          "key": "type",
+                          "operator": "In",
+                          "values": ["worker", "aux"]
+                        }]
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    }]
+                  }
+                }
           containers:
             - name: hdfs-httpfs
               image: ${IMAGE}

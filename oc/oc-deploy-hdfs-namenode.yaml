@@ -49,16 +49,23 @@ objects:
             type: "master"
         spec:
           hostname: hdfs-namenode
-          podAntiAffinity:
-            requiredDuringSchedulingIgnoreDuringExecution:
-              - labelSelector:
-                  matchExpressions:
-                    - key: type
-                      operator: In
-                      values:
-                        - "master"
-                        - "driver"
-                        - "aux"
+          annotations:
+            pod.alpha.kubernetes.io/initialized: "true"
+            scheduler.alpha.kubernetes.io/affinity: >
+                {
+                  "podAntiAffinity": {
+                    "requiredDuringScheduling": [{
+                      "labelSelector": {
+                        "matchExpressions": [{
+                          "key": "type",
+                          "operator": "In",
+                          "values": ["worker", "aux"]
+                        }]
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    }]
+                  }
+                }
           volumes:
             - name: hdfs-namenode-storage
               emptyDir: {}
