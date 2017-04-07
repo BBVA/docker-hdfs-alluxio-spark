@@ -4,8 +4,8 @@ action="$1"
 local_file="$2"
 remote_filepath="$3"
 
-user=${HUSER:-"openshift"}
-httpfs=${HTTPFS:-"http://hdfs-httpfs-has.192.168.42.95.nip.io"}
+user=${HUSER:-"root"}
+httpfs=${HTTPFS:-"http://hdfs-httpfs-has.eurocloud.hyperscale.io"}
 
 debug="-s"
 case $action in
