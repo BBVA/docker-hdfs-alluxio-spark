@@ -49,7 +49,7 @@ objects:
           weight: 100
       port:
           targetPort: driver-console-port
-      wildcardPolicy: None  
+      wildcardPolicy: None
 
   - apiVersion: batch/v1
     kind: Job
@@ -68,13 +68,15 @@ objects:
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
-                    "requiredDuringScheduling": [{
-                      "labelSelector": {
-                        "matchExpressions": [{
-                          "key": "type",
-                          "operator": "In",
-                          "values": ["worker", "master", "aux"]
-                        }]
+                    "requiredDuringSchedulingIgnoredDuringExecution": [{
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["worker", "master", "aux"]
+                          }]
+                        }
                       },
                       "topologyKey": "kubernetes.io/hostname"
                     }]

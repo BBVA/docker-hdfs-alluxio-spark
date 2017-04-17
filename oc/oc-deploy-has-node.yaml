@@ -121,7 +121,7 @@ objects:
         weight: 100
       port:
         targetPort: alluxio-worker-rpc-ui
-      wildcardPolicy: None  
+      wildcardPolicy: None
 
   - apiVersion: v1
     kind: DeploymentConfig
@@ -160,13 +160,15 @@ objects:
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
-                    "requiredDuringScheduling": [{
-                      "labelSelector": {
-                        "matchExpressions": [{
-                          "key": "type",
-                          "operator": "In",
-                          "values": ["master", "driver", "worker", "aux"]
-                        }]
+                    "requiredDuringSchedulingIgnoredDuringExecution": [{
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["master", "driver", "worker", "aux"]
+                          }]
+                        }
                       },
                       "topologyKey": "kubernetes.io/hostname"
                     }]

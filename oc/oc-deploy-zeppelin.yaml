@@ -93,7 +93,7 @@ objects:
           weight: 100
       port:
           targetPort: spark-ui
-      wildcardPolicy: None  
+      wildcardPolicy: None
 
   - apiVersion: v1
     kind: DeploymentConfig
@@ -131,15 +131,18 @@ objects:
             scheduler.alpha.kubernetes.io/affinity: >
                 {
                   "podAntiAffinity": {
-                    "preferredDuringScheduling": [{
-                      "labelSelector": {
-                        "matchExpressions": [{
-                          "key": "type",
-                          "operator": "In",
-                          "values": ["worker", "master", "driver"]
-                        }]
-                      },
-                      "topologyKey": "kubernetes.io/hostname"
+                    "preferredDuringSchedulingIgnoredDuringExecution": [{
+                      "weight": 1,
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["worker", "master", "driver"]
+                          }]
+                        },
+                        "topologyKey": "kubernetes.io/hostname"
+                      }
                     }]
                   }
                 }

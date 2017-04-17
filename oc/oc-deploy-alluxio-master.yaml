@@ -61,7 +61,7 @@ objects:
           weight: 100
       port:
           targetPort: alluxio-master-rest
-      wildcardPolicy: None  
+      wildcardPolicy: None
 
   - apiVersion: v1
     kind: DeploymentConfig
@@ -98,14 +98,31 @@ objects:
           annotations:
             scheduler.alpha.kubernetes.io/affinity: >
                 {
+                  "podAffinity": {
+                    "preferredDuringSchedulingIgnoredDuringExecution": [{
+                      "weight": 1,
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["master"]
+                          }]
+                        },
+                        "topologyKey": "kubernetes.io/hostname"
+                      }
+                    }]
+                  },
                   "podAntiAffinity": {
-                    "requiredDuringScheduling": [{
-                      "labelSelector": {
-                        "matchExpressions": [{
-                          "key": "type",
-                          "operator": "In",
-                          "values": ["worker", "aux"]
-                        }]
+                    "requiredDuringSchedulingIgnoredDuringExecution": [{
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["worker", "aux"]
+                          }]
+                        }
                       },
                       "topologyKey": "kubernetes.io/hostname"
                     }]
