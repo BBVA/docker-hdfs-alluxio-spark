@@ -18,7 +18,7 @@ fi
 
 # bring up namenode and show its url
 mkdir -p ${volume}/alluxio-master
-alluxio_master_id=$(docker run --shm-size 2g -d -v ${volume}/alluxio-master:/data -p 19999:19999 --name alluxio-master -h alluxio-master --network=${net}  alluxio master start alluxio-master)
+alluxio_master_id=$(docker run --shm-size 2g -d -v ${volume}/alluxio-master:/data -p 19999:19999 -p 19998:19998 --name alluxio-master -h alluxio-master --network=${net}  alluxio master start alluxio-master)
 
 sleep 2s
 

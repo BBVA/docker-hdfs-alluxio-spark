@@ -1,6 +1,6 @@
 import org.apache.spark.{SparkConf, SparkContext}
 
-object sparky {
+object Sparky {
   def main(args: Array[String]) {
     val conf = new Conf(args)
 

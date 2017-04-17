@@ -147,7 +147,7 @@ This contains a Scala application that counts lines on a textFile given the apro
 
 Read the source code, and try it like:
 
-    sbt "runMain (sparky | AlluxioExperiment | CSVToParquet) --spark spark://spark-master-dashboard-has.192.168.99.100.nip.io --input alluxio://alluxio-master-dashboard-has.192.168.99.100.nip.io/README.txt [--output outputFile]"
+    sbt "runMain (Sparky | AlluxioExperiment | CSVToParquet) --spark spark://spark-master-dashboard-has.192.168.99.100.nip.io --input alluxio://alluxio-master-dashboard-has.192.168.99.100.nip.io/README.txt [--output outputFile]"
 
 To test it agains the minishift cluster.
 
