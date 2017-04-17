@@ -146,6 +146,8 @@ default_properties=(
 	"alluxio.security.authentication.type=SIMPLE"
 	"alluxio.security.authorization.permission.enabled=true"
 	"alluxio.user.block.size.bytes.default=32MB"
+  "alluxio.user.file.write.location.policy.class=alluxio.client.file.policy.RoundRobinPolicy"
+  "alluxio.user.file.writetype.default=CACHE_THROUGH"
 )
 
 # default config
