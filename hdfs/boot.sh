@@ -63,7 +63,7 @@ data_node() {
 		start)
 			if [ ! -d /data/${cluster_name}/ ]; then
 				mkdir -p /data/${cluster_name}
-			fi		
+			fi
 			# Start a HDFS DataNode with the following command on each designated node as hdfs:
 			$HADOOP_PREFIX/sbin/hadoop-daemon.sh --config ${HADOOP_CONF_DIR} --script hdfs start datanode
 		;;
@@ -197,6 +197,8 @@ hdfs_site_default=(
 	"dfs.namenode.servicerpc-address=hdfs://${cluster_name}:8022"
 	"dfs.namenode.datanode.registration.ip-hostname-check=false"
 	"dfs.datanode.data.dir=/data/${cluster_name}"
+	"dfs.client.use.datanode.hostname=true"
+	"dfs.datanode.use.datanode.hostname=true"
 )
 
 
