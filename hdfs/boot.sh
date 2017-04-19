@@ -104,43 +104,30 @@ httpfs_node() {
 	esac
 }
 
+
 config() {
-	local file="${1}"
-	shift
-	local conf=("${@}")
-	echo "<configuration>" > ${file}
-	for p in "${conf[@]}"; do
-		prop=$(echo ${p} | cut -f 1 -d '=')
-		val=$(echo ${p} | cut -f 2 -d '=')
-		echo "$file: $prop = $val"
-		echo "<property>" >> ${file}
-		echo "<name>${prop}</name><value>${val}</value>" >> ${file}
-		echo "</property>" >> ${file}
+	vars=(${CONF_VARS})
+	files=(${CONF_FILES})
+	for i in "${!vars[@]}"; do
+		conf=${vars[i]}
+		file=${files[i]}
+		echo "${!conf}" > $file
 	done
-	echo "</configuration>" >> ${file}
 }
 
 hadoop_handler() {
 	local node="$1"
 	local action="$2"
 	local cluster_name="$3"
-	echo "hadoop_handler():${node} ${action} ${cluster_name}"
+
 	case $node in
 		namenode)
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
 			name_node ${action} ${cluster_name}
 		;;
 		datanode)
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
 			data_node ${action} ${cluster_name}
 		;;
 		httpfs)
-			export HTTPFS_HTTP_PORT=14000
-			export HTTPFS_ADMIN_PORT=14001
-			config "${HADOOP_CONF_DIR}/core-site.xml" ${CORE_SITE_CONF[@]}
-			config "${HADOOP_CONF_DIR}/hdfs-site.xml" ${HDFS_SITE_CONF[@]}
 			httpfs_node ${action} ${cluster_name}
 		;;
 		*)
@@ -166,7 +153,6 @@ shut_down() {
 	hadoop_handler ${node} stop ${cluster_name}
 }
 
-
 trap "shut_down sigkill" SIGKILL
 trap "shut_down sigterm" SIGTERM
 trap "shut_down sighup" SIGHUP
@@ -174,43 +160,8 @@ trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
 
-# default config
-# For httpfs config
-# https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Superusers.html
-# insecure defaults
-core_site_default=(
-	"fs.defaultFS=hdfs://${cluster_name}:8020"
-	"io.file.buffer.size=131072"
-	"hadoop.proxyuser.openshift.hosts=172.16.0.0/12,10.0.0.0/8"
-	"hadoop.proxyuser.openshift.groups=openshift,root"
-	"hadoop.proxyuser.root.hosts=172.16.0.0/12,10.0.0.0/8"
-	"hadoop.proxyuser.root.groups=root"
-)
-
-# https://log.rowanto.com/why-datanode-is-denied-communication-with-namenode/
-# disable remote host name check, enable in production with a correct service
-# discovery reverse dns set up
-hdfs_site_default=(
-	"dfs.namenode.name.dir=file:///data/${cluster_name}/"
-	"dfs.blocksize=33554432"
-	"dfs.namenode.handler.count=100"
-	"dfs.namenode.servicerpc-address=hdfs://${cluster_name}:8022"
-	"dfs.namenode.datanode.registration.ip-hostname-check=false"
-	"dfs.datanode.data.dir=/data/${cluster_name}"
-	"dfs.client.use.datanode.hostname=true"
-	"dfs.datanode.use.datanode.hostname=true"
-)
-
-
-if [ "${CORE_SITE_CONF}z" == "z" ]; then
-	CORE_SITE_CONF=${core_site_default[@]}
-fi
-
-if [ "${HDFS_SITE_CONF}z" == "z" ]; then
-	HDFS_SITE_CONF=${hdfs_site_default[@]}
-fi
-
 setup_username
+config
 
 echo "The ${node} is swtching to ${action} with ${cluster_name} id"
 hadoop_handler ${node} ${action} ${cluster_name}
