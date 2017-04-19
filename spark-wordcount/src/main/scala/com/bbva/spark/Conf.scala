@@ -9,12 +9,18 @@ object ConfParser {
 
   private lazy val parser = new OptionParser[Conf]("scopt") {
 
+    head("WordCount")
+
     opt[String]('i', "input").required().valueName("<file>")
         .action((input, c) => c.copy(inputFile = input))
         .text("input is a required file property")
 
+    help("help").text("prints this usage text")
   }
 
-  def parse(args: Seq[String], conf: Conf): Option[Conf] = parser.parse(args, conf)
+  def parseAndRun(args: Seq[String])(runFunc: Conf => Unit): Unit = parser.parse(args, Conf()) match {
+    case Some(conf) => runFunc(conf)
+    case None => // ignore
+  }
 
 }
