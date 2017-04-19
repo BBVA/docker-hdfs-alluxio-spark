@@ -29,7 +29,48 @@ parameters:
     value: "2048MB"
   - name: HDFS_MEMORY
     value: "1024MB"
-
+  - name: HDFS_CONF_FILES
+    required: true
+  - name: HDFS_CONF_VARS
+    required: true
+  - name: CORE_SITE_CONF
+    required: true
+  - name: HDFS_SITE_CONF
+    required: true
+  - name: HTTPFS_HTTP_PORT
+    required: true
+  - name: HTTPFS_ADMIN_PORT
+    required: true
+  - name: ALLUXIO_CONF_FILES
+    required: true
+  - name: ALLUXIO_CONF_VARS
+    required: true
+  - name: ALLUXIO_CONF
+    required: true
+  - name: ALLUXIO_WORKER_MEMORY_SIZE
+    required: true
+  - name: ALLUXIO_RAM_FOLDER
+    required: true
+  - name: ALLUXIO_UNDERFS_ADDRESS
+    required: true
+  - name: SPARK_CONF_FILES
+    required: true
+  - name: SPARK_CONF_VARS
+    required: true
+  - name: SPARK_CONF
+    required: true
+  - name: SPARK_MASTER_WEBUI_PORT
+    required: true
+  - name: SPARK_WORKER_MEMORY
+    required: true
+  - name: SPARK_WORKER_PORT
+    required: true
+  - name: SPARK_WORKER_WEBUI_PORT
+    required: true
+  - name: SPARK_DAEMON_MEMORY
+    required: true
+  - name: HADOOP_CONFIG_DIR
+    required: true
 objects:
 
   - apiVersion: v1
@@ -190,6 +231,13 @@ objects:
             - name: hdfs-worker${ID}
               image: ${IMAGE_HDFS}
               resources: {}
+              environment:
+                - CONF_FILES="${HDFS_CONF_FILES}"
+                - CONF_VARS="${HDFS_CONF_VARS}"
+                - CORE_SITE_CONF="${CORE_SITE_CONF}"
+                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
+                - HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}"
+                - HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}"
               args:
                 - datanode
                 - start
@@ -202,6 +250,16 @@ objects:
             - name: alluxio-worker-${ID}
               image: ${IMAGE_ALLUXIO}
               resources: {}
+              environment:
+                - CONF_FILES="${ALLUXIO_CONF_FILES}"
+                - CONF_VARS="${ALLUXIO_CONF_VARS}"
+                - CORE_SITE_CONF="${CORE_SITE_CONF}"
+                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
+                - ALLUXIO_CONF="${ALLUXIO_CONF}"
+                - ALLUXIO_WORKER_MEMORY_SIZE="${ALLUXIO_WORKER_MEMORY_SIZE}"
+                - ALLUXIO_RAM_FOLDER="${ALLUXIO_RAM_FOLDER}"
+                - ALLUXIO_UNDERFS_ADDRESS="${ALLUXIO_UNDERFS_ADDRESS}"
+                - HADOOP_CONFIG_DIR="${HADOOP_CONFIG_DIR}"
               args:
                 - slave
                 - start
@@ -219,6 +277,18 @@ objects:
             - name: spark-worker-${ID}
               image: ${IMAGE_SPARK}
               resources: {}
+              environment:
+                - CONF_FILES="${SPARK_CONF_FILES}"
+                - CONF_VARS="${SPARK_CONF_VARS}"
+                - CORE_SITE_CONF="${CORE_SITE_CONF}"
+                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
+                - SPARK_CONF="${SPARK_CONF}"
+                - SPARK_MASTER_WEBUI_PORT="${SPARK_MASTER_WEBUI_PORT}"
+                - SPARK_WORKER_MEMORY="${SPARK_WORKER_MEMORY}"
+                - SPARK_WORKER_PORT="${SPARK_WORKER_PORT}"
+                - SPARK_WORKER_WEBUI_PORT="${SPARK_WORKER_WEBUI_PORT}"
+                - SPARK_DAEMON_MEMORY="${SPARK_DAEMON_MEMORY}"
+                - HADOOP_CONFIG_DIR="${HADOOP_CONFIG_DIR}"
               args:
                 - slave
                 - start

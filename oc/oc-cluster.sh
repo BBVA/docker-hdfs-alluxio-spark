@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+source ../config/hadoop.sh
+source ../config/alluxio.sh
+source ../config/spark.sh
+
 # basic project data
 export project="has"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
@@ -26,17 +30,38 @@ done
 export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
 	-p IMAGE=${hdfs_image} \
+  -p CONF_FILES="${HDFS_CONF_FILES}" \
+  -p CONF_VARS="${HDFS_CONF_VARS}" \
+  -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
+  -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
+  -p HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}" \
+  -p HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}" \
 	-f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
 # Deploy HDFS httpfs node
 oc process \
 	-p IMAGE=${hdfs_image} \
+  -p CONF_FILES="${HDFS_CONF_FILES}" \
+  -p CONF_VARS="${HDFS_CONF_VARS}" \
+  -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
+  -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
+  -p HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}" \
+  -p HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}" \
 	-f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
 
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
 	-p IMAGE=${alluxio_image} \
+  -p CONF_FILES="${ALLUXIO_CONF_FILES}" \
+  -p CONF_VARS="${ALLUXIO_CONF_VARS}" \
+  -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
+  -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
+  -p ALLUXIO_CONF="${ALLUXIO_CONF}" \
+  -p ALLUXIO_WORKER_MEMORY_SIZE="${ALLUXIO_WORKER_MEMORY_SIZE}" \
+  -p ALLUXIO_RAM_FOLDER="${ALLUXIO_RAM_FOLDER}" \
+  -p ALLUXIO_UNDERFS_ADDRESS="${ALLUXIO_UNDERFS_ADDRESS}"\
+  -p HADOOP_CONFIG_DIR="${HADOOP_CONFIG_DIR}" \
 	-f "oc-deploy-alluxio-master.yaml" | oc create -f -
 
 
@@ -44,6 +69,17 @@ oc process \
 export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
 	-p IMAGE=${spark_image} \
+  -p CONF_FILES="${SPARK_CONF_FILES}" \
+  -p CONF_VARS="${SPARK_CONF_VARS}" \
+  -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
+  -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
+  -p SPARK_CONF="${SPARK_CONF}" \
+  -p HADOOP_CONF_DIR="${HADOOP_CONF_DIR}" \
+  -p SPARK_MASTER_WEBUI_PORT="${SPARK_MASTER_WEBUI_PORT}" \
+  -p SPARK_WORKER_MEMORY="${SPARK_WORKER_MEMORY}" \
+  -p SPARK_WORKER_PORT="${SPARK_WORKER_PORT}" \
+  -p SPARK_WORKER_WEBUI_PORT="${SPARK_WORKER_WEBUI_PORT}" \
+  -p SPARK_DAEMON_MEMORY="${SPARK_DAEMON_MEMORY}" \
 	-f "oc-deploy-spark-master.yaml" | oc create -f -
 
 # Deploy three workers
@@ -55,6 +91,27 @@ for id in $(seq 1 1 ${nodes}); do
     	-p "ALLUXIO_MEMORY=6GB" \
     	-p "SPARK_MEMORY=6GB" \
     	-p "HDFS_MEMORY=1GB" \
+      -p HDFS_CONF_FILES="${HDFS_CONF_FILES}" \
+      -p HDFS_CONF_VARS="${HDFS_CONF_VARS}" \
+      -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
+      -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
+      -p HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}" \
+      -p HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}" \
+      -p ALLUXIO_CONF_FILES="${ALLUXIO_CONF_FILES}" \
+      -p ALLUXIO_CONF_VARS="${ALLUXIO_CONF_VARS}" \
+      -p ALLUXIO_CONF="${ALLUXIO_CONF}" \
+      -p ALLUXIO_WORKER_MEMORY_SIZE="${ALLUXIO_WORKER_MEMORY_SIZE}" \
+      -p ALLUXIO_RAM_FOLDER="${ALLUXIO_RAM_FOLDER}" \
+      -p ALLUXIO_UNDERFS_ADDRESS="${ALLUXIO_UNDERFS_ADDRESS}"\
+      -p HADOOP_CONFIG_DIR="${HADOOP_CONFIG_DIR}" \
+      -p SPARK_CONF_FILES="${SPARK_CONF_FILES}" \
+      -p SPARK_CONF_VARS="${SPARK_CONF_VARS}" \
+      -p SPARK_CONF="${SPARK_CONF}" \
+      -p SPARK_MASTER_WEBUI_PORT="${SPARK_MASTER_WEBUI_PORT}" \
+      -p SPARK_WORKER_MEMORY="${SPARK_WORKER_MEMORY}" \
+      -p SPARK_WORKER_PORT="${SPARK_WORKER_PORT}" \
+      -p SPARK_WORKER_WEBUI_PORT="${SPARK_WORKER_WEBUI_PORT}" \
+      -p SPARK_DAEMON_MEMORY="${SPARK_DAEMON_MEMORY}" \
     	-f "oc-deploy-has-node.yaml" | oc create -f -
 done
 

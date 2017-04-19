@@ -11,6 +11,18 @@ parameters:
     value: "hdfs"
     description: HAS HDFS Docker image
     required: true
+  - name: CONF_FILES
+    required: true
+  - name: CONF_VARS
+    required: true
+  - name: CORE_SITE_CONF
+    required: true
+  - name: HDFS_SITE_CONF
+    required: true
+  - name: HTTPFS_HTTP_PORT
+    required: true
+  - name: HTTPFS_ADMIN_PORT
+    required: true
 
 objects:
 
@@ -125,6 +137,13 @@ objects:
             - name: hdfs-namenode
               image: ${IMAGE}
               resources: {}
+              environment:
+                - CONF_FILES="${CONF_FILES}"
+                - CONF_VARS="${CONF_VARS}"
+                - CORE_SITE_CONF="${CORE_SITE_CONF}"
+                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
+                - HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}"
+                - HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}"
               args:
                 - namenode
                 - start
