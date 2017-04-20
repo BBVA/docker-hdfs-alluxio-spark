@@ -2,18 +2,8 @@
 
 export spark_master="spark-master"
 
-
-export SPARK_CONF_VARS=(
-	"CORE_SITE_CONF"
-	"HDFS_SITE_CONF"
-	"SPARK_CONF"
-)
-
-export SPARK_CONF_FILES=(
-	"/opt/spark/conf/core-site.xml"
-	"/opt/spark/conf/hdfs-site.xml"
-	"/opt/spark/conf/spark-defaults.conf"
-)
+export SPARK_CONF_VARS="CORE_SITE_CONF HDFS_SITE_CONF SPARK_CONF"
+export SPARK_CONF_FILES="/opt/spark/conf/core-site.xml /opt/spark/conf/hdfs-site.xml /opt/spark/conf/spark-defaults.conf"
 
 export SPARK_MASTER_WEBUI_PORT=${SPARK_MASTER_WEBUI_PORT:-8080}
 export SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-1g}

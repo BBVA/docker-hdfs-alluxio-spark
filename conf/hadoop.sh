@@ -1,13 +1,7 @@
 # hadoop configuration
-export HADOOP_CONF_VARS=(
-	"CORE_SITE_CONF"
-	"HDFS_SITE_CONF"
-)
 
-export HADOOP_CONF_FILES=(
-	"/opt/hadoop/etc/hadoop/core-site.xml"
-	"/opt/hadoop/etc/hadoop/hdfs-site.xml"
-)
+export HADOOP_CONF_VARS="CORE_SITE_CONF HDFS_SITE_CONF"
+export HADOOP_CONF_FILES="/opt/hadoop/etc/hadoop/core-site.xml /opt/hadoop/etc/hadoop/hdfs-site.xml"
 
 # For httpfs config
 # https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/Superusers.html

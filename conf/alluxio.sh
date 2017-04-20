@@ -1,22 +1,14 @@
 
 export alluxio_master="alluxio_master"
 
-export ALLUXIO_CONF_VARS=(
-	"CORE_SITE_CONF"
-	"HDFS_SITE_CONF"
-	"ALLUXIO_CONF"
-)
+export ALLUXIO_CONF_VARS="CORE_SITE_CONF HDFS_SITE_CONF ALLUXIO_CONF"
+export ALLUXIO_CONF_FILES="/opt/alluxio/conf/core-site.xml /opt/alluxio/conf/hdfs-site.xml /opt/alluxio/conf/alluxio.conf"
 
-export ALLUXIO_CONF_FILES=(
-	"/opt/alluxio/conf/core-site.xml"
-	"/opt/alluxio/conf/hdfs-site.xml"
-	"/opt/alluxio/conf/alluxio.conf"
-)
 
 export ALLUXIO_WORKER_MEMORY_SIZE=${ALLUXIO_WORKER_MEMORY_SIZE:-"1024MB"}
 export ALLUXIO_RAM_FOLDER=${ALLUXIO_RAM_FOLDER:-"/mnt/ramdisk"}
 export ALLUXIO_UNDERFS_ADDRESS=${ALLUXIO_UNDERFS_ADDRESS:-"hdfs://hdfs-namenode:8020"}
-export HADOOP_CONFIG_DIR="${ALLUXIO_PREFIX}/conf/"
+# export HADOOP_CONF_DIR="${ALLUXIO_PREFIX}/conf/"
 
 read -r -d '' ALLUXIO_CONF <<EOF
 	alluxio.security.authentication.type=SIMPLE
