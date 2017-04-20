@@ -137,13 +137,19 @@ objects:
             - name: hdfs-namenode
               image: ${IMAGE}
               resources: {}
-              environment:
-                - CONF_FILES="${CONF_FILES}"
-                - CONF_VARS="${CONF_VARS}"
-                - CORE_SITE_CONF="${CORE_SITE_CONF}"
-                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
-                - HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}"
-                - HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}"
+              env:
+                - name: CONF_FILES
+                  value: "${CONF_FILES}"
+                - name: CONF_VARS
+                  value: "${CONF_VARS}"
+                - name: CORE_SITE_CONF
+                  value: "${CORE_SITE_CONF}"
+                - name: HDFS_SITE_CONF
+                  value: "${HDFS_SITE_CONF}"
+                - name: HTTPFS_HTTP_PORT
+                  value: "${HTTPFS_HTTP_PORT}"
+                - name: HTTPFS_ADMIN_PORT
+                  value: "${HTTPFS_ADMIN_PORT}"
               args:
                 - namenode
                 - start

@@ -27,7 +27,7 @@ parameters:
     required: true
   - name: ALLUXIO_UNDERFS_ADDRESS
     required: true
-  - name: HADOOP_CONFIG_DIR
+  - name: HADOOP_CONF_DIR
     required: true
 
 objects:
@@ -155,16 +155,25 @@ objects:
             - name: alluxio-master
               image: ${IMAGE}
               resources: {}
-              environment:
-                - CONF_FILES="${CONF_FILES}"
-                - CONF_VARS="${CONF_VARS}"
-                - CORE_SITE_CONF="${CORE_SITE_CONF}"
-                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
-                - ALLUXIO_CONF="${ALLUXIO_CONF}"
-                - ALLUXIO_WORKER_MEMORY_SIZE="${ALLUXIO_WORKER_MEMORY_SIZE}"
-                - ALLUXIO_RAM_FOLDER="${ALLUXIO_RAM_FOLDER}"
-                - ALLUXIO_UNDERFS_ADDRESS="${ALLUXIO_UNDERFS_ADDRESS}"
-                - HADOOP_CONFIG_DIR="${HADOOP_CONFIG_DIR}"
+              env:
+                - name: CONF_FILES
+                  value: "${CONF_FILES}"
+                - name: CONF_VARS
+                  value: "${CONF_VARS}"
+                - name: CORE_SITE_CONF
+                  value: "${CORE_SITE_CONF}"
+                - name: HDFS_SITE_CONF
+                  value: "${HDFS_SITE_CONF}"
+                - name: ALLUXIO_CONF
+                  value: "${ALLUXIO_CONF}"
+                - name: ALLUXIO_WORKER_MEMORY_SIZE
+                  value: "${ALLUXIO_WORKER_MEMORY_SIZE}"
+                - name: ALLUXIO_RAM_FOLDER
+                  value: "${ALLUXIO_RAM_FOLDER}"
+                - name: ALLUXIO_UNDERFS_ADDRESS
+                  value: "${ALLUXIO_UNDERFS_ADDRESS}"
+                - name: HADOOP_CONF_DIR
+                  value: "${HADOOP_CONF_DIR}"
               args:
                 - master
                 - start

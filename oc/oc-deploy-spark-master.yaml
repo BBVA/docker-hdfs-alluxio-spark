@@ -31,7 +31,7 @@ parameters:
     required: true
   - name: SPARK_DAEMON_MEMORY
     required: true
-  - name: HADOOP_CONFIG_DIR
+  - name: HADOOP_CONF_DIR
     required: true
 
 objects:
@@ -141,18 +141,29 @@ objects:
             - name: spark-master
               image: ${IMAGE}
               resources: {}
-              environment:
-                - CONF_FILES="${CONF_FILES}"
-                - CONF_VARS="${CONF_VARS}"
-                - CORE_SITE_CONF="${CORE_SITE_CONF}"
-                - HDFS_SITE_CONF="${HDFS_SITE_CONF}"
-                - SPARK_CONF="${SPARK_CONF}"
-                - SPARK_MASTER_WEBUI_PORT="${SPARK_MASTER_WEBUI_PORT}"
-                - SPARK_WORKER_MEMORY="${SPARK_WORKER_MEMORY}"
-                - SPARK_WORKER_PORT="${SPARK_WORKER_PORT}"
-                - SPARK_WORKER_WEBUI_PORT="${SPARK_WORKER_WEBUI_PORT}"
-                - SPARK_DAEMON_MEMORY="${SPARK_DAEMON_MEMORY}"
-                - HADOOP_CONFIG_DIR="${HADOOP_CONFIG_DIR}"
+              env:
+                - name: CONF_FILES
+                  value: "${CONF_FILES}"
+                - name: CONF_VARS
+                  value: "${CONF_VARS}"
+                - name: CORE_SITE_CONF
+                  value: "${CORE_SITE_CONF}"
+                - name: HDFS_SITE_CONF
+                  value: "${HDFS_SITE_CONF}"
+                - name: SPARK_CONF
+                  value: "${SPARK_CONF}"
+                - name: SPARK_MASTER_WEBUI_PORT
+                  value: "${SPARK_MASTER_WEBUI_PORT}"
+                - name: SPARK_WORKER_MEMORY
+                  value: "${SPARK_WORKER_MEMORY}"
+                - name: SPARK_WORKER_PORT
+                  value: "${SPARK_WORKER_PORT}"
+                - name: SPARK_WORKER_WEBUI_PORT
+                  value: "${SPARK_WORKER_WEBUI_PORT}"
+                - name: SPARK_DAEMON_MEMORY
+                  value: "${SPARK_DAEMON_MEMORY}"
+                - name: HADOOP_CONF_DIR
+                  value: "${HADOOP_CONF_DIR}"
               args:
                 - master
                 - start
