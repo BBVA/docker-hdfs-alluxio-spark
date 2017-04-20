@@ -14,10 +14,13 @@ object WordCount extends App {
       .set("spark.broadcast.port", "51200")
       .set("spark.blockManager.port", "51400")
       .set("spark.executor.port", "51500")
+      .set("alluxio.user.file.write.location.policy.class", "alluxio.client.file.policy.RoundRobinPolicy")
+      .set("alluxio.user.block.size.bytes.default", "32MB")
 
     val sc = SparkContext.getOrCreate(sparkConf)
 
     sc.hadoopConfiguration.set("dfs.client.use.datanode.hostname", "true")
+    sc.hadoopConfiguration.set("dfs.blocksize", "33554432")
 
     val lines = sc.textFile(conf.inputFile)
 
@@ -28,7 +31,8 @@ object WordCount extends App {
     println(s"Total: ${words.count()}")
 
     println(s"Total distinct: ${counts.count()}")
-   // counts.take(20).foreach(println)
+
+    words.saveAsTextFile(conf.outputFile)
 
     sc.stop()
 
