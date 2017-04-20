@@ -236,9 +236,9 @@ objects:
               resources: {}
               env:
                 - name: CONF_FILES
-                  value: "${CONF_FILES}"
+                  value: "${HDFS_CONF_FILES}"
                 - name: CONF_VARS
-                  value: "${CONF_VARS}"
+                  value: "${HDFS_CONF_VARS}"
                 - name: CORE_SITE_CONF
                   value: "${CORE_SITE_CONF}"
                 - name: HDFS_SITE_CONF
