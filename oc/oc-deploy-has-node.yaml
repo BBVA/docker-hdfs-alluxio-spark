@@ -23,10 +23,6 @@ parameters:
     value: "spark"
     description: HAS Spark Docker image
     required: true
-  - name: ALLUXIO_MEMORY
-    value: "4096MB"
-  - name: SPARK_MEMORY
-    value: "2048MB"
   - name: HDFS_MEMORY
     value: "1024MB"
   - name: HDFS_CONF_FILES
@@ -289,9 +285,6 @@ objects:
                   mountPath: /dev/shm
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
-              env:
-                - name: ALLUXIO_WORKER_MEMORY_SIZE
-                  value: ${ALLUXIO_MEMORY}
             - name: spark-worker-${ID}
               image: ${IMAGE_SPARK}
               resources: {}
@@ -327,9 +320,6 @@ objects:
                   mountPath: /data
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
-              env:
-                - name: SPARK_WORKER_MEMORY
-                  value: ${SPARK_MEMORY}
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst

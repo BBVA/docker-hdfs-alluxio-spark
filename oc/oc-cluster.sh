@@ -52,7 +52,7 @@ oc process \
   -p HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}" \
   -p HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}" \
 	-f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
-set -e
+
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
@@ -92,8 +92,6 @@ for id in $(seq 1 1 ${nodes}); do
     	-p IMAGE_SPARK="${spark_image}" \
     	-p IMAGE_ALLUXIO="${alluxio_image}" \
     	-p IMAGE_HDFS="${hdfs_image}" \
-    	-p "ALLUXIO_MEMORY=6GB" \
-    	-p "SPARK_MEMORY=6GB" \
     	-p "HDFS_MEMORY=1GB" \
       -p HDFS_CONF_FILES="${HADOOP_CONF_FILES}" \
       -p HDFS_CONF_VARS="${HADOOP_CONF_VARS}" \
@@ -104,7 +102,7 @@ for id in $(seq 1 1 ${nodes}); do
       -p ALLUXIO_CONF_FILES="${ALLUXIO_CONF_FILES}" \
       -p ALLUXIO_CONF_VARS="${ALLUXIO_CONF_VARS}" \
       -p ALLUXIO_CONF="${ALLUXIO_CONF}" \
-      -p ALLUXIO_WORKER_MEMORY_SIZE="${ALLUXIO_WORKER_MEMORY_SIZE}" \
+      -p ALLUXIO_WORKER_MEMORY_SIZE="6GB" \
       -p ALLUXIO_RAM_FOLDER="${ALLUXIO_RAM_FOLDER}" \
       -p ALLUXIO_UNDERFS_ADDRESS="${ALLUXIO_UNDERFS_ADDRESS}" \
       -p ALLUXIO_HADOOP_CONF_DIR="/opt/alluxio/conf" \
@@ -113,7 +111,7 @@ for id in $(seq 1 1 ${nodes}); do
       -p SPARK_CONF_VARS="${SPARK_CONF_VARS}" \
       -p SPARK_CONF="${SPARK_CONF}" \
       -p SPARK_MASTER_WEBUI_PORT="${SPARK_MASTER_WEBUI_PORT}" \
-      -p SPARK_WORKER_MEMORY="${SPARK_WORKER_MEMORY}" \
+      -p SPARK_WORKER_MEMORY="6GB" \
       -p SPARK_WORKER_PORT="${SPARK_WORKER_PORT}" \
       -p SPARK_WORKER_WEBUI_PORT="${SPARK_WORKER_WEBUI_PORT}" \
       -p SPARK_DAEMON_MEMORY="${SPARK_DAEMON_MEMORY}" \
