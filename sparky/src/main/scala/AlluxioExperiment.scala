@@ -14,8 +14,13 @@ object AlluxioExperiment {
       .set("spark.executor.port", "51500")
       .set("spark.ui.port", "51600")
       .set("spark.eventLog.enabled", "true")
+      .set("alluxio.user.file.write.location.policy.class", "alluxio.client.file.policy.RoundRobinPolicy")
+      .set("alluxio.user.block.size.bytes.default", "32MB")
 
     val sc = new SparkContext(sparkConf)
+
+    sc.hadoopConfiguration.set("dfs.client.use.datanode.hostname", "true")
+    sc.hadoopConfiguration.set("dfs.blocksize", "33554432")
 
     val alluxioFile = sc.textFile(conf.input())
     alluxioFile.saveAsTextFile(conf.output())
