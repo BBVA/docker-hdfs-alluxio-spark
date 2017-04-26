@@ -73,10 +73,10 @@ history_node() {
 
 	case $action in
 		start)
-			${SPARK_HOME}/sbin/start-history-server.sh --host $(hostname -f) spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+			${SPARK_HOME}/sbin/start-history-server.sh
 			;;
 		stop)
-			${SPARK_HOME}/sbin/stop-history-server.s
+			${SPARK_HOME}/sbin/stop-history-server.sh
 			;;
 		status)
 			# I would love a status report
