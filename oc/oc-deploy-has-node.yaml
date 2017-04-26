@@ -250,6 +250,8 @@ objects:
               volumeMounts:
                 - name: hdfs-worker-storage-${ID}
                   mountPath: /data
+                - name: dshm
+                  mountPath: /dev/shm
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
             - name: alluxio-worker-${ID}
@@ -318,6 +320,8 @@ objects:
               volumeMounts:
                 - name: spark-worker-storage-${ID}
                   mountPath: /data
+                - name: dshm
+                  mountPath: /dev/shm
               terminationMessagePath: /dev/termination-log
               imagePullPolicy: Always
           restartPolicy: Always
