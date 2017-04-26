@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: spark-history
+  annotations:
+    description: Sparm cluster history
+    tags: networking,storage
+
+parameters:
+  - name: IMAGE
+    value: "spark"
+    description: HAS spark Docker image
+    required: true
+  - name: CONF_FILES
+    required: true
+  - name: CONF_VARS
+    required: true
+  - name: CORE_SITE_CONF
+    required: true
+  - name: HDFS_SITE_CONF
+    required: true
+  - name: SPARK_CONF
+    required: true
+  - name: HADOOP_CONF_DIR
+    required: true
+
+objects:
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: spark-history
+    spec:
+      selector:
+        app: "spark-history"
+      ports:
+        - name: spark-history-history
+          protocol: TCP
+          port: 18080
+          targetPort: 18080
+
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      name: spark-history-dashboard
+      namespace: has
+    spec:
+      to:
+          kind: Service
+          name: spark-history
+          weight: 100
+      port:
+          targetPort: spark-history-ui
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: spark-history
+      namespace: has
+      labels:
+        app: spark-history
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - spark-history
+            from:
+              kind: ImageStreamTag
+              namespace: has
+              name: 'spark:latest'
+      replicas: 1
+      test: false
+      selector:
+        app: spark-history
+        deploymentconfig: spark-history
+      template:
+        metadata:
+          labels:
+            app: spark-history
+            deploymentconfig: spark-history
+            type: "history"
+          annotations:
+            scheduler.alpha.kubernetes.io/affinity: >
+                {
+                  "podAffinity": {
+                    "preferredDuringSchedulingIgnoredDuringExecution": [{
+                      "weight": 1,
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["history"]
+                          }]
+                        },
+                        "topologyKey": "kubernetes.io/hostname"
+                      }
+                    }]
+                  },
+                  "podAntiAffinity": {
+                    "requiredDuringSchedulingIgnoredDuringExecution": [{
+                      "podAffinityTerm": {
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["worker", "aux"]
+                          }]
+                        }
+                      },
+                      "topologyKey": "kubernetes.io/hostname"
+                    }]
+                  }
+                }
+        spec:
+          hostname: spark-history
+          volumes:
+            - name: spark-history-storage
+              emptyDir: {}
+          containers:
+            - name: spark-history
+              image: ${IMAGE}
+              resources: {}
+              env:
+                - name: CONF_FILES
+                  value: "${CONF_FILES}"
+                - name: CONF_VARS
+                  value: "${CONF_VARS}"
+                - name: CORE_SITE_CONF
+                  value: "${CORE_SITE_CONF}"
+                - name: HDFS_SITE_CONF
+                  value: "${HDFS_SITE_CONF}"
+                - name: SPARK_CONF
+                  value: "${SPARK_CONF}"
+                - name: HADOOP_CONF_DIR
+                  value: "${HADOOP_CONF_DIR}"
+              args:
+                - history
+                - start
+                - spark-master
+              volumeMounts:
+                - name: spark-history-storage
+                  mountPath: /data
+              terminationMessagePath: /dev/termination-log
+              imagePullPolicy: Always
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+

@@ -21,7 +21,7 @@ oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
 # Create builds for each docker image
 for c in "hdfs" "alluxio" "spark" "spark-submitter"; do #"zeppelin"; do
-    oc process -p REPOSITORY=${repository} \
+    oc process  -p REPOSITORY=${repository} \
                 -p CONTEXTDIR="${c}" \
                 -p SECRETNAME="${secretname}" \
                 -p ID="${c}" \
@@ -31,32 +31,32 @@ done
 # Deploy HDFS namenode
 export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
-	-p IMAGE=${hdfs_image} \
+  -p IMAGE=${hdfs_image} \
   -p CONF_FILES="${HADOOP_CONF_FILES}" \
   -p CONF_VARS="${HADOOP_CONF_VARS}" \
   -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
   -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
   -p HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}" \
   -p HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}" \
-	-f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
+  -f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
 
 
 
 # Deploy HDFS httpfs node
 oc process \
-	-p IMAGE=${hdfs_image} \
+  -p IMAGE=${hdfs_image} \
   -p CONF_FILES="${HADOOP_CONF_FILES}" \
   -p CONF_VARS="${HADOOP_CONF_VARS}" \
   -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
   -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
   -p HTTPFS_HTTP_PORT="${HTTPFS_HTTP_PORT}" \
   -p HTTPFS_ADMIN_PORT="${HTTPFS_ADMIN_PORT}" \
-	-f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
+  -f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
 
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
-	-p IMAGE=${alluxio_image} \
+  -p IMAGE=${alluxio_image} \
   -p CONF_FILES="${ALLUXIO_CONF_FILES}" \
   -p CONF_VARS="${ALLUXIO_CONF_VARS}" \
   -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
@@ -72,7 +72,7 @@ oc process \
 # Deploy Spark master
 export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
-	-p IMAGE=${spark_image} \
+  -p IMAGE=${spark_image} \
   -p CONF_FILES="${SPARK_CONF_FILES}" \
   -p CONF_VARS="${SPARK_CONF_VARS}" \
   -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
@@ -86,13 +86,25 @@ oc process \
   -p SPARK_DAEMON_MEMORY="${SPARK_DAEMON_MEMORY}" \
 	-f "oc-deploy-spark-master.yaml" | oc create -f -
 
+# Deploy splark history server
+oc process \
+  -p IMAGE=${spark_image} \
+  -p CONF_FILES="${SPARK_CONF_FILES}" \
+  -p CONF_VARS="${SPARK_CONF_VARS}" \
+  -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
+  -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
+  -p SPARK_CONF="${SPARK_CONF}" \
+  -p HADOOP_CONF_DIR="/opt/spark/conf" \
+  -f "oc-deploy-spark-history.yaml" | oc create -f -
+
+
 # Deploy three workers
 for id in $(seq 1 1 ${nodes}); do
     oc process -p ID=${id} \
-    	-p IMAGE_SPARK="${spark_image}" \
-    	-p IMAGE_ALLUXIO="${alluxio_image}" \
-    	-p IMAGE_HDFS="${hdfs_image}" \
-    	-p "HDFS_MEMORY=1GB" \
+      -p IMAGE_SPARK="${spark_image}" \
+      -p IMAGE_ALLUXIO="${alluxio_image}" \
+      -p IMAGE_HDFS="${hdfs_image}" \
+      -p "HDFS_MEMORY=1GB" \
       -p HDFS_CONF_FILES="${HADOOP_CONF_FILES}" \
       -p HDFS_CONF_VARS="${HADOOP_CONF_VARS}" \
       -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
