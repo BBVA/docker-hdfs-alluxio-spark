@@ -4,7 +4,7 @@ source ../conf/hadoop.sh
 source ../conf/alluxio.sh
 
 export SUBMITTER_CONF_VARS="CORE_SITE_CONF HDFS_SITE_CONF ALLUXIO_CONF"
-export SUBMITTER_CONF_FILES="/opt/spark/conf/core-site.xml /opt/spark/conf/hdfs-site.xml /opt/spark/conf/alluxio.conf"
+export SUBMITTER_CONF_FILES="/opt/spark/conf/core-site.xml /opt/spark/conf/hdfs-site.xml /opt/spark/conf/alluxio-site.properties"
 
 name="$1"
 shift
@@ -18,8 +18,8 @@ export project="has"
 export spark_submitter_image=$(oc get is/spark-submitter --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
   -p IMAGE=${spark_submitter_image} \
-  -p CONF_FILES="${SUBMITTER_CONF_FILES}" \
-  -p CONF_VARS="${SUBMITTER_CONF_VARS}" \
+  -p SUBMITTER_CONF_FILES="${SUBMITTER_CONF_FILES}" \
+  -p SUBMITTER_CONF_VARS="${SUBMITTER_CONF_VARS}" \
   -p CORE_SITE_CONF="${CORE_SITE_CONF}" \
   -p HDFS_SITE_CONF="${HDFS_SITE_CONF}" \
   -p ALLUXIO_CONF="${ALLUXIO_CONF}" \
