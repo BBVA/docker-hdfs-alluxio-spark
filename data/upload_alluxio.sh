@@ -19,4 +19,3 @@ echo Deleting temporal files...
 rm /tmp/sample-1g
 rm /tmp/sample-2g
 EOF
-

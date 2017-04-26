@@ -11,10 +11,6 @@ parameters:
     value: "1Gi"
     description: Zeppelin client ID
     required: true
-  - name: STORAGE
-    value: "1Gi"
-    description: Storage assigned to the node
-    required: true
   - name: IMAGE
     value: "zeppelin"
     description: HAS szeppelinpark Docker image
