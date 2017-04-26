@@ -17,6 +17,18 @@ parameters:
   - name: SUBMIT_ARGS
     description: Spark Submit arguments
     required: true
+  - name: SUBMITTER_CONF_FILES
+    required: true
+  - name: SUBMITTER_CONF_VARS
+    required: true
+  - name: CORE_SITE_CONF
+    required: true
+  - name: HDFS_SITE_CONF
+    required: true
+  - name: ALLUXIO_CONF
+    required: true
+  - name: HADOOP_CONF_DIR
+    required: true
 
 objects:
 
@@ -89,6 +101,19 @@ objects:
             namespace: has
             args:
             - ${SUBMIT_ARGS}
+            env:
+            - name: CONF_FILES
+              value: "${SUBMITTER_CONF_FILES}"
+            - name: CONF_VARS
+              value: "${SUBMITTER_CONF_VARS}"
+            - name: CORE_SITE_CONF
+              value: "${CORE_SITE_CONF}"
+            - name: HDFS_SITE_CONF
+              value: "${HDFS_SITE_CONF}"
+            - name: ALLUXIO_CONF
+              value: "${ALLUXIO_CONF}"
+            - name: HADOOP_CONF_DIR
+              value: "${HADOOP_CONF_DIR}"
             ports:
             - containerPort: 4040
           restartPolicy: Never
