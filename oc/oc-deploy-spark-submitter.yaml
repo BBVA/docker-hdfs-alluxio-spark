@@ -27,6 +27,8 @@ parameters:
     required: true
   - name: ALLUXIO_CONF
     required: true
+  - name: SPARK_CONF
+    required: true
   - name: HADOOP_CONF_DIR
     required: true
 
@@ -112,6 +114,8 @@ objects:
               value: "${HDFS_SITE_CONF}"
             - name: ALLUXIO_CONF
               value: "${ALLUXIO_CONF}"
+            - name: SPARK_CONF
+              value: "${SPARK_CONF}"
             - name: HADOOP_CONF_DIR
               value: "${HADOOP_CONF_DIR}"
             ports:
