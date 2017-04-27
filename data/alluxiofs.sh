@@ -33,9 +33,7 @@ function persist {
 }
 
 debug="-s"
-debug="-v"
 
-set -x
 case $action in
     upload)
         upload
