@@ -24,3 +24,4 @@ ip=$(docker inspect --format '{{ .NetworkSettings.Networks.'${net}'.IPAddress }}
 
 echo Zeppelin started in:
 echo http://$ip:8080
+
