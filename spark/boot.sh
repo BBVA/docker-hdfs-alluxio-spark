@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-cluster_name="$3"
-
 set -o errexit
 set -o pipefail
 set -o nounset
@@ -12,14 +10,12 @@ set -o errtrace
 
 node="$1"
 action="$2"
+cluster_name="$3"
 
-if [ "${cluster_name}z" == "z" ]; then
-	cluster_name=${HOSTNAME}
-fi
-SPARK_MASTER_HOST=${cluster_name}
 
 export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
+export HADOOP_CONF_DIR=/opt/spark/conf
 
 # SPARK_MASTER_PORT is also defined by openshift to a value incompatible
 # so we need to foce it here
@@ -37,10 +33,6 @@ master_node() {
 		stop)
 			${SPARK_HOME}/sbin/stop-master.sh
 		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
 		*)
 			echo "Action not supported"
 			;;
@@ -53,14 +45,10 @@ slave_node() {
 
 	case $action in
 		start)
-			${SPARK_HOME}/sbin/start-slave.sh --host $(hostname -f) spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
+			${SPARK_HOME}/sbin/start-slave.sh --host $(hostname -f) spark://${cluster_name}:${SPARK_MASTER_PORT}
 			;;
 		stop)
 			${SPARK_HOME}/sbin/stop-slave.sh
-			;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
 			;;
 		*)
 			echo "Action not supported"
@@ -77,10 +65,6 @@ history_node() {
 			;;
 		stop)
 			${SPARK_HOME}/sbin/stop-history-server.sh
-			;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
 			;;
 		*)
 			echo "Action not supported"
@@ -116,16 +100,6 @@ setup_username() {
 }
 
 
-config() {
-	vars=(${CONF_VARS})
-	files=(${CONF_FILES})
-	for i in "${!vars[@]}"; do
-		conf=${vars[i]}
-		file=${files[i]}
-		echo "${!conf}" > $file
-	done
-}
-
 shut_down() {
 	echo "Calling shutdown! $1"
 	spark_handler ${node} stop
@@ -138,11 +112,8 @@ trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
 setup_username
-config
-
-echo "The ${node} is swtching to ${action}"
-
 spark_handler ${node} ${action} ${cluster_name}
 
 sleep 2s
 tail -f /opt/spark/logs/*
+

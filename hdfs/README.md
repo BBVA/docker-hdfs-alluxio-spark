@@ -1,7 +1,6 @@
-# hadfs
+# hdfs
 
 This image contains hadoop 2.7.3 distribution but its only used to bring up hdfs services.
-
 
 # Local usage
 

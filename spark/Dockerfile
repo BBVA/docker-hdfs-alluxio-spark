@@ -24,4 +24,10 @@ EXPOSE 7077 6066 8080 35000 8081
 WORKDIR /
 ADD boot.sh /
 
+ADD core-site.xml /opt/spark/conf/core-site.xml
+ADD hdfs-site.xml /opt/spark/conf/hdfs-site.xml
+ADD alluxio-site.properties /opt/spark/conf/alluxio-site.properties
+ADD spark-defaults.conf /opt/spark/conf/spark-defaults.conf
+
 ENTRYPOINT ["/boot.sh"]
+

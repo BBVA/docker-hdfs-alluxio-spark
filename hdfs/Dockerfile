@@ -18,6 +18,11 @@ RUN chmod -R g+rw /opt/hadoop
 EXPOSE 8020 8022 50070 50010 50075 50020
 
 WORKDIR /
+
 ADD boot.sh /
 
+ADD core-site.xml /opt/hadoop/etc/hadoop/core-site.xml
+ADD hdfs-site.xml /opt/hadoop/etc/hadoop/hdfs-site.xml
+
 ENTRYPOINT ["/boot.sh"]
+

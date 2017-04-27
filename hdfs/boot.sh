@@ -1,29 +1,21 @@
 #!/usr/bin/env bash
 
-# Optional varaible
-cluster_name="$3"
-
 set -o errexit
 set -o pipefail
 set -o nounset
 set -o errtrace
 
-
 # main script mandatory params
 node="$1"
 action="$2"
-
-set +o nounset
-
-if [ "${cluster_name}z" == "z" ]; then
-	cluster_name=${HOSTNAME}
-fi
-
+cluster_name="$3"
 
 # https://hadoop.apache.org/docs/r2.7.3/hadoop-project-dist/hadoop-common/ClusterSetup.html
 
-HADOOP_PREFIX=/opt/hadoop
-HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
+export HADOOP_PREFIX=/opt/hadoop
+export HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
+export HTTPFS_HTTP_PORT=${HTTPFS_HTTP_PORT:-14000}
+export HTTPFS_ADMIN_PORT=${HTTPFS_ADMIN_PORT:-14001}
 
 # stars a name node
 name_node() {
@@ -43,10 +35,6 @@ name_node() {
 		stop)
 			# Stop the NameNode with the following command, run on the designated NameNode as hdfs:
 			$HADOOP_PREFIX/sbin/hadoop-daemon.sh --config ${HADOOP_CONF_DIR} --script hdfs stop namenode
-		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
 		;;
 		*)
 		echo "Action not supported"
@@ -71,10 +59,6 @@ data_node() {
 			# Run a script to stop a DataNode as hdfs:
 			$HADOOP_PREFIX/sbin/hadoop-daemon.sh --config ${HADOOP_CONF_DIR} --script hdfs stop datanode
 		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
 		*)
 		echo "Action not supported"
 		;;
@@ -94,10 +78,6 @@ httpfs_node() {
 			# Run a script to stop a DataNode as hdfs:
 			$HADOOP_PREFIX/sbin/httpfs.sh stop
 		;;
-		status)
-			# I would love a status report
-			echo "Not implemented"
-		;;
 		*)
 		echo "Action not supported"
 		;;
@@ -105,15 +85,6 @@ httpfs_node() {
 }
 
 
-config() {
-	vars=(${CONF_VARS})
-	files=(${CONF_FILES})
-	for i in "${!vars[@]}"; do
-		conf=${vars[i]}
-		file=${files[i]}
-		echo "${!conf}" > $file
-	done
-}
 
 hadoop_handler() {
 	local node="$1"
@@ -141,7 +112,7 @@ setup_username() {
 	export GROUP_ID=$(id -g)
 	cat /etc/passwd > /tmp/passwd
 	cat /etc/group > /tmp/group
-	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ALLUXIO_PREFIX}:/bin/bash" >> /tmp/passwd
+	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${HADOOP_PREFIX}:/bin/bash" >> /tmp/passwd
 	echo "openshift:x:${GROUP_ID}:openshift" >> /tmp/group
 	export LD_PRELOAD=/usr/lib/libnss_wrapper.so
 	export NSS_WRAPPER_PASSWD=/tmp/passwd
@@ -159,12 +130,9 @@ trap "shut_down sighup" SIGHUP
 trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
-
 setup_username
-config
-
-echo "The ${node} is swtching to ${action} with ${cluster_name} id"
 hadoop_handler ${node} ${action} ${cluster_name}
 
 sleep 2s
 tail -f /opt/hadoop/logs/*
+

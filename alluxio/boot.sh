@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-cluster_name="$3"
-
 set -o errexit
 set -o pipefail
 set -o nounset
@@ -11,18 +9,15 @@ set -o errtrace
 
 node="$1"
 action="$2"
+cluster_name="$3"
 
-set +o nounset
-
-if [ "${cluster_name}z" == "z" ]; then
-	cluster_name=${HOSTNAME}
-fi
 
 # http://www.alluxio.org/docs/1.4/en/Configuration-Settings.html
 
+export ALLUXIO_WORKER_MEMORY_SIZE=${ALLUXIO_WORKER_MEMORY_SIZE:-"1024MB"}
+export ALLUXIO_UNDERFS_ADDRESS=${ALLUXIO_UNDERFS_ADDRESS:-"hdfs://hdfs-namenode:8020"}
 export ALLUXIO_PREFIX=/opt/alluxio
-
-set +o nounset
+export HADOOP_CONF_DIR=/opt/alluxio/conf
 
 master_node() {
 	local action="$1"
@@ -78,16 +73,6 @@ slave_node() {
 	esac
 }
 
-config() {
-	vars=(${CONF_VARS})
-	files=(${CONF_FILES})
-	for i in "${!vars[@]}"; do
-		conf=${vars[i]}
-		file=${files[i]}
-		echo "${!conf}" > $file
-	done
-}
-
 alluxio_handler() {
 	local node="$1"
 	local action="$2"
@@ -126,9 +111,8 @@ trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
 setup_username
-config
-
 alluxio_handler ${node} ${action} ${cluster_name}
 
 sleep 2s
 tail -f /opt/alluxio/logs/*
+

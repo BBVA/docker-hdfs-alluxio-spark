@@ -19,4 +19,9 @@ EXPOSE 19999 19998 29998 29999 30000 39999
 WORKDIR /
 ADD boot.sh /
 
+ADD core-site.xml /opt/alluxio/conf/core-site.xml
+ADD hdfs-site.xml /opt/alluxio/conf/hdfs-site.xml
+ADD alluxio-site.properties /opt/alluxio/conf/alluxio-site.properties
+
 ENTRYPOINT ["/boot.sh"]
+
