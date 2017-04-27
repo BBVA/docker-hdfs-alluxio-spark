@@ -145,6 +145,7 @@ objects:
               args:
                 - master
                 - start
+                - alluxio-master
               volumeMounts:
                 - name: alluxio-master-storage
                   mountPath: /data
