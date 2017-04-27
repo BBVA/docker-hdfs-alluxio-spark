@@ -11,23 +11,7 @@ parameters:
     value: "alluxio"
     description: HAS Alluxio Docker image
     required: true
-  - name: CONF_FILES
-    required: true
-  - name: CONF_VARS
-    required: true
-  - name: CORE_SITE_CONF
-    required: true
-  - name: HDFS_SITE_CONF
-    required: true
-  - name: ALLUXIO_CONF
-    required: true
   - name: ALLUXIO_WORKER_MEMORY_SIZE
-    required: true
-  - name: ALLUXIO_RAM_FOLDER
-    required: true
-  - name: ALLUXIO_UNDERFS_ADDRESS
-    required: true
-  - name: HADOOP_CONF_DIR
     required: true
 
 objects:
@@ -156,24 +140,8 @@ objects:
               image: ${IMAGE}
               resources: {}
               env:
-                - name: CONF_FILES
-                  value: "${CONF_FILES}"
-                - name: CONF_VARS
-                  value: "${CONF_VARS}"
-                - name: CORE_SITE_CONF
-                  value: "${CORE_SITE_CONF}"
-                - name: HDFS_SITE_CONF
-                  value: "${HDFS_SITE_CONF}"
-                - name: ALLUXIO_CONF
-                  value: "${ALLUXIO_CONF}"
                 - name: ALLUXIO_WORKER_MEMORY_SIZE
                   value: "${ALLUXIO_WORKER_MEMORY_SIZE}"
-                - name: ALLUXIO_RAM_FOLDER
-                  value: "${ALLUXIO_RAM_FOLDER}"
-                - name: ALLUXIO_UNDERFS_ADDRESS
-                  value: "${ALLUXIO_UNDERFS_ADDRESS}"
-                - name: HADOOP_CONF_DIR
-                  value: "${HADOOP_CONF_DIR}"
               args:
                 - master
                 - start
@@ -193,3 +161,4 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
+

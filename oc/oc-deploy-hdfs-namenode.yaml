@@ -11,18 +11,6 @@ parameters:
     value: "hdfs"
     description: HAS HDFS Docker image
     required: true
-  - name: CONF_FILES
-    required: true
-  - name: CONF_VARS
-    required: true
-  - name: CORE_SITE_CONF
-    required: true
-  - name: HDFS_SITE_CONF
-    required: true
-  - name: HTTPFS_HTTP_PORT
-    required: true
-  - name: HTTPFS_ADMIN_PORT
-    required: true
 
 objects:
 
@@ -137,22 +125,10 @@ objects:
             - name: hdfs-namenode
               image: ${IMAGE}
               resources: {}
-              env:
-                - name: CONF_FILES
-                  value: "${CONF_FILES}"
-                - name: CONF_VARS
-                  value: "${CONF_VARS}"
-                - name: CORE_SITE_CONF
-                  value: "${CORE_SITE_CONF}"
-                - name: HDFS_SITE_CONF
-                  value: "${HDFS_SITE_CONF}"
-                - name: HTTPFS_HTTP_PORT
-                  value: "${HTTPFS_HTTP_PORT}"
-                - name: HTTPFS_ADMIN_PORT
-                  value: "${HTTPFS_ADMIN_PORT}"
               args:
                 - namenode
                 - start
+                - hdfs-namenode
               volumeMounts:
                 - name: hdfs-namenode-storage
                   mountPath: /data
@@ -169,3 +145,4 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
+

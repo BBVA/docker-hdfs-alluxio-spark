@@ -11,18 +11,6 @@ parameters:
     value: "spark"
     description: HAS spark Docker image
     required: true
-  - name: CONF_FILES
-    required: true
-  - name: CONF_VARS
-    required: true
-  - name: CORE_SITE_CONF
-    required: true
-  - name: HDFS_SITE_CONF
-    required: true
-  - name: SPARK_CONF
-    required: true
-  - name: HADOOP_CONF_DIR
-    required: true
 
 objects:
 
@@ -127,19 +115,6 @@ objects:
             - name: spark-history
               image: ${IMAGE}
               resources: {}
-              env:
-                - name: CONF_FILES
-                  value: "${CONF_FILES}"
-                - name: CONF_VARS
-                  value: "${CONF_VARS}"
-                - name: CORE_SITE_CONF
-                  value: "${CORE_SITE_CONF}"
-                - name: HDFS_SITE_CONF
-                  value: "${HDFS_SITE_CONF}"
-                - name: SPARK_CONF
-                  value: "${SPARK_CONF}"
-                - name: HADOOP_CONF_DIR
-                  value: "${HADOOP_CONF_DIR}"
               args:
                 - history
                 - start
