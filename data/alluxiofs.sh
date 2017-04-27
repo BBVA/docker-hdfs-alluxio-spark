@@ -66,6 +66,12 @@ case $action in
         "${alluxio_proxy}/api/v1/paths/${remote_filepath}/delete"
     ;;
 
+    free)
+        remote_filepath=${local_file}
+        curl -L $debug -H "Content-Type: application/json" -X POST -d '{"recursive":"true"}'  \
+        "${alluxio_proxy}/api/v1/paths/${remote_filepath}/free"
+    ;;
+
     get)
         remote_filepath=${local_file}
         stream_id=$(curl $debug -L -X POST \
