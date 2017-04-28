@@ -6,6 +6,19 @@ remote_filepath="$3"
 
 alluxio_proxy=${ALLUXIO_PROXY:-"http://alluxio-master-rest-has.eurocloud.hyperscale.io"}
 
+function usage() {
+  echo -e "Usage: alluxiofs.sh <action> <[local_file | remote_file | remote_path] remote_file>"
+  echo -e "Actions:"
+  echo -e "  mkdir <remote_path> \t\t\t\tcreates a directory hierarchy"
+  echo -e "  ls <remote_path> \t\t\t\tlist files in a remote path stored"
+  echo -e "  upload <local_file> <remote_file> \t\tuploads a file"
+  echo -e "  upload-persisted <local_file> <remote_file> \tuploads a file and persists it in alluxio's underfs"
+  echo -e "  free <remote_file | remote_path> \t\tremoves a file or directory from alluxio's memory"
+  echo -e "  rm <remote_file | remote_path> \t\tremoves a file or directory from alluxio's memory and it's underfs"
+  echo -e "  persist <remote_file | remote_path> \t\tpersists a file or directory to alluxio's underfs"
+  echo -e "  get <remote_file> \t\t\t\tdownloads a file stored in alluxio"
+}
+
 function upload {
   local options=${1}
 
@@ -88,8 +101,13 @@ case $action in
         curl $debug -L -X POST \
             "${alluxio_proxy}/api/v1/streams/${stream_id}/close"
     ;;
+    "-h")
+        usage
+        exit 0
+    ;;
     *)
       echo "Invalid action: ${action}"
+      usage
       exit 1
     ;;
 esac
