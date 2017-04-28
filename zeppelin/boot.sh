@@ -27,15 +27,17 @@ set +o nounset
 export ZEPPELIN_PORT=${ZEPPELIN_PORT:-8080}
 export ZEPPELIN_NOTEBOOK_DIR=${ZEPPELIN_NOTEBOOK_DIR:-/data/zeppelin}
 export ZEPPELIN_NOTEBOOK_PUBLIC=${ZEPPELIN_NOTEBOOK_PUBLIC:-false}
-
 export ZEPPELIN_HOME=/opt/zeppelin
+export ALLUXIO_HOME=${ZEPPELIN_HOME}
+export HADOOP_CONF_DIR=${ZEPPELIN_HOME}/conf
+
 mkdir -p ${ZEPPELIN_HOME}/logs/
 mkdir -p ${ZEPPELIN_NOTEBOOK_DIR}
 
 master_node() {
 	local action="${1}"
 	local cluster_name="${2}"
-	
+
 	case $action in
 		start)
 			${ZEPPELIN_HOME}/bin/zeppelin-daemon.sh start
