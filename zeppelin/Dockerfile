@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk
 
-ENV ZEPPELIN="http://www-eu.apache.org/dist/zeppelin/zeppelin-0.7.0/zeppelin-0.7.1-bin-all.tgz"
+ENV ZEPPELIN="http://www-eu.apache.org/dist/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-all.tgz"
 WORKDIR /tmp
 
 RUN mkdir -p /opt/zeppelin && curl ${ZEPPELIN} | tar xzf - --strip-components=1 -C /opt/zeppelin
