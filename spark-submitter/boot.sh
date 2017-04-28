@@ -2,6 +2,7 @@
 
 export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
+export ALLUXIO_HOME=${SPARK_HOME}
 export HADOOP_CONF_DIR=/opt/spark/conf
 
 executable=$SPARK_HOME/bin/spark-submit
