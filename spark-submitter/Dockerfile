@@ -16,6 +16,11 @@ WORKDIR /
 ADD boot.sh /
 RUN chmod a+x /boot.sh
 
+ADD core-site.xml /opt/spark/conf/core-site.xml
+ADD hdfs-site.xml /opt/spark/conf/hdfs-site.xml
+ADD alluxio-site.properties /opt/spark/conf/alluxio-site.properties
+ADD spark-defaults.conf /opt/spark/conf/spark-defaults.conf
+
 EXPOSE 4040
 
 ENTRYPOINT ["/boot.sh"]

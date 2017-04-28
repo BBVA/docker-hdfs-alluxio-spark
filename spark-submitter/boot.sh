@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 export SPARK_HOME=/opt/spark
+export SPARK_CONF_DIR=${SPARK_HOME}/conf
+export HADOOP_CONF_DIR=/opt/spark/conf
 
 executable=$SPARK_HOME/bin/spark-submit
 job_path=/tmp/spark-job.jar
@@ -17,18 +19,7 @@ setup_username() {
 	export NSS_WRAPPER_GROUP=/etc/group
 }
 
-config() {
-	vars=(${CONF_VARS})
-	files=(${CONF_FILES})
-	for i in "${!vars[@]}"; do
-		conf=${vars[i]}
-		file=${files[i]}
-		echo "${!conf}" > $file
-	done
-}
-
 setup_username
-config
 
 # Extract jar URL argument and download
 for ((i=${#submit_args[@]+1}; i>0; i--)); do
