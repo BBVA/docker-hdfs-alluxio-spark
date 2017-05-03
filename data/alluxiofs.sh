@@ -23,7 +23,7 @@ function upload {
   local options=${1}
 
   stream_id=$(curl $debug -L -X POST -H "Content-Type: application/json" \
-      "${alluxio_proxy}/api/v1/paths/${remote_filepath}/create-file")
+      -d '{"locationPolicyClass":"alluxio.client.file.policy.RoundRobinPolicy"}' "${alluxio_proxy}/api/v1/paths/${remote_filepath}/create-file")
 
   re='^[0-9]+$'
   if ! [[ ${stream_id} =~ $re ]] ; then
