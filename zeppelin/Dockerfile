@@ -18,6 +18,7 @@ ADD boot.sh /boot.sh
 
 ADD core-site.xml /opt/zeppelin/conf/core-site.xml
 ADD hdfs-site.xml /opt/zeppelin/conf/hdfs-site.xml
+ADD interpreter.json /opt/zeppelin/conf/interpreter.json
 ADD alluxio-site.properties /opt/zeppelin/conf/alluxio-site.properties
 
 EXPOSE 4040 8080 8081
