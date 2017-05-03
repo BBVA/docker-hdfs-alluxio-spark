@@ -45,10 +45,10 @@ export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepositor
 oc process \
   -p IMAGE=${spark_image} \
   -p SPARK_MASTER_WEBUI_PORT="8080" \
-  -p SPARK_WORKER_MEMORY="6GB" \
+  -p SPARK_WORKER_MEMORY="6G" \
   -p SPARK_WORKER_PORT="35000" \
   -p SPARK_WORKER_WEBUI_PORT="8081" \
-  -p SPARK_DAEMON_MEMORY="1GB" \
+  -p SPARK_DAEMON_MEMORY="1G" \
   -f "oc-deploy-spark-master.yaml" | oc create -f -
 
 # Deploy splark history server
@@ -66,10 +66,10 @@ for id in $(seq 1 1 ${nodes}); do
       -p "HDFS_MEMORY=1GB" \
       -p ALLUXIO_WORKER_MEMORY_SIZE="6GB" \
       -p SPARK_MASTER_WEBUI_PORT="8080" \
-      -p SPARK_WORKER_MEMORY="6GB" \
+      -p SPARK_WORKER_MEMORY="6G" \
       -p SPARK_WORKER_PORT="35000" \
       -p SPARK_WORKER_WEBUI_PORT="8081" \
-      -p SPARK_DAEMON_MEMORY="1GB" \
+      -p SPARK_DAEMON_MEMORY="1G" \
       -f "oc-deploy-has-node.yaml" | oc create -f -
 done
 
