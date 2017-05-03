@@ -1,4 +1,7 @@
-FROM openjdk:8-jdk
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get --no-install-recommends install -y default-jre libnss-wrapper wget libsnappy1v5 libsnappy-java libsnappy-jni openssl && apt-get clean
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 ENV ZEPPELIN="http://www-eu.apache.org/dist/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-all.tgz"
 WORKDIR /tmp
