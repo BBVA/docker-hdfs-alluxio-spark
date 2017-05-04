@@ -74,10 +74,10 @@ for id in $(seq 1 1 ${nodes}); do
 done
 
 # Deploy a Zeppelin client
-# export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-# oc process -p ID=0 \
-# 	-p IMAGE=${zeppelin_image} \
-# 	-f "oc-deploy-zeppelin.yaml" | oc create -f -
+export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
+oc process -p ID=0 \
+	-p IMAGE=${zeppelin_image} \
+	-f "oc-deploy-zeppelin.yaml" | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070,
