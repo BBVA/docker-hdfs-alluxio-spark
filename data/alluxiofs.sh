@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# set -x
 action="$1"
 local_file="$2"
 remote_filepath="$3"
@@ -11,8 +12,10 @@ function usage() {
   echo -e "Actions:"
   echo -e "  mkdir <remote_path> \t\t\t\tcreates a directory hierarchy"
   echo -e "  ls <remote_path> \t\t\t\tlist files in a remote path stored"
-  echo -e "  upload <local_file> <remote_file> \t\tuploads a file"
-  echo -e "  upload-persisted <local_file> <remote_file> \tuploads a file and persists it in alluxio's underfs"
+  echo -e "  upload [options] <local_file> <remote_file> \tuploads a file"
+  echo -e "  Options:"
+  echo -e "  \t<-p | --persist> \tpersists to alluxio underfs"
+  echo -e "  \t<-r | --round-robin> \tpartition the file among all alluxio workers"
   echo -e "  free <remote_file | remote_path> \t\tremoves a file or directory from alluxio's memory"
   echo -e "  rm <remote_file | remote_path> \t\tremoves a file or directory from alluxio's memory and it's underfs"
   echo -e "  persist <remote_file | remote_path> \t\tpersists a file or directory to alluxio's underfs"
@@ -21,9 +24,11 @@ function usage() {
 
 function upload {
   local options=${1}
+  local local_file="$2"
+  local remote_filepath="$3"
 
   stream_id=$(curl $debug -L -X POST -H "Content-Type: application/json" \
-      -d '{"locationPolicyClass":"alluxio.client.file.policy.RoundRobinPolicy"}' "${alluxio_proxy}/api/v1/paths/${remote_filepath}/create-file")
+      -d ${options} "${alluxio_proxy}/api/v1/paths/${remote_filepath}/create-file")
 
   re='^[0-9]+$'
   if ! [[ ${stream_id} =~ $re ]] ; then
@@ -46,15 +51,37 @@ function persist {
 }
 
 debug="-s"
+# debug="-v"
 
 case $action in
     upload)
-        upload
-    ;;
+        options=()
+        shift
 
-    upload-persisted)
-        upload
-        persist ${remote_filepath}
+        while [[ ${1} == -* ]]; do
+          index=${#options[@]}
+
+          case ${1} in
+            --persist)
+            ;&
+            -p)
+                options[$index]='"writeType":"CACHE_THROUGH"'
+            ;;
+            --round-robin)
+            ;&
+            -r)
+                options[$index]='"locationPolicyClass":"alluxio.client.file.policy.RoundRobinPolicy"'
+            ;;
+          esac
+          shift
+        done
+
+        local_file="$1"
+        remote_filepath="$2"
+
+        data=$(IFS=','; echo "${options[*]}")
+
+        upload "{${data}}" ${local_file} ${remote_filepath}
     ;;
 
     persist)
