@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# set -x
 action="$1"
 local_file="$2"
 remote_filepath="$3"
@@ -51,7 +50,6 @@ function persist {
 }
 
 debug="-s"
-# debug="-v"
 
 case $action in
     upload)
