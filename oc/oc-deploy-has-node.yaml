@@ -169,20 +169,20 @@ objects:
                 {
                   "podAntiAffinity": {
                     "requiredDuringSchedulingIgnoredDuringExecution": [{
-                      "podAffinityTerm": {
                         "labelSelector": {
                           "matchExpressions": [{
                             "key": "type",
                             "operator": "In",
                             "values": ["master", "driver", "worker", "aux"]
                           }]
-                        }
-                      },
+                       },
                       "topologyKey": "kubernetes.io/hostname"
                     }]
                   }
                 }
         spec:
+          nodeSelector:
+            role: worker
           hostname: worker${ID}
           volumes:
             - name: hdfs-worker-storage-${ID}

@@ -126,7 +126,7 @@ objects:
           annotations:
             scheduler.alpha.kubernetes.io/affinity: >
                 {
-                  "podAntiAffinity": {
+                  "podAffinity": {
                     "preferredDuringSchedulingIgnoredDuringExecution": [{
                       "weight": 1,
                       "podAffinityTerm": {
@@ -134,11 +134,23 @@ objects:
                           "matchExpressions": [{
                             "key": "type",
                             "operator": "In",
-                            "values": ["worker", "master", "driver"]
+                            "values": ["aux"]
                           }]
                         },
                         "topologyKey": "kubernetes.io/hostname"
                       }
+                    }]
+                  },
+                  "podAntiAffinity": {
+                    "requiredDuringSchedulingIgnoredDuringExecution": [{
+                        "labelSelector": {
+                          "matchExpressions": [{
+                            "key": "type",
+                            "operator": "In",
+                            "values": ["worker", "master", "driver"]
+                          }]
+                        },
+                      "topologyKey": "kubernetes.io/hostname"
                     }]
                   }
                 }

@@ -70,15 +70,13 @@ objects:
                 {
                   "podAntiAffinity": {
                     "requiredDuringSchedulingIgnoredDuringExecution": [{
-                      "podAffinityTerm": {
                         "labelSelector": {
                           "matchExpressions": [{
                             "key": "type",
                             "operator": "In",
                             "values": ["worker", "master", "aux"]
                           }]
-                        }
-                      },
+                        },
                       "topologyKey": "kubernetes.io/hostname"
                     }]
                   }
