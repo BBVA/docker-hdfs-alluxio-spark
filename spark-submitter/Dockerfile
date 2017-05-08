@@ -15,6 +15,8 @@ RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.0-bin-hadoop2.7.tgz --strip-co
 WORKDIR /
 ADD boot.sh /
 RUN chmod a+x /boot.sh
+RUN chown -R root.root /opt/spark
+RUN chmod -R g+rw /opt/spark
 
 ADD core-site.xml /opt/spark/conf/core-site.xml
 ADD hdfs-site.xml /opt/spark/conf/hdfs-site.xml
