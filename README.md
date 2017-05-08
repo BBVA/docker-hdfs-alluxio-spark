@@ -138,6 +138,8 @@ Modify the following properties:
 Add the following artifact to connect to alluxio:
     org.alluxio:alluxio-core-client:1.2.0
 
+**NOTE: The current image includes all previous parameters by default in the "interpreters.json" file. In order to run zeppelin jobs in local, you must set the spar.executor.memory property to 512m or less (less than the available memory for the workers), default value is 1g.** 
+
 
 **Version 1.2.0 of alluxio is needed in order to work with the combination of libraries the version 0.7.0 of zeppelin ships by default. If you need a newer version, you will need to build your own zeppelin distribution and docker image**
 
@@ -165,7 +167,7 @@ The general procedure to bring this up is:
 
 Please note that images are built in your minishift installation, it might take some time. Also The deployments might not be started automatically, so proceed to deploy manually when the images are ready.
 
-```oc-cluster.sh``` is used to deploy a production-grade cluster, 7 workers, and 3 masters, with antiaffinity rules, also with 6GB of RAM for alluxio workers and 6GB of RAM for spark workers. Please read the yaml for current layout and futher details. On the other hand,  ```oc-minishift.sh``` deploys three workers with 512MB of RAM for alluxio and 512MB of RAM for spark workers,  this scenario expects a single VM minishift deployment. 
+```oc-cluster.sh``` is used to deploy a production-grade cluster, 7 workers, and 3 masters, with antiaffinity rules, also with 6GB of RAM for alluxio workers and 6GB of RAM for spark workers. Please read the yaml for current layout and futher details. On the other hand,  ```oc-minishift.sh``` deploys three workers with 512MB of RAM for alluxio and 512MB of RAM for spark workers,  this scenario expects a single VM minishift deployment.
 
 ## notes on data locality
 
