@@ -1,4 +1,4 @@
 #!/bin/bash
 
-oc get pods --template='pod - nodename {{ printf "\n" }}{{ range .items }}{{.metadata.name }} - {{ .spec.nodeName }} {{printf "\n"}} {{end}}'
+oc get pods --template='pod - nodename {{ printf "\n" }}{{ range .items }}{{.metadata.name }} - {{ .spec.nodeName }} {{printf "\n"}} {{end}}' | grep -v build | grep -v deploy
 
