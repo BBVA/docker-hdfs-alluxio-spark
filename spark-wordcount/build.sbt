@@ -6,7 +6,9 @@ scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.1.0" % "provided",
-  "com.github.scopt" %% "scopt" % "3.5.0"
+  "com.github.scopt" %% "scopt" % "3.5.0",
+  "org.alluxio" % "alluxio-core-client" % "1.4.0" % "provided"
+
 )
 
 mainClass in assembly := Some("com.bbva.spark.WordCount")
