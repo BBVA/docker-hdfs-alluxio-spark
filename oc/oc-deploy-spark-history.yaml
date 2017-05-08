@@ -22,7 +22,7 @@ objects:
       selector:
         app: "spark-history"
       ports:
-        - name: spark-history-history
+        - name: spark-history-ui
           protocol: TCP
           port: 18080
           targetPort: 18080
@@ -128,4 +128,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
