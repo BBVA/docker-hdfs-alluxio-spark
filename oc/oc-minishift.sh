@@ -4,8 +4,9 @@
 export project="has"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
 export secretname="sshcert"
+export ENVIRONMENT="minishift"
 nodes=${1:-"3"}
-# https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
+# https://docs.openshift.org/laremove_affinity/dev_guide/builds/build_inputs.html
 
 # Create new oc project
 oc new-project "${project}"
@@ -24,42 +25,42 @@ done
 
 # Deploy HDFS namenode
 export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process \
+./remove_affinity.py "oc-deploy-hdfs-namenode.yaml" | oc process \
 	-p IMAGE=${hdfs_image} \
-	-f "oc-deploy-hdfs-namenode.yaml" | oc create -f -
+	-f - | oc create -f -
 
 # Deploy HDFS httpfs node
-oc process \
+./remove_affinity.py "oc-deploy-hdfs-httpfs.yaml" | oc process \
 	-p IMAGE=${hdfs_image} \
-	-f "oc-deploy-hdfs-httpfs.yaml" | oc create -f -
+	-f - | oc create -f -
 
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process \
+./remove_affinity.py "oc-deploy-alluxio-master.yaml" | oc process \
 	-p IMAGE=${alluxio_image} \
   -p ALLUXIO_WORKER_MEMORY_SIZE="512MB" \
-	-f "oc-deploy-alluxio-master.yaml" | oc create -f -
+	-f - | oc create -f -
 
 # Deploy Spark master
 export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process \
+./remove_affinity.py "oc-deploy-spark-master.yaml" | oc process \
 	-p IMAGE=${spark_image} \
   -p SPARK_MASTER_WEBUI_PORT="8080" \
   -p SPARK_WORKER_MEMORY="512M" \
   -p SPARK_WORKER_PORT="35000" \
   -p SPARK_WORKER_WEBUI_PORT="8081" \
   -p SPARK_DAEMON_MEMORY="512M" \
-	-f "oc-deploy-spark-master.yaml" | oc create -f -
+	-f - | oc create -f -
 
   # Deploy splark history server
-oc process \
+./remove_affinity.py "oc-deploy-spark-history.yaml" | oc process \
   -p IMAGE=${spark_image} \
-  -f "oc-deploy-spark-history.yaml" | oc create -f -
+  -f - | oc create -f -
 
 
 # Deploy three workers
 for id in $(seq 1 1 ${nodes}); do
-    oc process -p ID=${id} \
+    ./remove_affinity.py "oc-deploy-has-node.yaml" | oc process -p ID=${id} \
     	-p IMAGE_SPARK="${spark_image}" \
     	-p IMAGE_ALLUXIO="${alluxio_image}" \
     	-p IMAGE_HDFS="${hdfs_image}" \
@@ -70,14 +71,14 @@ for id in $(seq 1 1 ${nodes}); do
       -p SPARK_WORKER_PORT="35000" \
       -p SPARK_WORKER_WEBUI_PORT="8081" \
       -p SPARK_DAEMON_MEMORY="512M" \
-    	-f "oc-deploy-has-node.yaml" | oc create -f -
+    	-f - | oc create -f -
 done
 
 # Deploy a Zeppelin client
 export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-oc process -p ID=0 \
+./remove_affinity.py "oc-deploy-zeppelin.yaml" | oc process -p ID=0 \
 	-p IMAGE=${zeppelin_image} \
-	-f "oc-deploy-zeppelin.yaml" | oc create -f -
+	-f - | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070,
