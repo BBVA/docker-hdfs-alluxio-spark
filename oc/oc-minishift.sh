@@ -4,7 +4,7 @@
 export project="has"
 export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
 export secretname="sshcert"
-export ENVIRONMENT="minishift"
+
 nodes=${1:-"3"}
 # https://docs.openshift.org/laremove_affinity/dev_guide/builds/build_inputs.html
 
