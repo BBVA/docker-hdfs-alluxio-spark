@@ -181,8 +181,6 @@ objects:
                   }
                 }
         spec:
-          nodeSelector:
-            role: worker
           hostname: worker${ID}
           volumes:
             - name: hdfs-worker-storage-${ID}
@@ -255,4 +253,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
