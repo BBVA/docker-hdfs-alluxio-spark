@@ -8,7 +8,6 @@ WORKDIR /tmp
 
 RUN mkdir -p /opt/zeppelin && wget -qO- ${ZEPPELIN} | tar xzf - --strip-components=1 -C /opt/zeppelin
 
-RUN echo openshift-user:x:1000050000:0:root:::/bin/false >> /etc/passwd
 RUN chown -R root.root /opt/zeppelin
 RUN chmod g+rwx /opt/zeppelin
 RUN chmod -R g+rw /opt/zeppelin
