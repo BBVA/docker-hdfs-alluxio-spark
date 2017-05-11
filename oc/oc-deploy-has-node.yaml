@@ -84,11 +84,33 @@ objects:
           protocol: TCP
           port: 6066
           targetPort: 6066
-        - name: spark-blockmanager-port
+        - name: spark-blockmanager-port0
           protocol: TCP
           port: 51400
           targetPort: 51400
-
+        - name: spark-blockmanager-port1
+          protocol: TCP
+          port: 51401
+          targetPort: 51401
+        - name: spark-blockmanager-port2
+          protocol: TCP
+          port: 51402
+          targetPort: 51402
+        - name: spark-blockmanager-port3
+          protocol: TCP
+          port: 51403
+        - name: spark-blockmanager-port4
+          protocol: TCP
+          port: 51404
+          targetPort: 51404
+        - name: spark-blockmanager-port5
+          protocol: TCP
+          port: 51405
+          targetPort: 51405
+        - name: spark-blockmanager-port6
+          protocol: TCP
+          port: 51406
+          targetPort: 51406
   - apiVersion: v1
     kind: Route
     metadata:
