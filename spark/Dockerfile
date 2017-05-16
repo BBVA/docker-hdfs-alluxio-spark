@@ -17,7 +17,6 @@ RUN wget --quiet ${ALLUXIO_SPARK_URL}
 
 RUN chown -R root.root /opt/spark
 RUN chmod -R g+rw /opt/spark
-RUN mkdir -p /tmp/spark-events
 
 EXPOSE 7077 6066 8080 35000 8081
 
