@@ -40,6 +40,20 @@ parameters:
 
 objects:
 
+  - apiVersion: "v1"
+    kind: "PersistentVolumeClaim"
+    metadata:
+      name: "hdfs-worker-storage-${ID}"
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes:
+        - "ReadWriteMany"
+      resources:
+        requests:
+          storage: "80Gi"
+      volumeName: hdfs-worker-storage-${ID}
+      
   - apiVersion: v1
     kind: Service
     metadata:
@@ -206,7 +220,8 @@ objects:
           hostname: worker${ID}
           volumes:
             - name: hdfs-worker-storage-${ID}
-              emptyDir: {}
+              persistentVolumeClaim:
+                claimName: hdfs-worker-storage-${ID}
             - name: alluxio-worker-storage-${ID}
               emptyDir: {}
             - name: spark-worker-storage-${ID}
