@@ -5,4 +5,4 @@ worker and a HDFS datanode. (TODO explain cluster capacity and topology)
 
 Each datanode had replication factor configured to 3x.
 
-1. [TestDFSIO](../dfsio/README.md)
+1. [TestDFSIO](./dfsio/README.md)
