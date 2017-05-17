@@ -6,7 +6,7 @@ export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-allux
 export secretname="sshcert"
 
 nodes=${1:-"3"}
-# https://docs.openshift.org/laremove_affinity/dev_guide/builds/build_inputs.html
+# https://docs.openshift.org/laremove_cluster_stuff/dev_guide/builds/build_inputs.html
 
 # Create new oc project
 oc new-project "${project}"
@@ -25,25 +25,25 @@ done
 
 # Deploy HDFS namenode
 export hdfs_image=$(oc get is/hdfs --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-./remove_affinity.py "oc-deploy-hdfs-namenode.yaml" | oc process \
+./remove_cluster_stuff.py "oc-deploy-hdfs-namenode.yaml" | oc process \
 	-p IMAGE=${hdfs_image} \
 	-f - | oc create -f -
 
 # Deploy HDFS httpfs node
-./remove_affinity.py "oc-deploy-hdfs-httpfs.yaml" | oc process \
+./remove_cluster_stuff.py "oc-deploy-hdfs-httpfs.yaml" | oc process \
 	-p IMAGE=${hdfs_image} \
 	-f - | oc create -f -
 
 # Deploy Alluxio master
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-./remove_affinity.py "oc-deploy-alluxio-master.yaml" | oc process \
+./remove_cluster_stuff.py "oc-deploy-alluxio-master.yaml" | oc process \
 	-p IMAGE=${alluxio_image} \
   -p ALLUXIO_WORKER_MEMORY_SIZE="512MB" \
 	-f - | oc create -f -
 
 # Deploy Spark master
 export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-./remove_affinity.py "oc-deploy-spark-master.yaml" | oc process \
+./remove_cluster_stuff.py "oc-deploy-spark-master.yaml" | oc process \
 	-p IMAGE=${spark_image} \
   -p SPARK_MASTER_WEBUI_PORT="8080" \
   -p SPARK_WORKER_MEMORY="512M" \
@@ -53,14 +53,14 @@ export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepositor
 	-f - | oc create -f -
 
   # Deploy splark history server
-./remove_affinity.py "oc-deploy-spark-history.yaml" | oc process \
+./remove_cluster_stuff.py "oc-deploy-spark-history.yaml" | oc process \
   -p IMAGE=${spark_image} \
   -f - | oc create -f -
 
 
 # Deploy three workers
 for id in $(seq 1 1 ${nodes}); do
-    ./remove_affinity.py "oc-deploy-has-node.yaml" | oc process -p ID=${id} \
+    ./remove_cluster_stuff.py "oc-deploy-has-node.yaml" | oc process -p ID=${id} \
     	-p IMAGE_SPARK="${spark_image}" \
     	-p IMAGE_ALLUXIO="${alluxio_image}" \
     	-p IMAGE_HDFS="${hdfs_image}" \
@@ -76,7 +76,7 @@ done
 
 # Deploy a Zeppelin client
 export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
-./remove_affinity.py "oc-deploy-zeppelin.yaml" | oc process -p ID=0 \
+./remove_cluster_stuff.py "oc-deploy-zeppelin.yaml" | oc process -p ID=0 \
 	-p IMAGE=${zeppelin_image} \
 	-f - | oc create -f -
 
