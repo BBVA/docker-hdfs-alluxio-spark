@@ -12,31 +12,31 @@ Each datanode had replication factor configured to 3x.
 ### Clean benchmarks
 
 ```bash
-bash run_clean.sh
+./run_clean.sh
 ```
 
 ### Run write tests
 
 ```bash
-bash run_write.sh [MUST_CACHE | CACHE_THROUGH | THROUGH] <num_files> <file_size>
+./run_write.sh [MUST_CACHE | CACHE_THROUGH | THROUGH] <num_files> <file_size>
 ```
 
 Example:
 
 ```bash
-bash run_write.sh MUST_CACHE 10 1gb
+./run_write.sh MUST_CACHE 10 1gb
 ```
 
 ### Run read tests
 
 ```bash
-bash run_read.sh [NO_CACHE | CACHE] <num_files> <file_size>
+./run_read.sh [NO_CACHE | CACHE] <num_files> <file_size>
 ```
 
 Example:
 
 ```bash
-bash run_read.sh NO_CACHE 10 1gb
+./run_read.sh NO_CACHE 10 1gb
 ```
 
 ## Results
@@ -48,23 +48,23 @@ bash run_read.sh NO_CACHE 10 1gb
 ##### Number of files: 10. File size: 1gb. Max. cores: 7
 
 ```bash
-bash run_write.sh MUST_CACHE 10 1gb
+./run_write.sh MUST_CACHE 10 1gb
 ```
 
 ##### Number of files: 30. File size: 1gb. Max. cores: 7
 
 ```bash
-bash run_write.sh MUST_CACHE 30 1gb
+./run_write.sh MUST_CACHE 30 1gb
 ```
 
 ##### Number of files: 50. File size: 1gb. Max. cores: 7
 
 ```bash
-bash run_write.sh MUST_CACHE 50 1gb
+./run_write.sh MUST_CACHE 50 1gb
 ```
 
 ##### Number of files: 70. File size: 1gb. Max. cores: 7
 
 ```bash
-bash run_write.sh MUST_CACHE 70 1gb
+./run_write.sh MUST_CACHE 70 1gb
 ```
