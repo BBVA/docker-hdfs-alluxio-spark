@@ -48,11 +48,10 @@ objects:
         volume.alpha.kubernetes.io/storage-class: anything
     spec:
       accessModes:
-        - "ReadWriteMany"
+        - "ReadWriteOnce"
       resources:
         requests:
           storage: "80Gi"
-      volumeName: hdfs-worker-storage-${ID}
       
   - apiVersion: v1
     kind: Service
