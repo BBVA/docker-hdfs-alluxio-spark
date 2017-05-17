@@ -11,7 +11,7 @@ import json
 with open(sys.argv[1], 'r') as stream:
     try:
         parsed_yaml = yaml.load(stream)
-        deploymentConfig_indexes = [k for k,v in enumerate(parsed_yaml["objects"]) if v["kind"] == "DeploymentConfig"]
+        deploymentConfig_indexes = [k for k,v in enumerate(parsed_yaml["objects"]) if v["kind"] == "DeploymentConfig" or v["kind"] == "Job"]
         for i in deploymentConfig_indexes:
             del parsed_yaml["objects"][i]["spec"]["template"]["metadata"]["annotations"]["scheduler.alpha.kubernetes.io/affinity"]
 
