@@ -13,12 +13,12 @@ parse() {
 	 	for  (k in kv) {
 	 		printf("%s,", kv[k]);
 	 	}
-	 	print "\n";
+	 	printf("\n");
 	 }'
 }
 
 
-pods=$(oc get pods -l type=driver --template="{{ range .items }}{{.metadata.name }}{{end }}")
+pods=$(oc get pods -l type=driver --template="{{ range .items }}{{.metadata.name }} {{end }}")
 
 for pod in $pods; do
 	oc logs $pod | parse $pod
