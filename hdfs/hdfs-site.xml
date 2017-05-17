@@ -1,6 +1,6 @@
 <configuration>
 	<property><name>dfs.namenode.name.dir</name><value>file:///data/hdfs-namenode/</value></property>
-	<property><name>dfs.blocksize</name><value>33554432</value></property>
+	<property><name>dfs.blocksize</name><value>128m</value></property>
 	<property><name>dfs.namenode.handler.count</name><value>100</value></property>
 	<property><name>dfs.namenode.servicerpc-address</name><value>hdfs://hdfs-namenode:8022</value></property>
 	<property><name>dfs.namenode.datanode.registration.ip-hostname-check</name><value>false</value></property>
@@ -8,4 +8,3 @@
 	<property><name>dfs.client.use.datanode.hostname</name><value>true</value></property>
 	<property><name>dfs.datanode.use.datanode.hostname</name><value>true</value></property>
 </configuration>
-
