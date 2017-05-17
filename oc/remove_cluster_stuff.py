@@ -30,6 +30,9 @@ with open(sys.argv[1], 'r') as stream:
             if v["kind"]  == "DeploymentConfig":
                 clean_deployment_affinity(parsed_yaml, i)
                 clean_deployment_volume_claim(parsed_yaml, i)
+            if v["kind"] == "Job":
+                clean_deployment_affinity(parsed_yaml, i)
+
 
         print(json.dumps(parsed_yaml))
     except yaml.YAMLError as exc:
