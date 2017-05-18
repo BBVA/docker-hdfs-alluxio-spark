@@ -119,3 +119,33 @@ Command:
 ./run_write.sh MUST_CACHE 150 1gb
 ```
 Result:
+
+##### Number of files: 10. File size: 10GB. Max. cores: 7
+
+Command:
+
+```bash
+./run_write.sh MUST_CACHE 10 10gb
+```
+
+Result:
+
+##### Number of files: 30. File size: 10GB. Max. cores: 7
+
+Command:
+
+```bash
+./run_write.sh MUST_CACHE 30 10gb
+```
+
+Result:
+
+##### Number of files: 50. File size: 10GB. Max. cores: 7
+
+Command:
+
+```bash
+./run_write.sh MUST_CACHE 50 10gb
+```
+
+Result:

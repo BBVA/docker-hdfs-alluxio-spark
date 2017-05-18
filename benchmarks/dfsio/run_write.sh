@@ -6,7 +6,7 @@ write_type="$1"
 num_files="$2"
 file_size="$3"
 
-job_name=$(echo "dfsio-write-${read_type}-${num_files}-${file_size}" | sed "s/_/-/g" | tr A-Z a-z)
+job_name=$(echo "dfsio-write-${write_type}-${num_files}-${file_size}" | sed "s/_/-/g" | tr A-Z a-z)
 
 executor_cores="1"
 total_executor_cores="7"
