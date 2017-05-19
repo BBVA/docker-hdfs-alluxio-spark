@@ -42,11 +42,11 @@ Where ```type``` is the node type like namenode, master, worker, etc. ```action`
 
 ## about dockerfiles
 
-All Dockerfiles are based in the official ubuntu docker image, and contains the minimum commands required to run the software. Please beware that some tools might be lacking like ip utils, dns utils, etc. If you need to customize the image for debbuging purposes, either modify the Dockerfile or compose your image from one of ours.
+All Dockerfiles are based in the official ubuntu docker image, and contains the minimum commands required to run the software. Please, be aware that some tools might be lacking like ip utils, dns utils, etc. If you need to customize the image for debbuging purposes, either modify the Dockerfile or compose your image from one of ours.
 
 ## about configurations
 
-All components are configured using their correspondant configuration files which are included in the images at build time. There are no dynamic configuration tools or support for dynamic configuration storages like consul, etcd, S3, etc. So everytime a change of config is needed, a new version of the image must be build. 
+All components are configured using their correspondant configuration files which are included in the images at build time. There are no dynamic configuration tools or support for dynamic configuration storages like consul, etcd, S3, etc. So everytime a change of config is needed, a new version of the image must be build.
 
 Dockerfiles are layed for this purpose, so rebuild an image with a config change is cheap in space and time.
 
@@ -62,7 +62,7 @@ To achieve this in openshift, several assumptions are made:
  - the openshift service and the hostname of the pod must be equal
  - all the nodes that accept as a parameter its local name, shoud be set up that way using the FQDN, for example with the output of ```hostname -f```
 
-Data locality is only achieved between all the components only when using PODs, as all the workers must share hostname in order to be aware of the data locality. 
+Data locality is only achieved between all the components only when using PODs, as all the workers must share hostname in order to be aware of the data locality.
 
 TODO: Testing in docker/swarm environment needs to be done to clarify data locality options on this environment.
 
@@ -96,7 +96,7 @@ And the following environment variables for alluxio configuration:
     export ALLUXIO_RAM_FOLDER=${ALLUXIO_RAM_FOLDER:-"/mnt/ramdisk"}
     export ALLUXIO_UNDERFS_ADDRESS=${ALLUXIO_UNDERFS_ADDRESS:-"hdfs://hdfs-namenode:8020"}
 
-If not set, you can see in that snipper the default values for each variable. More can be added by following the alluxio conifguration guideline.
+If not set, you can see in that snippet the default values for each variable. More can be added by following the alluxio conifguration guideline.
 
 ## SPARK image
 
@@ -106,12 +106,22 @@ The boot.sh accepts the following parameters:
 
 boot.sh node_type action cluster_name
 
-Most of the configuration is on the spark-defaults.conf file added to the Docker image. But please consider configuring your executors with the followingo parameters:
+Most of the configuration is on the spark-defaults.conf file added to the Docker image. But please consider configuring your executors with the following parameters:
 
- TODO: Put parameters of jobs
+--master spark://spark-master:7077 \
+--class com.bbva.spark.benchmarks.dfsio.TestDFSIO \
+--total-executor-cores $total_executor_cores \
+--executor-cores $executor_cores \
+--driver-memory 1g \
+--executor-memory 1g \
+--conf spark.locality.wait=30s \
+--conf spark.driver.extraJavaOptions=-Dalluxio.user.file.writetype.default=$write_type \
+--conf spark.executor.extraJavaOptions=-Dalluxio.user.file.writetype.default=$write_type \
+--conf spark.driver.extraJavaOptions=-Dalluxio.user.file.readtype.default=$read_type \
+--conf spark.executor.extraJavaOptions=-Dalluxio.user.file.readtype.default=$read_type \
+--packages org.alluxio:alluxio-core-client:1.4.0 \
 
-
-If not set, you can see in that snipper the default values for each variable. More can be added by following the spark conifguration guideline.
+If not set, you can see in that snippet the default values for each variable. More can be added by following the spark conifguration guideline.
 
 ## ZEPPELIN image
 
@@ -145,8 +155,7 @@ Modify the following properties:
 Add the following artifact to connect to alluxio:
     org.alluxio:alluxio-core-client:1.2.0
 
-**NOTE: The current image includes all previous parameters by default in the "interpreters.json" file. In order to run zeppelin jobs in local, you must set the spar.executor.memory property to 512m or less (less than the available memory for the workers), default value is 1g.** 
-
+**NOTE: The current image includes all previous parameters by default in the "interpreters.json" file. In order to run zeppelin jobs in local (minishift), spark.executor.memory property must be set to 512m or less (less than the available memory for the workers), default value is 1g.**
 
 **Version 1.2.0 of alluxio is needed in order to work with the combination of libraries the version 0.7.0 of zeppelin ships by default. If you need a newer version, you will need to build your own zeppelin distribution and docker image**
 
@@ -163,19 +172,9 @@ There are some peculiarities to take into account:
   - do require kubernetes v1.4 for the scheduling code to work. If you have kuerbenets >1.4, that deployment code must be changed.
   - do require every worker to be deployed to not share host with any other worker or master. This is needed to support host-nat-based SDN like flannel and others due to requirements of HDFS protocol.
 
-The script ```oc-cluster.sh``` contains the deployment set up for a 10 node cluster with 16GB of ram on each node. The resource allocations must be tuned to support your installation. Meanwhile the script ```oc-minishit.sh``` contains the code to deploy the system in a local instance of minishift, set up as stated.
+The script ```oc-cluster.sh``` contains the deployment set up for a 10 node cluster with 16GB of ram on each node and a persistent volume claim of 500Gi accross the cluster. The resource allocations must be tuned to support your installation. Meanwhile the script ```oc-minishit.sh``` contains the code to deploy the system in a local instance of minishift, set up as stated.
 
 The images are build inside openshift and expect a repository layout like this one. Do not move the Docker files or the config files without updating the build code for openshift, or the process will fail.
-
-# sparky
-
-This contains a Scala application that counts lines on a textFile given the apropriate alluxio url.
-
-Read the source code, and try it like:
-
-    sbt "runMain (Sparky | AlluxioExperiment | CSVToParquet) --spark spark://spark-master-dashboard-has.192.168.99.100.nip.io --input alluxio://alluxio-master-dashboard-has.192.168.99.100.nip.io/README.txt [--output outputFile]"
-
-To test it agains the minishift cluster.
 
 # oc
 
@@ -186,14 +185,25 @@ The general procedure to bring this up is:
  - install virtualbox, kvm, xhype or other virtualization tool supported by docker-machine
  - install docker-machine and the drivers you need for virtualbox, kvm, etc.
  - install ```minishift``` command  and openshift cli ```oc``` command and put them in your path
- - stat a minishift cluster: ```minishift start --vm-driver=virtualbox --cpus 4 --memory 8192```
+ - start a minishift cluster: ```minishift start --vm-driver=virtualbox --cpus 4 --memory 10240 --disk-size 100G```
  - run bash oc-build.sh to bring up all the components
 
 Please note that images are built in your minishift installation, it might take some time. Also The deployments might not be started automatically, so proceed to deploy manually when the images are ready.
 
-```oc-cluster.sh``` is used to deploy a production-grade cluster, 7 workers, and 3 masters, with antiaffinity rules, also with 6GB of RAM for alluxio workers and 6GB of RAM for spark workers. Please read the yaml for current layout and futher details. On the other hand,  ```oc-minishift.sh``` deploys three workers with 512MB of RAM for alluxio and 512MB of RAM for spark workers,  this scenario expects a single VM minishift deployment.
+```oc-cluster.sh``` is used to deploy a production-grade cluster, 7 workers, and 3 masters, with antiaffinity rules, also with 6GB of RAM for alluxio workers and 6GB of RAM for spark workers. Please read the yaml for current layout and futher details. On the other hand,  ```oc-minishift.sh``` deploys three workers with 512MB of RAM for alluxio and 512MB of RAM for spark workers,  this scenario expects a single VM minishift deployment. Using oc-minishift.sh removes all the volume and affinity/antiaffinity configuration to allow for a correct deployment of the cluster in a single node.
 
+# Data
 
+This folder contains scripts to download and extend datasets for test porpuses. It also contains 2 scripts to manipulate HDFS and Alluxio filesystems from the command line, making use of their HTTP API.
+
+* `httpfs.sh` allows to upload | rm | mkdir | ls | get files and directories inside HDFS.
+* `alluxiofs.sh` allows to upload | rm | mkdir | ls | get | free | persist files and directories in Alluxio. The opload option also allows to distribute the files among all the worker nodes and persist the files to the underlying filesystem (HDFS).
+
+# Benchmarks
+
+This folder contains a synthetic benchmark aimed to check performance of the cluster in several scenarios. It's based on [DFSIO](http://blog.unit1127.com/blog/2013/08/28/benchmarks/) benchmark for HDFS and adapted to work using Spark.
+
+TODO: Define scenarios  
 
 # docker
 
