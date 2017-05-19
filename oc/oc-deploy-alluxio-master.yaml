@@ -15,6 +15,18 @@ parameters:
     required: true
 
 objects:
+  - apiVersion: "v1"
+    kind: "PersistentVolumeClaim"
+    metadata:
+      name: "alluxio-master-storage"
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "5Gi"
 
   - apiVersion: v1
     kind: Service
@@ -132,7 +144,8 @@ objects:
           hostname: alluxio-master
           volumes:
             - name: alluxio-master-storage
-              emptyDir: {}
+              persistentVolumeClaim:
+                claimName: alluxio-master-storage
           containers:
             - name: alluxio-master
               image: ${IMAGE}
@@ -160,4 +173,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-

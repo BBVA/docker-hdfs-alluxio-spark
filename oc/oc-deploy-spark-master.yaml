@@ -24,6 +24,18 @@ parameters:
 
 
 objects:
+  - apiVersion: "v1"
+    kind: "PersistentVolumeClaim"
+    metadata:
+      name: "spark-master-storage"
+      annotations:
+        volume.alpha.kubernetes.io/storage-class: anything
+    spec:
+      accessModes:
+        - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "5Gi"
 
   - apiVersion: v1
     kind: Service
@@ -123,7 +135,8 @@ objects:
           hostname: spark-master
           volumes:
             - name: spark-master-storage
-              emptyDir: {}
+              persistentVolumeClaim:
+                claimName: spark-master-storage
           containers:
             - name: spark-master
               image: ${IMAGE}
@@ -159,4 +172,3 @@ objects:
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
           securityContext: {}
-
