@@ -17,3 +17,10 @@ run_test() {
 }
 
 run_test 7
+run_test 14
+run_test 21
+run_test 28
+run_test 35
+run_test 42
+
+
