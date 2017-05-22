@@ -67,7 +67,12 @@
           }
         }
       ],
-      "dependencies": [],
+      "dependencies": [
+        {
+          "groupArtifactVersion": "org.alluxio:alluxio-core-client:1.2.0",
+          "local": false
+        }
+      ],
       "option": {
         "remote": true,
         "port": -1,
