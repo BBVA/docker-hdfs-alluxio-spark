@@ -11,6 +11,8 @@ WORKDIR /tmp
 RUN mkdir -p /opt/zeppelin && wget -qO- ${ZEPPELIN} | tar xzf - --strip-components=1 -C /opt/zeppelin
 RUN mkdir -p /opt/spark && wget -qO- ${SPARK_DIST_URL} | tar xzf - --strip-components=1 -C /opt/spark
 
+RUN /opt/zeppelin/bin/install-interpreter.sh --name python,md
+
 WORKDIR /
 ADD boot.sh /boot.sh
 RUN chmod a+x /boot.sh
@@ -18,8 +20,6 @@ RUN chown -R root.root /opt/zeppelin
 RUN chmod -R g+rw /opt/zeppelin
 RUN chown -R root.root /opt/spark
 RUN chmod -R g+rw /opt/spark
-
-RUN /opt/zeppelin/bin/install-interpreter.sh --name python,md
 
 ADD core-site.xml /opt/spark/conf/core-site.xml
 ADD hdfs-site.xml /opt/spark/conf/hdfs-site.xml
