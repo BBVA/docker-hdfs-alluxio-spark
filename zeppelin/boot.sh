@@ -74,7 +74,7 @@ setup_username() {
 	export USER_ID=$(id -u)
 	export GROUP_ID=$(id -g)
 	cat /etc/passwd > /tmp/passwd
-	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ALLUXIO_PREFIX}:/bin/bash" >> /tmp/passwd
+	echo "openshift:x:${USER_ID}:${GROUP_ID}:OpenShift Dynamic user:${ZEPPELIN_HOME}:/bin/bash" >> /tmp/passwd
 	export LD_PRELOAD=/usr/lib/libnss_wrapper.so
 	export NSS_WRAPPER_PASSWD=/tmp/passwd
 	export NSS_WRAPPER_GROUP=/etc/group
@@ -93,7 +93,7 @@ trap "shut_down sigint" SIGINT
 # trap "shut_down sigexit" EXIT
 
 setup_username
-echo "The ${node} is swtching to ${action}"
+echo "The ${node} is switching to ${action}"
 zeppelin_handler ${node} ${action} ${cluster_name}
 
 sleep 2s
