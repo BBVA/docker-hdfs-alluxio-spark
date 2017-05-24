@@ -51,7 +51,7 @@ objects:
         - "ReadWriteOnce"
       resources:
         requests:
-          storage: "500Gi"
+          storage: "80Gi"
 
   - apiVersion: v1
     kind: Service
