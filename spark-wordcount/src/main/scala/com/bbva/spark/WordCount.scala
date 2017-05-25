@@ -14,7 +14,7 @@ object WordCount extends App {
 
     val lines = sc.textFile(conf.inputFile)
 
-    val words = lines.flatMap(_.split(" ")).cache()
+    val words = lines.flatMap(_.split(" "))
 
     val counts = words.map(word => (word, 1)).reduceByKey(_ + _)
 

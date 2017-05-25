@@ -1,4 +1,4 @@
 <configuration>
-	<property><name>dfs.blocksize</name><value>128m</value></property>
+	<property><name>dfs.blocksize</name><value>32m</value></property>
 	<property><name>dfs.client.use.datanode.hostname</name><value>true</value></property>
 </configuration>
