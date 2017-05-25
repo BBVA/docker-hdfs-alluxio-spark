@@ -1,9 +1,1 @@
-
-
-
-
-bash oc-deploy-spark-job.sh dfsio --master spark://spark-master:7077 --class com.bbva.spark.benchmarks.dfsio.TestDFSIO --driver-memory 1g --executor-memory 2g --conf 'spark.driver.extraJavaOptions=-Dalluxio.user.file.writetype.default=CACHE_THROUGH' --conf 'spark.executor.extraJavaOptions=-Dalluxio.user.file.writetype.default=CACHE_THROUGH' --packages org.alluxio:alluxio-core-client:1.4.0 "http://hdfs-httpfs:14000/webhdfs/v1/jobs/dfsio.jar?op=OPEN&user.name=openshift" write --numFiles 10 --fileSize 100mb --outputDir  alluxio://alluxio-master:19998/benchmarks/DFSIO
-
-bash oc-deploy-spark-job.sh dfsio --master spark://spark-master:7077 --class com.bbva.spark.benchmarks.dfsio.TestDFSIO --driver-memory 1g --executor-memory 2g --packages org.alluxio:alluxio-core-client:1.4.0 "http://hdfs-httpfs:14000/webhdfs/v1/jobs/dfsio.jar?op=OPEN&user.name=openshift" clean --outputDir  alluxio://alluxio-master:19998/benchmarks/DFSIO
-
-bash oc-deploy-spark-job.sh dfsio --master spark://spark-master:7077 --class com.bbva.spark.benchmarks.dfsio.TestDFSIO --total-executor-cores 7 --executor-cores 1 --driver-memory 1g --executor-memory 2g --conf 'spark.driver.extraJavaOptions=-Dalluxio.user.file.writetype.default=CACHE_THROUGH' --conf 'spark.executor.extraJavaOptions=-Dalluxio.user.file.writetype.default=CACHE_THROUGH' --packages org.alluxio:alluxio-core-client:1.4.0 "http://hdfs-httpfs:14000/webhdfs/v1/jobs/dfsio.jar?op=OPEN&user.name=openshift" write --numFiles 10 --fileSize 1gb --outputDir  alluxio://alluxio-master:19998/benchmarks/DFSIO
+bash oc-deploy-spark-job.sh wordcount --master spark://spark-master:7077 --class com.bbva.spark.WordCount --total-executor-cores 14 --executor-cores 2 --driver-memory 512m --executor-memory 512m --conf spark.locality.wait=30s --packages org.alluxio:alluxio-core-client:1.4.0 "http://hdfs-httpfs:14000/webhdfs/v1/jobs/wordcount.jar?op=OPEN&user.name=openshift" -i /sample1g -o /sample1g-copy
