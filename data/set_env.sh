@@ -9,7 +9,7 @@ export HDFS_DIRS="spark/eventlogs jobs data"
 export MINISHIFT_IP=$(minishift ip)
 
 #Set params..
-export ALLUXIO_PROXY=http://alluxio-master-rest-has.${MINISHIFT_IP}.io
+export ALLUXIO_PROXY=http://alluxio-master-rest-has.${MINISHIFT_IP}.nip.io
 export HUSER=openshift
 export HTTPFS=http://hdfs-httpfs-has.${MINISHIFT_IP}.nip.io
 
