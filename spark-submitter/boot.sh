@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sleep 3
+
 export SPARK_HOME=/opt/spark
 export SPARK_CONF_DIR=${SPARK_HOME}/conf
 export ALLUXIO_HOME=${SPARK_HOME}
