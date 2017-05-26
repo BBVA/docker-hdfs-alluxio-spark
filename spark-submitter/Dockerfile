@@ -24,6 +24,6 @@ ADD alluxio-site.properties /opt/spark/conf/alluxio-site.properties
 ADD spark-defaults.conf /opt/spark/conf/spark-defaults.conf
 ADD log4j.properties /opt/spark/conf/log4j.properties
 
-EXPOSE 4040
+EXPOSE 4040 51000 51100 51200 51400 51500
 
 ENTRYPOINT ["/boot.sh"]
