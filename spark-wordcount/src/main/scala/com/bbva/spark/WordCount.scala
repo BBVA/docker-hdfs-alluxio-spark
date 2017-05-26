@@ -1,6 +1,5 @@
 package com.bbva.spark
 
-import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 
 object WordCount extends App {
@@ -14,6 +13,15 @@ object WordCount extends App {
     val sc = SparkContext.getOrCreate(sparkConf)
 
     sc.hadoopConfiguration.set("fs.defaultFS", "hdfs://hdfs-namenode:8020")
+
+    sc.parallelize(Seq("")).repartition(7).foreachPartition(x => {
+      import org.apache.log4j.{LogManager, Level}
+      import org.apache.commons.logging.LogFactory
+
+      LogManager.getRootLogger().setLevel(Level.DEBUG)
+      val log = LogFactory.getLog("EXECUTOR-LOG:")
+      log.debug("START EXECUTOR DEBUG LOG LEVEL")
+    })
 
     val lines = sc.textFile(conf.inputFile)
 
