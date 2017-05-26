@@ -35,7 +35,7 @@ function upload {
   fi
 
   curl $debug -L -H "Content-Type: application/octet-stream" -X POST \
-      -d @${local_file} \
+      -T ${local_file} \
       "${alluxio_proxy}/api/v1/streams/${stream_id}/write"
 
   curl $debug -L -X POST \
