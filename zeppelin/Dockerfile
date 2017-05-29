@@ -30,6 +30,6 @@ ADD log4j.properties /opt/spark/conf/log4j.properties
 ADD interpreter.json /opt/zeppelin/conf/interpreter.json
 RUN chmod 666 /opt/zeppelin/conf/interpreter.json
 
-EXPOSE 4040 8080 8081
+EXPOSE 4040 8080 8081 51000 51100 51200 51400 51500
 
 ENTRYPOINT ["/boot.sh"]
