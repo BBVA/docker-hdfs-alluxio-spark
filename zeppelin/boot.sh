@@ -32,14 +32,6 @@ export SPARK_HOME=/opt/spark
 export ALLUXIO_HOME=${SPARK_HOME}
 export HADOOP_CONF_DIR=${SPARK_HOME}/conf
 
-export SPARK_EXECUTOR_MEMORY=${SPARK_EXECUTOR_MEMORY:-1g}
-export SPARK_APP_NAME=${SPARK_APP_NAME:-"Zeppelin"}
-export SPARK_CORES_MAX=${SPARK_CORES_MAX:-1}
-
-sed -i 's@SPARK_CORES_MAX@'"$SPARK_CORES_MAX"'@' /opt/zeppelin/conf/interpreter.json
-sed -i 's@SPARK_APP_NAME@'"$SPARK_APP_NAME"'@' /opt/zeppelin/conf/interpreter.json
-sed -i 's@SPARK_EXECUTOR_MEMORY@'"$SPARK_EXECUTOR_MEMORY"'@' /opt/zeppelin/conf/interpreter.json
-
 mkdir -p ${ZEPPELIN_HOME}/logs/
 mkdir -p ${ZEPPELIN_NOTEBOOK_DIR}
 
