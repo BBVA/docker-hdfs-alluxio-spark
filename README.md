@@ -168,7 +168,7 @@ Add the following artifact to connect to alluxio:
 org.alluxio:alluxio-core-client:1.2.0
 ```
 
-**NOTE: The current image includes all previous parameters by default in the "interpreters.json" file. In order to run zeppelin jobs in local (minishift), spark.executor.memory property must be set to 512m or less (less than the available memory for the workers), default value is 1g.**
+**NOTE: The current image includes all previous parameters by default in the "interpreters.json" file. In order to run zeppelin jobs in local, you must set the spar.executor.memory property to "512m" or less (less than the available memory for workers), default value is 1g in the interpreter configuration. You can also set the property "spark.driver.extraJavaOptions" to "-Dalluxio.user.file.writetype.default=THROUGH -Dalluxio.user.file.write.location.policy.class=alluxio.client.file.policy.RoundRobinPolicy -Dalluxio.user.file.readtype.default=NO_CACHE" for configure alluxio.**
 
 **Version 1.2.0 of alluxio is needed in order to work with the combination of libraries the version 0.7.0 of zeppelin ships by default. If you need a newer version, you will need to build your own zeppelin distribution and docker image**
 

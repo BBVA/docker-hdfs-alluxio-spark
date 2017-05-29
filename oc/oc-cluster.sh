@@ -77,6 +77,9 @@ done
 export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -p ID=0 \
 	-p IMAGE=${zeppelin_image} \
+  -p SPARK_EXECUTOR_MEMORY="1g" \
+  -P SPARK_APP_NAME="Zeppelin" \
+  -p SPARK_CORES_MAX="1" \
 	-f "oc-deploy-zeppelin.yaml" | oc create -f -
 
 # HDFS ports
