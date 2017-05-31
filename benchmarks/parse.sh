@@ -13,9 +13,10 @@
     
     
 parse() {
-	awk '/INFO TestDFSIO\$: $/ ,/\n/ {print $0}'  |  awk -v pod="$1" 'BEGIN{
+	 awk -v pod="$1" 'BEGIN{
 		i=0
-	}{ 
+	}
+	/INFO TestDFSIO\$: $/ ,/^\n/ { 
 	 split($0, kva, ": ")
 	 kv[i]=kva[2]
 	 i++
