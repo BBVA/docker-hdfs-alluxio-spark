@@ -5,6 +5,7 @@ oc_dir=${OC_DIR:-"../../oc"}
 function wait_job() {
 	local job_name="$1"; shift
 	echo $checking $job_name
+	sleep 5
 	while [ $? -eq 0 ]; do
 		sleep 5
 		oc get jobs  --template "{{range .items}}{{ if .status.active }}busy{{ end }}{{ end }}" | grep -q busy
