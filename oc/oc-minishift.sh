@@ -78,6 +78,9 @@ done
 export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 ./remove_cluster_stuff.py "oc-deploy-zeppelin.yaml" | oc process -p ID=0 \
 	-p IMAGE=${zeppelin_image} \
+	-p SPARK_EXECUTOR_MEMORY="512M" \
+  -p SPARK_APP_NAME="ZeppelinMinishift" \
+  -p SPARK_CORES_MAX="1" \
 	-f - | oc create -f -
 
 # HDFS ports

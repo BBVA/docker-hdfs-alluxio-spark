@@ -57,7 +57,7 @@ oc process \
   -f "oc-deploy-spark-history.yaml" | oc create -f -
 
 
-# Deploy three workers
+# Deploy workers
 for id in $(seq 1 1 ${nodes}); do
     oc process -p ID=${id} \
       -p IMAGE_SPARK="${spark_image}" \
@@ -77,7 +77,18 @@ done
 export zeppelin_image=$(oc get is/zeppelin --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process -p ID=0 \
 	-p IMAGE=${zeppelin_image} \
+  -p SPARK_EXECUTOR_MEMORY="1g" \
+  -p SPARK_APP_NAME="BigZeppelin" \
+  -p SPARK_CORES_MAX="14" \
 	-f "oc-deploy-zeppelin.yaml" | oc create -f -
+
+for id in $(seq 1 1 4); do
+    oc process -p ID=${id} \
+    -p IMAGE=${zeppelin_image} \
+    -p SPARK_EXECUTOR_MEMORY="512m" \
+    -p SPARK_APP_NAME="SmallZeppelin" \
+    -p SPARK_CORES_MAX="3" \
+    -f "oc-deploy-zeppelin.yaml" | oc create -f -
 
 # HDFS ports
 # MASTER 8020, 8022, 50070,

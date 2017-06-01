@@ -7,9 +7,9 @@
       "properties": {
         "args": "",
         "master": "spark://spark-master:7077",
-        "spark.app.name": "Zeppelin",
-        "spark.executor.memory": "",
-        "spark.cores.max": "",
+        "spark.app.name": "SPARK_APP_NAME",
+        "spark.executor.memory": "SPARK_EXECUTOR_MEMORY",
+        "spark.cores.max": "SPARK_CORES_MAX",
         "zeppelin.spark.printREPLOutput": "true",
         "zeppelin.dep.additionalRemoteRepository": "spark-packages,http://dl.bintray.com/spark-packages/maven,false;",
         "zeppelin.spark.sql.stacktrace": "false",

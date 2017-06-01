@@ -15,6 +15,12 @@ parameters:
     value: "zeppelin"
     description: HAS zeppelin spark Docker image
     required: true
+  - name: SPARK_EXECUTOR_MEMORY
+    required: true
+  - name: SPARK_APP_NAME
+    required: true
+  - name: SPARK_CORES_MAX
+    required: true
 
 objects:
 
@@ -164,6 +170,13 @@ objects:
             - name: zeppelin
               image: ${IMAGE}
               resources: {}
+              env:
+                - name: SPARK_EXECUTOR_MEMORY
+                  value: "${SPARK_EXECUTOR_MEMORY}"
+                - name: SPARK_APP_NAME
+                  value: "${SPARK_APP_NAME}"
+                - name: SPARK_CORES_MAX
+                  value: "${SPARK_CORES_MAX}"
               args:
                 - master
                 - start
