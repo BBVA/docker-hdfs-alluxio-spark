@@ -87,7 +87,7 @@ Contains the version of the complete zeppelin 0.7.1 binary distribution with all
 Documentation specific to this component can be found [here](zeppelin/README.md).
 
 ## Spark Submitter
-TODO
+Contains the version of the complete spark 2.1.0 distribution with hdfs 2.7 build and default confiuration and scripts to run spark jobs on the cluster.
 
 Documentation specific to this component can be found [here](spark-submitter/README.md).
 
