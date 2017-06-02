@@ -38,7 +38,4 @@ done
 execution="$executable $submit_args"
 
 echo "Submitting Spark job with: $execution"
-exec $execution  2>&1 > /tmp/log.txt &
-
-sleep 5
-tail -f /tmp/log.txt
+exec $execution

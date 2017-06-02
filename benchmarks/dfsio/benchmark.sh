@@ -12,13 +12,13 @@ run_test() {
 	local cores=$(echo ${num_files}/7 | bc)
 	local total_cores=${num_files}
 
-	dfsio_write "dfsio-write-${l_write_cache}-${num_files}-${file_size}" "${cores}" "${total_cores}" "${num_files}" "${file_size}" "${write_cache}"
+	dfsio_write "dfsio-write-${l_read_cache}-${l_write_cache}-${num_files}-${file_size}" "${cores}" "${total_cores}" "${num_files}" "${file_size}" "${write_cache}"
 
-	dfsio_wait_job "dfsio-write-${l_write_cache}-${num_files}-${file_size}"
+	dfsio_wait_job "dfsio-write-${l_read_cache}-${l_write_cache}-${num_files}-${file_size}"
 
-	dfsio_read "dfsio-read-${l_read_cache}-${num_files}-${file_size}" "${cores}" "${total_cores}" "${num_files}" "${file_size}" "${read_cache}"
+	dfsio_read "dfsio-read-${l_read_cache}-${l_write_cache}-${num_files}-${file_size}" "${cores}" "${total_cores}" "${num_files}" "${file_size}" "${read_cache}"
 
-	dfsio_wait_job "dfsio-read-${l_read_cache}-${num_files}-${file_size}"
+	dfsio_wait_job "dfsio-read-${l_read_cache}-${l_write_cache}-${num_files}-${file_size}"
 
 }
 
@@ -30,7 +30,7 @@ for wc in ${write_cache[@]}; do
 	for rc in ${read_cache[@]}; do
 		for n in $(seq 7 7 42); do
 			run_test ${size} ${n} ${wc} ${rc}
-			#sleep 60
+			sleep 60
 		done
 	done
 done
