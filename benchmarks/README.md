@@ -12,3 +12,5 @@ The scenarios are designed to write and read from/to alluxio in several configur
 
 * [TestDFSIO](./dfsio/README.md)
 * Write files of 1GB into Alluxio using write-type `CACHE_THROUGH` to HDFS. Read the same files from Alluxio using readtype `CACHE`.
+
+./plot.sh png results.csv "write,cache,cache,through" "Files MB/s" 10,13 > results-wcct.png

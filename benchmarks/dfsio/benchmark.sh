@@ -30,7 +30,7 @@ for wc in ${write_cache[@]}; do
 	for rc in ${read_cache[@]}; do
 		for n in $(seq 7 7 42); do
 			run_test ${size} ${n} ${wc} ${rc}
-			sleep 60
+			sleep 5
 		done
 	done
 done

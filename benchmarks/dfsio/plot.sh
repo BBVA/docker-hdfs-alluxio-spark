@@ -12,7 +12,7 @@ N=$(echo ${fields} | tr -dc "," | wc -c )
 data=$(mktemp)
 
 echo "${header}" > ${data}
-cat ${file} | grep ${term} | sort -t, -k7 -n | cut --output-delimiter=" " -d, -f${fields}  >> ${data}
+cat ${file} | grep ${term} | sort -t, -k${fields[0]} -n | cut -d, -f${fields}  | sed 's/,/ /g'>> ${data}
 
 case "$type" in
 	text)
@@ -31,6 +31,5 @@ case "$type" in
 		echo usage:
 		echo 	plot.sh type file term header fields
 		;;
-	
-esac
 
+esac
