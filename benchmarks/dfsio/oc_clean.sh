@@ -2,6 +2,9 @@
 
 oc delete jobs $(oc get jobs  --template "{{range .items}}{{ .metadata.name  }} {{ end }}")
 
+oc delete dc $(oc get dc  --template "{{range .items}}{{ .metadata.name }}
+{{end}}" | grep dfsio)
+
 oc delete routes $(oc get routes  --template "{{range .items}}{{ .metadata.name }}
 {{end}}" | grep dfsio)
 

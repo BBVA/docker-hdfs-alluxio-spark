@@ -2,23 +2,24 @@
 
 oc_dir=${OC_DIR:-"../../oc"}
 
-function wait_job() {
+function dfsio_wait_job() {
 	local job_name="$1"; shift
 	echo $checking $job_name
-	sleep 5
-	while [ $? -eq 0 ]; do
-		sleep 5
-		oc get jobs  --template "{{range .items}}{{ if .status.active }}busy{{ end }}{{ end }}" | grep -q busy
-	done
+	#sleep 5
+	#while [ $? -eq 0 ]; do
+		echo Press enter to continue
+		read
+		# oc get jobs  --template "{{range .items}}{{ if .status.active }}busy{{ end }}{{ end }}" | grep -q busy
+	#done
 }
 
 
-function write() {
+function dfsio_write() {
 	local job_name="$1"; shift
 	local cores="$1"; shift
 	local total_cores="$1"; shift
 	local num_files="$1"; shift
-	local file_size="$1"; shift	
+	local file_size="$1"; shift
 	local write_type="$1"; shift
 
 	pushd $oc_dir
@@ -39,12 +40,12 @@ function write() {
 }
 
 
-function read() {
+function dfsio_read() {
 	local job_name="$1"; shift
 	local cores="$1"; shift
 	local total_cores="$1"; shift
 	local num_files="$1"; shift
-	local file_size="$1"; shift	
+	local file_size="$1"; shift
 	local read_type="$1"; shift
 
 	pushd $oc_dir
@@ -64,7 +65,7 @@ function read() {
 	popd
 }
 
-function clean() {
+function dfsio_clean() {
 	local job_name="${1:-"dfsio-clean"}"
 
 	pushd $oc_dir
