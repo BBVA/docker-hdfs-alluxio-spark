@@ -1,6 +1,8 @@
 #!/bin/bash
 
 oc delete jobs $(oc get jobs  --template "{{range .items}}{{ .metadata.name  }} {{ end }}")
+oc delete dc $(oc get dc  --template "{{range .items}}{{ .metadata.name }}
+{{end}}" | grep dfsio)
 
 oc delete dc $(oc get dc  --template "{{range .items}}{{ .metadata.name }}
 {{end}}" | grep dfsio)
