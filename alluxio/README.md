@@ -16,4 +16,4 @@ And the following environment variables for alluxio configuration:
     export ALLUXIO_UNDERFS_ADDRESS=${ALLUXIO_UNDERFS_ADDRESS:-"hdfs://hdfs-namenode:8020"}
 ```
 
-If not set, you can see in that snippet the default values for each variable. More can be added by following the alluxio conifguration guideline.
+If not set, you can see in that snippet the default values for each variable. More can be added by following the alluxio configuration guideline.

@@ -6,7 +6,7 @@ In order to support openshift, and its various possible configurations, we:
 - do not modify /etc/hosts, /etc/passwd or /etc/groups. Use NSS-WRAPPER as stated in openshift docs as required by HDFS.
 - do use Services abstraction in order to communicate workers and master. Every worker has a worker service, and every master has a master service.
 - do not require any special configuration of openshift, or user with special privileges
-- do require kubernetes v1.4 for the scheduling code to work. If you have kuerbenets >1.4, that deployment code must be changed.
+- do require kubernetes v1.4 for the scheduling code to work. If you have kubernetes >1.4, that deployment code must be changed.
 - do require every worker to be deployed to not share host with any other worker or master. This is needed to support host-nat-based SDN like flannel and others due to requirements of HDFS protocol.
 
 The images are built inside openshift and expect a repository layout and file location inside the repository. Do not move the Docker files or the config files without updating the build code for openshift, or the process will fail. In any case, they may take some time to build depending on your internet connection.
@@ -31,8 +31,8 @@ The script `oc-cluster.sh` contains the deployment set up for a 10 node cluster 
 * 3 master nodes: HDFS Namenode, Alluxio Master, Spark Master and Zeppelin driver
 * 7 worker nodes: each contains an HDFS datanode, Alluxio worker and Spark slave.
 
-They are deployed with antiaffinity rules to avoid workers landidng on master nodes and have more than 1 worker in a single node.
+They are deployed with antiaffinity rules to avoid workers landing on master nodes and have more than 1 worker in a single node.
 
 All nodes are comprised of 8 cores and 16GB of RAM, 6GB of RAM for Alluxio 6GB for Spark and 6 for HDFS. There is a a persistent volume claim of 500Gi for the whole cluster. The resource allocations must be tuned to support your installation.
 
-Please read the yaml for current layout and futher details.
+Please read the yaml for current layout and further details.

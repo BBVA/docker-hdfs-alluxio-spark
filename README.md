@@ -87,7 +87,7 @@ Contains the version of the complete zeppelin 0.7.1 binary distribution with all
 Documentation specific to this component can be found [here](zeppelin/README.md).
 
 ## Spark Submitter
-Contains the version of the complete spark 2.1.0 distribution with hdfs 2.7 build and default confiuration and scripts to run spark jobs on the cluster.
+Contains the version of the complete spark 2.1.0 distribution with hdfs 2.7 build and default configuration and scripts to run spark jobs on the cluster.
 
 Documentation specific to this component can be found [here](spark-submitter/README.md).
 
@@ -97,7 +97,7 @@ The folder `oc` contains all the openshift code to bring up the deployments, rou
 Documentation specific to this component can be found [here](oc/README.md).
 
 # Data
-This folder contains scripts to download and extend datasets for test porpuses. It also contains 2 scripts to manipulate HDFS and Alluxio filesystems from the command line, making use of their HTTP API.
+This folder contains scripts to download and extend datasets for test purposes. It also contains 2 scripts to manipulate HDFS and Alluxio filesystems from the command line, making use of their HTTP API.
 
 Documentation specific to this component can be found [here](data/README.md).
 
@@ -113,7 +113,7 @@ Documentation specific to this component can be found [here](docker/README.md).
 
 
 ## Example
-From this folder, run the following commands to create the wordcount job example using spark-submitter in a local minishift.
+From this folder, run the following commands to create the word-count job example using spark-submitter in a local minishift.
 
 First export the following environment variables
 ```sh
@@ -122,7 +122,7 @@ export HTTPFS=http://hdfs-httpfs-has.192.168.42.42.nip.io
 export HUSER=openshift
 export MINISHIFT=true
 ```
-**NOTE:** Replace the `...192.168.42.42` segment with the appropiate ip where you have your local minishift. You can also find the full url by using the openshift ui. To do so, open your OpenShift web console and go to your project, in `Aplications/Routes` tab you will find all your applications routes.
+**NOTE:** Replace the `...192.168.42.42` segment with the appropriate ip where you have your local minishift. You can also find the full url by using the openshift ui. To do so, open your OpenShift web console and go to your project, in `Aplications/Routes` tab you will find all your applications routes.
 
 Next we will create some folders we will need for our job:
 ```sh
