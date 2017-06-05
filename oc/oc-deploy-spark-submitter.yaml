@@ -81,7 +81,6 @@ objects:
       labels:
         app: ${NAME}
     spec:
-      activeDeadlineSeconds: 60
       template:
         metadata:
           labels:
