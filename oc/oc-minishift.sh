@@ -58,7 +58,7 @@ export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepositor
 	-f - | oc create -f -
 
 
-# Deploy three workers
+# Deploy workers
 for id in $(seq 1 1 ${nodes}); do
 	./remove_cluster_stuff.py "oc-deploy-has-node.yaml" | oc process -p ID=${id} \
 		-p IMAGE_SPARK="${spark_image}" \
