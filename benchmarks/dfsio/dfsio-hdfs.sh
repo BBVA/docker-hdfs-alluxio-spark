@@ -18,7 +18,6 @@ function dfsio_write() {
 	local total_cores="$1"; shift
 	local num_files="$1"; shift
 	local file_size="$1"; shift
-	local write_type="$1"; shift
 
 	pushd $oc_dir
 		bash oc-deploy-spark-job.sh $job_name \
@@ -44,7 +43,6 @@ function dfsio_read() {
 	local total_cores="$1"; shift
 	local num_files="$1"; shift
 	local file_size="$1"; shift
-	local read_type="$1"; shift
 
 	pushd $oc_dir
 		bash oc-deploy-spark-job.sh $job_name \
