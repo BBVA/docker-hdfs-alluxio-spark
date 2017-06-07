@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat $1 | awk 'BEGIN{
+cat $1 | sed 's/gb//g' | awk 'BEGIN{
 	FS=","
 	printf("name,type,readcache,writecache,size,num_files, total_mb,mb/s,avg mb/s, std.dev.,time,zero\n")
 }
