@@ -61,4 +61,19 @@ cat $1 | sed 's/gb//g' | awk 'BEGIN{
 	}
 	printf("0\n")
 }
+/dfsio,hdfs,read/ {
+	printf("dfsio,read,%s,",$4)
+	for(i=9;i<=15;i++) {
+		printf("%s,",$i)
+	}
+	printf("0\n")
+}
+/dfsio,hdfs,write/ {
+	printf("dfsio,write,%s,",$4)
+	for(i=9;i<=15;i++) {
+		printf("%s,",$i)
+	}
+	printf("0\n")
+}
 '
+
