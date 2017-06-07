@@ -57,7 +57,7 @@ function dfsio_read() {
 			read \
       --numFiles $num_files \
       --fileSize $file_size \
-      --inputDir  hdfs://hdfs-namenode:8020/benchmarks/DFSIO
+      --inputDir  hdfs://hdfs-namenode:8020/benchmarks/DFSIO \
       --hadoopProps fs.defaultFS=hdfs://hdfs-namenode:8020
 	popd
 }
