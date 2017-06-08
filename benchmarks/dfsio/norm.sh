@@ -62,14 +62,14 @@ cat $1 | sed 's/gb//g' | awk 'BEGIN{
 	printf("0\n")
 }
 /dfsio,hdfs,read/ {
-	printf("dfsio,read,%s,",$4)
+	printf("dfsio,read,%s,%s,",$4,$5)
 	for(i=9;i<=15;i++) {
 		printf("%s,",$i)
 	}
 	printf("0\n")
 }
 /dfsio,hdfs,write/ {
-	printf("dfsio,write,%s,",$4)
+	printf("dfsio,write,%s,%s,",$4,$5)
 	for(i=9;i<=15;i++) {
 		printf("%s,",$i)
 	}
