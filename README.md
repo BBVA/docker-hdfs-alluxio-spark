@@ -1,4 +1,4 @@
-# HDFS ALLUXIO SPARK ZEPELLIN
+# HDFS ALLUXIO SPARK ZEPPELIN
 This repository contains the docker images and the Openshift code to bring up a a complete HASZ environment.
 
 Please complete this document if you find errors or lack information. Just git push it! :)
@@ -17,7 +17,7 @@ The folders called `hdfs`, `alluxio`, `spark` and `zeppelin` contain the Dockerf
 
 We tried to not make assumptions about the platform that will run this images, so they should work in a local docker installation, kubernetes, openshift or whatever. Of course the programs from the images have certain communications and storage requirements and **you MUST tailor them for your needs**.
 
-Also you need to be familiar with HDFS, alluxio, spark and zepelling. Do not expect everything to work without reading first how those programs operate in a general way.
+Also you need to be familiar with HDFS, alluxio, spark and zeppelin. Do not expect everything to work without reading first how those programs operate in a general way.
 
 The images also are prepared for graceful shutdown of each component.
 
