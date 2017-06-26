@@ -1,8 +1,8 @@
 # Docker
 
-This folder contains all the scripts used to bring up the whole thing in a docker installation under linux.
+This folder contains all the scripts used to bring up all the components in a local docker installation.
 
-Please read them to use them. Feel free to complete this documentation.
+Please read them before use.
 
 
 # Benchmarks

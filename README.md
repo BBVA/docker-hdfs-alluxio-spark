@@ -3,7 +3,18 @@ This repository contains the docker images and the Openshift code to bring up a 
 
 Please complete this document if you find errors or lack information. Just git push it! :)
 
-# Local environment
+# Getting started
+The general procedure to bring up the components is:
+
+ - Start minishift as stated in its documentation [here](https://docs.openshift.org/latest/minishift/getting-started/index.html)
+ - If you have an Openshift cluster already installed, log in and select or create a project for the deployment of the components
+ - If you're using docker locally, build the images for each component using the provided Dockerfiles
+ - On minishift/openshif enter the oc folder and execute the oc-minishift.sh / oc-cluster.sh
+ - If you're using docker, enter the docker folder and use the scripts of each component to deploy it.
+
+Also please read each folder README to get more details of each component.
+
+# Local environment: minishift
 Because this is used for development, tweaking images, etc. its recommended to be generous with the minishift parameters.
 
 ```sh
@@ -23,7 +34,6 @@ The images also are prepared for graceful shutdown of each component.
 
 Finally, its important to note that an image could act as a different component, normally master or worker of its software component.
 
-# General images information
 
 ## About boot.sh
 In general, this script is composed of three sections:
@@ -63,30 +73,30 @@ Data locality is only achieved between all the components only when using PODs, 
 
 TODO: Testing in docker/swarm environment needs to be done to clarify data locality options on this environment.
 
-# Docker images
-Files for each image is contained in their own folder.  
+## Dockerfiles
+Files for each image is contained in their own folder.
 
-## HDFS
+### HDFS
 Contains the version of the complete hadoop 2.7.3 distribution.
 
 Documentation specific to this component can be found [here](hdfs/README.md).
 
-## Alluxio
+### Alluxio
 Contains the version of the complete alluxio 1.4.0 distribution. It is uncompressed in /opt/alluxio.
 
 Documentation specific to this component can be found [here](alluxio/README.md).
 
-## Spark
+### Spark
 Contains the version of the complete spark 2.1.0 distribution with hdfs 2.7 build.
 
 Documentation specific to this component can be found [here](spark/README.md).
 
-## Zeppelin
+### Zeppelin
 Contains the version of the complete zeppelin 0.7.1 binary distribution with all interpreters (~700MB).
 
 Documentation specific to this component can be found [here](zeppelin/README.md).
 
-## Spark Submitter
+### Spark Submitter
 Contains the version of the complete spark 2.1.0 distribution with hdfs 2.7 build and default configuration and scripts to run spark jobs on the cluster.
 
 Documentation specific to this component can be found [here](spark-submitter/README.md).
@@ -96,7 +106,7 @@ The folder `oc` contains all the openshift code to bring up the deployments, rou
 
 Documentation specific to this component can be found [here](oc/README.md).
 
-# Data
+## Data
 This folder contains scripts to download and extend datasets for test purposes. It also contains 2 scripts to manipulate HDFS and Alluxio filesystems from the command line, making use of their HTTP API.
 
 Documentation specific to this component can be found [here](data/README.md).
@@ -112,35 +122,3 @@ This folder contains all the scripts used to bring up the whole thing in a docke
 Documentation specific to this component can be found [here](docker/README.md).
 
 
-## Example
-From this folder, run the following commands to create the word-count job example using spark-submitter in a local minishift.
-
-First export the following environment variables
-```sh
-export ALLUXIO_PROXY=http://alluxio-master-rest-has.192.168.42.42.nip.io
-export HTTPFS=http://hdfs-httpfs-has.192.168.42.42.nip.io
-export HUSER=openshift
-export MINISHIFT=true
-```
-**NOTE:** Replace the `...192.168.42.42` segment with the appropriate ip where you have your local minishift. You can also find the full url by using the openshift ui. To do so, open your OpenShift web console and go to your project, in `Aplications/Routes` tab you will find all your applications routes.
-
-Next we will create some folders we will need for our job:
-```sh
-./data/httpfs.sh mkdir spark/eventlogs
-./data/httpfs.sh mkdir jobs
-./data/httpfs.sh mkdir data
-```
-
-Then we upload our job and a sample file:
-```sh
-./data/httpfs.sh upload ./spark-wordcount/target/scala-2.11/spark-wordcount-1.0-with-dependencies.jar jobs/spark-wordcount.jar
-
-./data/httpfs.sh upload ./README.md data/README.md
-```
-
-And finally, when all the previous steps are finished, we can launch our work, for that we have to move to the oc folder and then run the job:
-```sh
-cd ./oc
-
-bash oc-deploy-spark-job.sh wordcount "--master spark://spark-master:7077 --class com.bbva.spark.WordCount --driver-memory 512m --executor-memory 512m --packages org.alluxio:alluxio-core-client:1.4.0 http://hdfs-httpfs:14000/webhdfs/v1/jobs/spark-wordcount.jar?op=OPEN&user.name=openshift -i alluxio://alluxio-master:19998/data/README.md -o alluxio://alluxio-master:19998/data/README.md-copy"
-```

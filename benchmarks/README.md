@@ -11,3 +11,4 @@ Each datanode had replication factor configured to 3x.
 The scenarios are designed to write and read from/to alluxio in several configurations of caching and file size and number. The resources available for Spark are also taken into account to measure the effect of concurrency and paralelization. So far the benchmarks defined are the following:
 
 * [TestDFSIO](./dfsio/README.md)
+
