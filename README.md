@@ -144,11 +144,3 @@ cd ./oc
 
 bash oc-deploy-spark-job.sh wordcount "--master spark://spark-master:7077 --class com.bbva.spark.WordCount --driver-memory 512m --executor-memory 512m --packages org.alluxio:alluxio-core-client:1.4.0 http://hdfs-httpfs:14000/webhdfs/v1/jobs/spark-wordcount.jar?op=OPEN&user.name=openshift -i alluxio://alluxio-master:19998/data/README.md -o alluxio://alluxio-master:19998/data/README.md-copy"
 ```
-
-# TODO
- * test new deployment option using PetSets / StatefulSets, reducing the services needed.
- * simplify the zeppelin configuration, it would be cool to automate it
- * test everything from the very beginning and fix any issue
- * test more complex analysis to see if there are any networking issues
- * make the data upload process easier to the cluster
- * deploy on real cluster

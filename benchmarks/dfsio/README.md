@@ -4,16 +4,52 @@ TestDFSIO is the canonical example of a benchmark that attempts to measure the H
 
 The original version is included in the Hadoop's MapReduce job client library. However, since we were running the tests on a Spark Standalone cluster, we needed using a modified version of this benchmark based entirely on Spark and fully compatible with the Alluxio filesystem.
 
-(TODO link to repo)
+See [Spark Benchmarks](https://github.com/BBVA/spark-benchmarks).
 
-## Benchmark scripts usage
+## Scripts description
 
-We have implemented the following benchmark scenarios:
- - read-small-files.sh, file size = 1GB
- - read-medium-files.sh, file size = 5GB
- - read-large-files.sh, fiole size = 10 GB
+ - parse.sh: extracts all the information generated from the driver logs in openshift and generate a csv output which we will use to analize the results.
+ - norm.sh: normalizes output to csv format.
+ - plot.sh: plots data usgin gnuplot.
+ - dfsio.sh: a set of functions to executing DFSIO benchmark using Alluxio.
+ - dfsio_hdfs.sh: a set of functions to executing DFSIO benchmark using only HDFS.
+ - dfsio_clean.sh: deletes all Kubernetes' jobs related to the benchmark.
+ - benchmark.sh: runs a benchmark set with different combinations by changing the number of concurrent tasks and the configuration of the read and write types in Alluxio.
+ - benchmark-hdfs.sh: similar to the previous one but using only HDFS.
+ - benchmark-files.sh: runs a benchmark set with different combinations by changing the file size to write and read.
+ - benchmark-files-hdfs: similar to the previous one but using only HDFS.
 
-Each scenario tests 7, 14, 21, 28, 35 and 42 files. We've selected those beacuse our cluster has 7 nodes. Also each scenario write files to alluxio using CACHE_TROUGH and read the files using CACHE. 
+Examples:
+
+ ```bash plot.sh text read-small-files.csv read "Files MB/s Time(s)" 7,15,18 "Throughtput"```
+
+ ```                                                                              
+   110 +-+------+-------+--------+--------+-------+--------+-------+------+-+   
+       +  *     +       +        +        +       +        +       +   #    +   
+   100 +-+ *                                                   MB/s *******-+   
+       |    *                                               Time(s) ####### |   
+    90 +-+   *                                                      #     +-+   
+       |      *                                                    #        |   
+    80 +-+     *                                                 ##       +-+   
+       |        *                                               #           |   
+    70 +-+       *                                             #          +-+   
+    60 +-+        *                                           #           +-+   
+       |           *              *******                    #              |   
+    50 +-+          *          ***       ****               #             +-+   
+       |             *      ***              **         ####                |   
+    40 +-+            *##***####               ************               +-+   
+       |            ## **       ###      #########         ************     |   
+    30 +-+       ###               ######                              *  +-+   
+       |      ###                                                           |   
+    20 +-+  ##                                                            +-+   
+       +  ##    +       +        +        +       +        +       +        +   
+    10 +-+------+-------+--------+--------+-------+--------+-------+------+-+   
+       5        10      15       20       25      30       35      40       45  
+ ```
+
+## Scenarios
+
+Each scenario tests 7, 14, 21, 28, 35 and 42 files. We've selected those beacuse our cluster has 7 nodes. Also each scenario write files to alluxio using CACHE_TROUGH and read the files using CACHE.
 
 After runing all scenarios, we use the tool ```parse.sh``` to extrat all the information generated from the driver logs in openshift and generate a csv output which we will use to analize the results.
 
@@ -40,32 +76,10 @@ small | files | dfsio | read | cache | through | 42 | 1g | ekt3o | Mon May 22 10
 small | files | dfsio | write | cache | through | 42 | 1g | 9jnez | Mon May 22 10:12:07 UTC 2017 | 42 | 43008 | 8.074380120293394 | 8.125965 | 7.534641372864125 | 138.523 | write
 
 
-```bash plot.sh text read-small-files.csv read "Files MB/s Time(s)" 7,15,18 "Throughtput"```
 
 
-```                                                                              
-  110 +-+------+-------+--------+--------+-------+--------+-------+------+-+   
-      +  *     +       +        +        +       +        +       +   #    +   
-  100 +-+ *                                                   MB/s *******-+   
-      |    *                                               Time(s) ####### |   
-   90 +-+   *                                                      #     +-+   
-      |      *                                                    #        |   
-   80 +-+     *                                                 ##       +-+   
-      |        *                                               #           |   
-   70 +-+       *                                             #          +-+   
-   60 +-+        *                                           #           +-+   
-      |           *              *******                    #              |   
-   50 +-+          *          ***       ****               #             +-+   
-      |             *      ***              **         ####                |   
-   40 +-+            *##***####               ************               +-+   
-      |            ## **       ###      #########         ************     |   
-   30 +-+       ###               ######                              *  +-+   
-      |      ###                                                           |   
-   20 +-+  ##                                                            +-+   
-      +  ##    +       +        +        +       +        +       +        +   
-   10 +-+------+-------+--------+--------+-------+--------+-------+------+-+   
-      5        10      15       20       25      30       35      40       45  
-```
+
+
 
 ```bash plot.sh text read-small-files.csv write "Files MB/s Time(s)" 7,15,18 "Throughtput"```
 
@@ -90,7 +104,7 @@ small | files | dfsio | write | cache | through | 42 | 1g | 9jnez | Mon May 22 1
       |                           ************************                 |   
       +        +       +        +        +       +        *************    +   
     0 +-+------+-------+--------+--------+-------+--------+-------+------+-+   
-      5        10      15       20       25      30       35      40       45 
+      5        10      15       20       25      30       35      40       45
 ```
 
 
@@ -111,148 +125,3 @@ File size: 1GB
 Executions: 7, 14, 21, 28, 35 and 42 files
 
 Results:
-
-
-
-
-
-### Clean benchmarks
-
-
-```bash
-./run_clean.sh
-```
-
-### Run write tests
-
-```bash
-./run_write.sh [MUST_CACHE | CACHE_THROUGH | THROUGH] <num_files> <file_size>
-```
-
-Example:
-
-```bash
-./run_write.sh MUST_CACHE 10 1gb
-```
-
-### Run read tests
-
-```bash
-./run_read.sh [NO_CACHE | CACHE] <num_files> <file_size>
-```
-
-Example:
-
-```bash
-./run_read.sh NO_CACHE 10 1gb
-```
-
-## Results
-
-### Write benchmarks
-
-#### Write type: *MUST_CACHE*
-
-##### Number of files: 10. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 10 1gb
-```
-
-Result:
-
-##### Number of files: 30. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 30 1gb
-```
-
-Result:
-
-##### Number of files: 50. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 50 1gb
-```
-Result:
-
-##### Number of files: 70. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 70 1gb
-```
-Result:
-
-##### Number of files: 90. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 90 1gb
-```
-Result:
-
-##### Number of files: 110. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 110 1gb
-```
-Result:
-
-##### Number of files: 130. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 130 1gb
-```
-Result:
-
-##### Number of files: 150. File size: 1GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 150 1gb
-```
-Result:
-
-##### Number of files: 10. File size: 10GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 10 10gb
-```
-
-Result:
-
-##### Number of files: 30. File size: 10GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 30 10gb
-```
-
-Result:
-
-##### Number of files: 50. File size: 10GB. Max. cores: 7
-
-Command:
-
-```bash
-./run_write.sh MUST_CACHE 50 10gb
-```
-
-Result:
