@@ -3,21 +3,16 @@
 # basic project data
 export project="spark"
 export repository="https://github.com/BBVA/docker-hdfs-alluxio-spark.git"
-#export secretname="sshcert"
 nodes=${1:-"7"}
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 
 # Create new oc project
 oc new-project "${project}"
 
-# Upload ssh key to access the git using ssh://
-#oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
-
 # Create builds for each docker image
 for c in "hdfs" "alluxio" "spark" "spark-submitter" "zeppelin"; do
     oc process -p REPOSITORY=${repository} \
                 -p CONTEXTDIR="${c}" \
-                -p SECRETNAME="${secretname}" \
                 -p ID="${c}" \
                 -f oc-build-has.yaml | oc create -f -
 done

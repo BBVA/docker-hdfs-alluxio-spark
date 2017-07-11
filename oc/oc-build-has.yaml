@@ -44,8 +44,6 @@ objects:
           uri: >-
             ${REPOSITORY}
         contextDir: ${CONTEXTDIR}
-        sourceSecret:
-          name: ${SECRETNAME}
       strategy:
         type: Docker
       output:
