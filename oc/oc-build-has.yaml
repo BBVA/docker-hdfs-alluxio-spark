@@ -7,16 +7,12 @@ metadata:
     tags: networking,storage
 
 parameters:
-  - name: SECRETNAME
-    value: "sshsecret"
-    description: Openshift secret name to get the sources
-    required: true
   - name: ID
     value: "hdfs"
     description: Component ID to tag openshift elements
     required: true
   - name: REPOSITORY
-    value: "ssh://git@globaldevtools.bbva.com:7999/bglh/.......git"
+    value: "https://github.com/BBVA/docker-hdfs-alluxio-spark.git"
     description: Source code respository
     required: true
   - name: CONTEXTDIR
