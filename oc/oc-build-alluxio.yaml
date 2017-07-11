@@ -11,7 +11,7 @@ spec:
     type: Git
     git:
       uri: >-
-        ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git
+        https://github.com/BBVA/docker-hdfs-alluxio-spark.git
     contextDir: alluxio
     sourceSecret:
       name: sshsecret

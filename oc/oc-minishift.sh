@@ -2,8 +2,8 @@
 
 # basic project data
 export project="has"
-export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
-export secretname="sshcert"
+export repository="https://github.com/BBVA/docker-hdfs-alluxio-spark.git"
+#export secretname="sshcert"
 
 nodes=${1:-"3"}
 # https://docs.openshift.org/laremove_cluster_stuff/dev_guide/builds/build_inputs.html
@@ -12,7 +12,7 @@ nodes=${1:-"3"}
 oc new-project "${project}"
 
 # Upload ssh key to access the git using ssh://
-oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
+#oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
 # Create builds for each docker image
 for c in "hdfs" "alluxio" "spark" "spark-submitter" "zeppelin"; do

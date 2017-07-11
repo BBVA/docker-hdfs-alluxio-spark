@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # basic project data
-export project="has"
-export repository="ssh://git@globaldevtools.bbva.com:7999/bglh/docker-hdfs-alluxio-spark.git"
-export secretname="sshcert"
+export project="spark"
+export repository="https://github.com/BBVA/docker-hdfs-alluxio-spark.git"
+#export secretname="sshcert"
 nodes=${1:-"7"}
 # https://docs.openshift.org/latest/dev_guide/builds/build_inputs.html
 
@@ -11,7 +11,7 @@ nodes=${1:-"7"}
 oc new-project "${project}"
 
 # Upload ssh key to access the git using ssh://
-oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
+#oc secrets new-sshauth ${secretname} --ssh-privatekey=$HOME/.ssh/id_rsa
 
 # Create builds for each docker image
 for c in "hdfs" "alluxio" "spark" "spark-submitter" "zeppelin"; do
@@ -37,7 +37,7 @@ oc process \
 export alluxio_image=$(oc get is/alluxio --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 oc process \
   -p IMAGE=${alluxio_image} \
-  -p ALLUXIO_WORKER_MEMORY_SIZE="6GB" \
+  -p ALLUXIO_WORKER_MEMORY_SIZE="16GB" \
   -f "oc-deploy-alluxio-master.yaml" | oc create -f -
 
 # Deploy Spark master
@@ -45,7 +45,7 @@ export spark_image=$(oc get is/spark --template="{{ .status.dockerImageRepositor
 oc process \
   -p IMAGE=${spark_image} \
   -p SPARK_MASTER_WEBUI_PORT="8080" \
-  -p SPARK_WORKER_MEMORY="6G" \
+  -p SPARK_WORKER_MEMORY="10G" \
   -p SPARK_WORKER_PORT="35000" \
   -p SPARK_WORKER_WEBUI_PORT="8081" \
   -p SPARK_DAEMON_MEMORY="1G" \
@@ -64,9 +64,9 @@ for id in $(seq 1 1 ${nodes}); do
       -p IMAGE_ALLUXIO="${alluxio_image}" \
       -p IMAGE_HDFS="${hdfs_image}" \
       -p "HDFS_MEMORY=1GB" \
-      -p ALLUXIO_WORKER_MEMORY_SIZE="6GB" \
+      -p ALLUXIO_WORKER_MEMORY_SIZE="16GB" \
       -p SPARK_MASTER_WEBUI_PORT="8080" \
-      -p SPARK_WORKER_MEMORY="6G" \
+      -p SPARK_WORKER_MEMORY="10G" \
       -p SPARK_WORKER_PORT="35000" \
       -p SPARK_WORKER_WEBUI_PORT="8081" \
       -p SPARK_DAEMON_MEMORY="1G" \
