@@ -4,7 +4,7 @@ RUN apt-get update && apt-get --no-install-recommends install -y default-jre lib
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 ENV ZEPPELIN=http://www-eu.apache.org/dist/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-netinst.tgz
-ENV SPARK_DIST_URL=http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz
+ENV SPARK_DIST_URL=https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
 
 WORKDIR /tmp
 

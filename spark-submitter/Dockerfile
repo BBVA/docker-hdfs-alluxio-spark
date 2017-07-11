@@ -5,12 +5,12 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
 LABEL version="spark_2.1.0_hadoop_2.7"
 
-ENV SPARK_DIST_URL=http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz
+ENV SPARK_DIST_URL=https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
 
 # Install Spark distribution
 WORKDIR /tmp
 RUN wget --quiet ${SPARK_DIST_URL}
-RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.0-bin-hadoop2.7.tgz --strip-components=1 -C /opt/spark/
+RUN mkdir -p /opt/spark && tar zxf /tmp/spark-2.1.1-bin-hadoop2.7.tgz --strip-components=1 -C /opt/spark/
 
 WORKDIR /
 ADD boot.sh /
