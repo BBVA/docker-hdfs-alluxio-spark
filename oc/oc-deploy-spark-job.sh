@@ -6,7 +6,7 @@ args="$@"
 submit_args="${args[@]}"
 
 # basic project data
-export project="has"
+export project="spark"
 export spark_submitter_image=$(oc get is/spark-submitter --template="{{ .status.dockerImageRepository }}" --namespace ${project})
 
 # Deploy Spark Job
