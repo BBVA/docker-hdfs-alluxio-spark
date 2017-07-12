@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 RUN apt-get update && apt-get --no-install-recommends install -y default-jre libnss-wrapper wget libsnappy1v5 libsnappy-dev libsnappy-java libsnappy-jni libssl1.0.0 libssl-dev && apt-get clean
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
-ENV ZEPPELIN=http://www-eu.apache.org/dist/zeppelin/zeppelin-0.7.1/zeppelin-0.7.1-bin-netinst.tgz
+ENV ZEPPELIN=http://apache.uvigo.es/zeppelin/zeppelin-0.7.2/zeppelin-0.7.2-bin-netinst.tgz
 ENV SPARK_DIST_URL=https://d3kbcqa49mib13.cloudfront.net/spark-2.1.1-bin-hadoop2.7.tgz
 
 WORKDIR /tmp
