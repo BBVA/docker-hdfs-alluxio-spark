@@ -1,5 +1,5 @@
-# HDFS ALLUXIO SPARK ZEPPELIN
-This repository contains the docker images and the Openshift code to bring up a a complete HASZ environment.
+# DOCKER HDFS ALLUXIO SPARK
+This repository contains the docker images and the Openshift code to bring up a a complete HAS environment.
 
 Please complete this document if you find errors or lack information. Just git push it! :)
 
@@ -121,4 +121,11 @@ This folder contains all the scripts used to bring up the whole thing in a docke
 
 Documentation specific to this component can be found [here](docker/README.md).
 
+# Contributions
 
+Contributions are very welcome, see [CONTRIBUTING.md](https://github.com/BBVA/docker-hdfs-alluxio-spark/blob/master/CONTRIBUTING.md)
+or skim [existing tickets](https://github.com/BBVA/docker-hdfs-alluxio-spark/issues) to see where you could help out.
+
+# License
+
+This project is Open Source and available under the Apache 2 License.
